@@ -28,11 +28,11 @@ class myBlueAdApp extends StatelessWidget {
               initialRoute: '/',
           //named routes concentradas
           routes: {
-            '/': (_) => HomeScreen(theme),
-            '/login': (_) => LogInScreen(theme),
-            '/signup' :(_) => SignUpScreen(theme),
-            '/homeoptions': (_) => HomeOptionsWidget(theme),
-            '/about': (_) => AboutUsScreen(theme),
+            '/': (_) => HomeScreen(),
+            '/login': (_) => LogInScreen(),
+            '/signup' :(_) => SignUpScreen(),
+            '/homeoptions': (_) => HomeOptionsWidget(),
+            '/about': (_) => AboutUsScreen(),
           }
 
       ),

@@ -1,11 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:frontend/model/theme_model.dart';
+import 'package:provider/provider.dart';
 
 class CustomDrawer extends StatefulWidget {
-  final ThemeModel _model;
-
-  //constructor
-  CustomDrawer(this._model);
   @override
   _CustomDrawerState createState() => _CustomDrawerState();
 }
@@ -35,7 +32,7 @@ class _CustomDrawerState extends State<CustomDrawer> {
         },
         title: Text('About us'),
         leading: Icon(Icons.info,
-            color: widget._model.mode==ThemeMode.dark ? Colors.yellow : Theme.of(context).primaryColor),
+            color: Provider.of<ThemeModel>(context, listen: false).mode==ThemeMode.dark ? Colors.yellow : Theme.of(context).primaryColor),
       ),
       ListTile(
         onTap: ()
@@ -45,7 +42,7 @@ class _CustomDrawerState extends State<CustomDrawer> {
         },
         title: Text('Security'),
         leading: Icon(Icons.security,
-        color: widget._model.mode==ThemeMode.dark ? Colors.yellow : Theme.of(context).primaryColor),
+        color: Provider.of<ThemeModel>(context, listen: false).mode==ThemeMode.dark ? Colors.yellow : Theme.of(context).primaryColor),
       ),
       ListTile(
         onTap: ()
@@ -54,7 +51,8 @@ class _CustomDrawerState extends State<CustomDrawer> {
           Navigator.of(context).pushNamed('/homeoptions', arguments: _option);
         },
         title: Text('FAQ'),
-        leading: Icon(Icons.help, color: widget._model.mode==ThemeMode.dark ? Colors.yellow : Theme.of(context).primaryColor),
+        leading: Icon(Icons.help,
+            color: Provider.of<ThemeModel>(context, listen: false).mode==ThemeMode.dark ? Colors.yellow : Theme.of(context).primaryColor),
       ),
     ];
 

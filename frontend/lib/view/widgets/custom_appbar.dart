@@ -1,17 +1,17 @@
 //TODO CUSTOMAPPBAR SHAREPREFERENCE IDIOMA Y THEME
 import 'package:flutter/material.dart';
 import 'package:frontend/model/theme_model.dart';
+import 'package:provider/provider.dart';
 
 import 'custom_switch.dart';
 
 class CustomAppBar extends AppBar
 {
-  final ThemeModel _model;
   final GlobalKey<ScaffoldState> _scaffoldKey;
   final BuildContext _context;
   //constructor
 
-  CustomAppBar(this._model, this._scaffoldKey, this._context, {Key key, Widget leading, Widget flexibleSpace, List <Widget> actions}) :
+  CustomAppBar(this._scaffoldKey, this._context, {Key key, Widget leading, Widget flexibleSpace, List <Widget> actions}) :
         super (key:key,
           leading: Padding(
             padding: const EdgeInsets.only(left: 8.0),
@@ -34,6 +34,6 @@ class CustomAppBar extends AppBar
             ),
           ),
           actions: <Widget>[
-    CustomSwitch(_model)
+    CustomSwitch(Provider.of<ThemeModel>(_context, listen: false))
   ]);
 }
