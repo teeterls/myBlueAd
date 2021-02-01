@@ -1,6 +1,6 @@
 # frontend
 
-myBlueAd mobile app frontend
+myBlueAd frontend: PROYECTO FIN DE CARRERA TERESA GONZÁLEZ GARCÍA
 
 ## Getting Started
 
