@@ -1,3 +1,4 @@
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:frontend/view/app.dart';
@@ -7,6 +8,8 @@ import 'package:provider/provider.dart';
 
 import 'package:frontend/model/theme_model.dart';
 
+import 'model/user_state.dart';
+
 void main() {
   //widgets de flutter inicializado
   WidgetsFlutterBinding.ensureInitialized();
@@ -14,7 +17,10 @@ void main() {
     providers: [
       ChangeNotifierProvider <ThemeModel> (
       create: (_) => ThemeModel(),
-      )
+      ),
+      ChangeNotifierProvider <UserState> (
+        create: (_) => UserState.instance(),
+      ),
     ],
       child: InitializeApp(),
   ),);

@@ -1,4 +1,6 @@
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:frontend/model/routers.dart';
 import 'package:frontend/model/theme_model.dart';
 import 'package:frontend/view/screens/about_screen.dart';
 import 'package:frontend/view/widgets/home_options_widget.dart';
@@ -25,20 +27,21 @@ class myBlueAdApp extends StatelessWidget {
           ), // Provide light theme.
           darkTheme: ThemeData.dark(), // Provide dark theme.
           themeMode:  theme.mode,
-              initialRoute: '/',
+            initialRoute: '/',
+            //generador de rutas
+            onGenerateRoute: Routers.generateRoute,
           //named routes concentradas
-          routes: {
+          /*routes: {
             '/': (_) => HomeScreen(),
             '/login': (_) => LogInScreen(),
             '/signup' :(_) => SignUpScreen(),
             '/homeoptions': (_) => HomeOptionsWidget(),
             '/about': (_) => AboutUsScreen(),
-          }
+          }*/
 
       ),
         ),
     );
   }
 }
-
 

@@ -42,6 +42,8 @@ dependencies:
   provider: ^4.3.3
   gradient_widgets: ^0.5.2
   flutter_switch: ^0.2.0
+  geopoint: ^0.7.1
+  latlong: ^0.6.1
 
 dev_dependencies:
   flutter_test:

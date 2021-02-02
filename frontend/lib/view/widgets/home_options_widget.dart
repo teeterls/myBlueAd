@@ -8,14 +8,13 @@ import 'custom_drawer.dart';
 //TODO CONTENIDO SEGUN TIPO DE PAGINA -> SWITCH-CASE
 
 class HomeOptionsWidget extends StatelessWidget {
+  //parametro que le llega de la clase nombrada (lo añadimos al constructor)
+  final String _option;
+  HomeOptionsWidget(this._option);
+
   final GlobalKey<ScaffoldState> _scaffoldKey = new GlobalKey<ScaffoldState>();
   @override
   Widget build(BuildContext context) {
-    //obtenemos el argumento pasado por la ruta nombrada
-    final String _option = ModalRoute
-        .of(context)
-        .settings
-        .arguments;
     switch (_option) {
       case "security":
         {
@@ -25,6 +24,8 @@ class HomeOptionsWidget extends StatelessWidget {
                     drawer: CustomDrawer(),
                 appBar: CustomAppBar(_scaffoldKey, context),
                 floatingActionButton: CustomBackButton(),
+                  //TODO
+                  body: Container(),
                 ));
         }
         break;
@@ -37,7 +38,9 @@ class HomeOptionsWidget extends StatelessWidget {
                   drawer: CustomDrawer(),
           appBar: CustomAppBar(
               _scaffoldKey, context),
-       floatingActionButton: CustomBackButton(),));
+       floatingActionButton: CustomBackButton(),
+              //TODO
+              body: Container(),));
         }
         break;
     }

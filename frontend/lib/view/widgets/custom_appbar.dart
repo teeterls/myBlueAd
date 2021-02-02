@@ -16,6 +16,7 @@ class CustomAppBar extends AppBar
           leading: Padding(
             padding: const EdgeInsets.only(left: 8.0),
             child: GestureDetector(
+              //abre el drawer que sea
                 onTap: () => _scaffoldKey.currentState.openDrawer(),
                 child: Image.asset("assets/logo.png")),
 

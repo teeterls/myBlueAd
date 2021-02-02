@@ -1,5 +1,6 @@
 // firebase admin sdk
 const admin= require('firebase-admin');
+TODO añadir nuevo servicio SDK
 const serviceAccount = require('./mybluead-tfg-firebase-adminsdk-ekd0h-6817f10073.json');
 admin.initializeApp({ credential: admin.credential.cert(serviceAccount)
 });

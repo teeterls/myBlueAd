@@ -38,6 +38,7 @@ class _CustomDrawerState extends State<CustomDrawer> {
         onTap: ()
         {
           _option="security";
+         // Navigator.pushNamed(context, '/homeoptions', arguments: _option);
           Navigator.of(context).pushNamed('/homeoptions', arguments: _option);
         },
         title: Text('Security'),
@@ -48,6 +49,7 @@ class _CustomDrawerState extends State<CustomDrawer> {
         onTap: ()
         {
           _option="faq";
+          //Navigator.pushNamed(context, '/homeoptions', arguments: _option);
           Navigator.of(context).pushNamed('/homeoptions', arguments: _option);
         },
         title: Text('FAQ'),
