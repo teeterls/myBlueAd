@@ -1,6 +1,8 @@
+import 'dart:async';
+
 import 'package:flutter/material.dart';
 import 'package:firebase_auth/firebase_auth.dart';
-//TODO USER NODE.JS LOGICA DE USUARIOS TODO
+//TODO USER NODE.JS LOGICA DE USUARIOS TODO. enviar al server
 //clase que se encarga de gestionar las sesiones y recoge los metodos de auth firebase
 //4 tipos de estado
 enum Status { Uninitialized, Authenticated, Authenticating, Unauthenticated }
@@ -20,8 +22,9 @@ class UserState with ChangeNotifier {
   Status get status => _status;
   User get user => _user;
 
-  //metodos firebase Register y SignIn -> si han ido ok
-  Future<bool> register (String username, String email, String password) async {
+  //TODO REGISTER + SIGN IN CON EMAIL VERIFICATION!!! (lo + seguro a la hora de registrarse)
+  //TODO ERROR CON EL TEXTO
+  Future <bool> register (String username, String email, String password) async {
     try {
       //authenticating
       _status= Status.Authenticating;
@@ -40,19 +43,21 @@ class UserState with ChangeNotifier {
       _status = Status.Unauthenticated;
       notifyListeners();
       return false;
-
     }
   }
 
   //TODO DISTINTOS SIGNIN
-  Future<bool> signIn(String email, String password) async {
+  Future<bool> signInEmailPwd(String email, String password) async {
+    //authenticating
+    _status = Status.Authenticating;
+    notifyListeners();
+
     try {
-      //authenticating
-      _status = Status.Authenticating;
-      notifyListeners();
-      await _auth.signInWithEmailAndPassword(email: email, password: password);
-      //_user.updateProfile(displayName:'teresa');
-      //print(_user.displayName);
+      final User user = (await _auth.signInWithEmailAndPassword(
+        email: email,
+        password: password,
+      ))
+          .user;
       return true;
     } catch (e) {
       _status = Status.Unauthenticated;
@@ -61,12 +66,40 @@ class UserState with ChangeNotifier {
     }
   }
 
+  Future <bool> signinAnonymously() async {
+    //authenticating
+    _status = Status.Authenticating;
+    notifyListeners();
+    try {
+      //no hay usuario
+      _auth.signInAnonymously();
+      return true;
+    } catch (e) {
+      _status = Status.Unauthenticated;
+      notifyListeners();
+      return false;
+    }
+
+  }
+
+  //sign out
   Future signOut() async {
-    _auth.signOut();
+     await _auth.signOut();
     //unauthenticated
     _status = Status.Unauthenticated;
     notifyListeners();
     return Future.delayed(Duration.zero);
+  }
+
+  //forgot password of a user, status se mantiene igual porque no llega a sign in todavia
+  Future<bool> resetPassword(String email) async {
+    try {
+      await _auth.sendPasswordResetEmail(email: email);
+      return true;
+    } catch (e)
+    {
+      return false;
+    }
   }
 
   //metodo avisar listeners

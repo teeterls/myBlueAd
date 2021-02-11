@@ -7,8 +7,8 @@ import 'package:frontend/view/widgets/home_options_widget.dart';
 import 'package:provider/provider.dart';
 
 import 'package:frontend/view/screens/home_screen.dart';
+import 'package:frontend/view/screens/sign_in_screen.dart';
 import 'package:frontend/view/screens/log_in_screen.dart';
-import 'package:frontend/view/screens/sign_up_screen.dart';
 
 class myBlueAdApp extends StatelessWidget {
   final String _title = "myBlueAd";

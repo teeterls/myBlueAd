@@ -1,5 +1,9 @@
 import 'package:flutter/material.dart';
+import 'package:frontend/model/user_state.dart';
 import 'package:gradient_widgets/gradient_widgets.dart';
+import 'package:provider/provider.dart';
+
+import 'custom_snackbar.dart';
 
 //logo y botones registro e iniciar sesion
 class HomeScreenWidget extends StatelessWidget {
@@ -25,6 +29,7 @@ class HomeScreenWidget extends StatelessWidget {
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
                       children: <Widget>[
                         GradientButton(
+                          //registrarse
                           child: Text('Log in'),
                           callback: () {
                             Navigator.of(context).pushNamed('/login');
@@ -36,9 +41,10 @@ class HomeScreenWidget extends StatelessWidget {
                         ),
                         SizedBox(width: 10,),
                         GradientButton(
-                          child: Text('Sign up'),
+                          //entrar
+                          child: Text('Sign in'),
                           callback: () {
-                            Navigator.of(context).pushNamed('/signup');
+                            Navigator.of(context).pushNamed('/signin');
                           },
                           gradient: Gradients.hotLinear,
                           shadowColor: Gradients.hotLinear.colors.last
@@ -46,8 +52,7 @@ class HomeScreenWidget extends StatelessWidget {
                         ),
                       ],
                     ),
-                  )
-
+                  ),
                 ]
             ),
           ),],),

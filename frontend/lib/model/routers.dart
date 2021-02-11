@@ -1,8 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:frontend/view/screens/about_screen.dart';
+import 'package:frontend/view/screens/changes_screen.dart';
 import 'package:frontend/view/screens/home_screen.dart';
+import 'package:frontend/view/screens/sign_in_screen.dart';
 import 'package:frontend/view/screens/log_in_screen.dart';
-import 'package:frontend/view/screens/sign_up_screen.dart';
 import 'package:frontend/view/screens/user_home_screen.dart';
 import 'package:frontend/view/widgets/error.dart';
 import 'package:frontend/view/widgets/home_options_widget.dart';
@@ -17,9 +18,9 @@ class Routers {
       //pagina inicio app
         return MaterialPageRoute(builder: (_) => HomeScreen());
       case '/login':
-        return MaterialPageRoute(builder: (_) => LoginScreen());
-      case '/signup':
-        return MaterialPageRoute(builder: (_) => SignUpScreen());
+        return MaterialPageRoute(builder: (_) => LogInScreen());
+      case '/signin':
+        return MaterialPageRoute(builder: (_) => SignInScreen());
       case '/homeoptions':
       //obtenemos el argumento pasado por la ruta
         var options = settings.arguments as String;
@@ -30,6 +31,9 @@ class Routers {
         //user auth pasado por la ruta
         var user = settings.arguments;
         return MaterialPageRoute(builder: (_) => UserHomeScreen(user));
+      case '/changes':
+        var form= settings.arguments as String;
+        return MaterialPageRoute(builder: (_) => ChangesScreen());
         //error
       default:
         return MaterialPageRoute(builder: (_) {
