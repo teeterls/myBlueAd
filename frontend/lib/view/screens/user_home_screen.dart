@@ -9,24 +9,23 @@ import 'package:provider/provider.dart';
 //TODO LOGICA PAGINA DE INICIO USUARIO CUANDO ENTRA
 //TODO BOTON RUEDA SETTINGS PARA CAMBIAR PERFIL O BORRARLO -> delete auth
 //TODO REAUTHENTICATING USER
-//TODO DISTINGUIR SI ES ANONIMO O NO PARA NO MOSTRARLE LO MISMO -> se puede hacer con displayname o con email indistintamente
+//TODO DISTINGUIR SI ES ANONIMO O NO PARA NO MOSTRARLE LO MISMO -> hacer mejor con email
 class UserHomeScreen extends StatelessWidget {
-  final User _user;
-  UserHomeScreen(this._user);
   @override
   Widget build(BuildContext context) {
+    //userstate para controlar estados
+    final userstate = Provider.of<UserState>(context);
+    //print(userstate.user.email);
     //anonimo
     return SafeArea(
         child:Column(
       children: <Widget> [
-        (_user.email!=null)? Text(' Welcome ${_user.displayName} ${_user.email}') : Text("hola") ,
+        (userstate.user.email!=null) ? Text(' Welcome ${userstate.user.displayName} ${userstate.user.email}') : Text("hola anonimo") ,
         TextButton(
           child: Text('sign out'),
             onPressed: () {
             //anonimo o no
-            ScaffoldMessenger.of(context).showSnackBar(CustomSnackBar(_user.email!=null ?'${_user.email} has succesfully signed out' : 'Signed out succesfully', context));/*SnackBar(
-              duration: Duration(seconds: 1),
-              content: Text(_user.email + ' has successfully signed out.'),),);*/
+            ScaffoldMessenger.of(context).showSnackBar(CustomSnackBar(userstate.user.email!=null ?'${userstate.user.email} has succesfully signed out' : 'Signed out succesfully', context));
               Provider.of<UserState>(context, listen:false).signOut();
               Navigator.of(context).pushNamed('/');
                  }

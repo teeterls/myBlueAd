@@ -9,7 +9,20 @@ import 'package:frontend/view/widgets/custom_backbutton.dart';
 import 'package:frontend/view/widgets/custom_drawer.dart';
 
 //TODO FORM LOGIN
-//TODO EMAIL VERIFICATION 
+//TODO EMAIL VERIFICATION
+
+/* try
+                            {
+                              //verificacion email 2FA la primera vez que accede
+                              await userstate.user.sendEmailVerification();
+                              if (userstate.user.emailVerified)
+                                //userhomepage con el usuario que ha se ha autenticado,
+                                Navigator.of(context).pushNamed('/userhome', arguments: userstate.user);
+                            }catch (e)
+                            {
+                              ScaffoldMessenger.of(context).showSnackBar(CustomSnackBar("Email verification failed", context));
+                              Navigator.of(context).pushNamed('/');
+                            }*/
 
 class LogInScreen extends StatelessWidget {
   @override

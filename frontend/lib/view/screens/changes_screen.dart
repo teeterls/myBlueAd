@@ -1,5 +1,11 @@
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:frontend/model/user_state.dart';
+import 'package:frontend/view/screens/sign_in_screen.dart';
+import 'package:frontend/view/widgets/custom_appbar.dart';
+import 'package:frontend/view/widgets/custom_backbutton.dart';
+import 'package:frontend/view/widgets/custom_drawer.dart';
+import 'package:frontend/view/widgets/forms_widget.dart';
 import 'package:provider/provider.dart';
 //screen donde el usuario (que exista registrado) realizara cambios
 //TODO para ver que cambio hacer, utiliza el provider user state. RECIBE EL ESTADO DEL USER. se ha autenticado ya o no?
@@ -11,13 +17,38 @@ class ChangesScreen extends StatefulWidget {
 }
 
 class _ChangesScreenState extends State<ChangesScreen> {
+  TextEditingController _email;
+  //keys
+  final _formKey = GlobalKey<FormState>();
+  final _scaffoldkey = GlobalKey<ScaffoldState>();
+
+  @override
+  void initState() {
+    super.initState();
+    //vacio
+    _email = TextEditingController(text: "");
+  }
   @override
   Widget build(BuildContext context) {
     //userstate para controlar estados
     final userstate = Provider.of<UserState>(context);
     return SafeArea(
-      //distinguir que cambio se va a hacer
-      child:  (userstate.status== Status.Unauthenticated) ? Text('pwd') : Text('email'),
+      child: Scaffold(
+        key: _scaffoldkey,
+        drawer: CustomDrawer(),
+        appBar: CustomAppBar(_scaffoldkey, context),
+        body: SingleChildScrollView(
+            child: GestureDetector(
+                onTap: ()=> hideKeyboard(context),
+                child: Card(
+                  elevation: 0,
+                  color: Colors.transparent,
+                  child: (userstate.status== Status.Unauthenticated) ? ResetPwdForm(formKey: _formKey, email: _email, userstate: userstate) : Text('cambio de perfil'),
+                ),
+              ),
+          ),
+        floatingActionButton: CustomBackButton(),
+      ),
     );
   }
 }

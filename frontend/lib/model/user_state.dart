@@ -102,7 +102,7 @@ class UserState with ChangeNotifier {
     }
   }
 
-  //metodo avisar listeners
+  //metodo avisar listeners cambios FirebaseAuth
   Future<void> _onAuthStateChanged(User firebaseUser) async {
     if (firebaseUser == null) {
       //wrong

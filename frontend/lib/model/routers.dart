@@ -22,17 +22,15 @@ class Routers {
       case '/signin':
         return MaterialPageRoute(builder: (_) => SignInScreen());
       case '/homeoptions':
-      //obtenemos el argumento pasado por la ruta
+      //obtenemos la opcion para el drawer pasado por la ruta
         var options = settings.arguments as String;
         return MaterialPageRoute(builder: (_) => HomeOptionsWidget(options));
       case '/about':
         return MaterialPageRoute(builder: (_) => AboutUsScreen());
+            //pagina USUARIO
       case '/userhome':
-        //user auth pasado por la ruta
-        var user = settings.arguments;
-        return MaterialPageRoute(builder: (_) => UserHomeScreen(user));
+        return MaterialPageRoute(builder: (_) => UserHomeScreen());
       case '/changes':
-        var form= settings.arguments as String;
         return MaterialPageRoute(builder: (_) => ChangesScreen());
         //error
       default:
