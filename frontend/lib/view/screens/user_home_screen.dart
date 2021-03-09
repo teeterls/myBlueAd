@@ -15,23 +15,23 @@ class UserHomeScreen extends StatelessWidget {
   Widget build(BuildContext context) {
     //userstate para controlar estados
     final userstate = Provider.of<UserState>(context);
-    //print(userstate.user.email);
-    //anonimo
     return SafeArea(
-        child:Column(
+        child: Scaffold(
+         body: Column(
       children: <Widget> [
-        (userstate.user.email!=null) ? Text(' Welcome ${userstate.user.displayName} ${userstate.user.email}') : Text("hola anonimo") ,
-        TextButton(
-          child: Text('sign out'),
-            onPressed: () {
-            //anonimo o no
-            ScaffoldMessenger.of(context).showSnackBar(CustomSnackBar(userstate.user.email!=null ?'${userstate.user.email} has succesfully signed out' : 'Signed out succesfully', context));
-              Provider.of<UserState>(context, listen:false).signOut();
-              Navigator.of(context).pushNamed('/');
-                 }
-        )
+          (userstate.user.email!=null) ? Text(' Welcome ${userstate.user.email}') : Text("hola anonimo") ,
+          TextButton(
+            child: Text('sign out'),
+              onPressed: () {
+              //anonimo o no
+              ScaffoldMessenger.of(context).showSnackBar(CustomSnackBar(userstate.user.email!=null ?'${userstate.user.email} has succesfully signed out' : userstate.user.phoneNumber!=null ?'${userstate.user.phoneNumber} has succesfully signed out': 'Signed out succesfully', context));
+                Provider.of<UserState>(context, listen:false).signOut();
+                Navigator.of(context).pushNamed('/');
+                   }
+          )
       ],
-    ),);
+    ),
+        ),);
 
   }
 }

@@ -1,11 +1,11 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:frontend/model/user_state.dart';
-import 'package:frontend/view/screens/sign_in_screen.dart';
+import 'package:frontend/view/screens/sign_log_in_screen.dart';
 import 'package:frontend/view/widgets/custom_appbar.dart';
 import 'package:frontend/view/widgets/custom_backbutton.dart';
 import 'package:frontend/view/widgets/custom_drawer.dart';
-import 'package:frontend/view/widgets/forms_widget.dart';
+import 'package:frontend/view/widgets/home_forms_widget.dart';
 import 'package:provider/provider.dart';
 //screen donde el usuario (que exista registrado) realizara cambios
 //TODO para ver que cambio hacer, utiliza el provider user state. RECIBE EL ESTADO DEL USER. se ha autenticado ya o no?
@@ -43,7 +43,7 @@ class _ChangesScreenState extends State<ChangesScreen> {
                 child: Card(
                   elevation: 0,
                   color: Colors.transparent,
-                  child: (userstate.status== Status.Unauthenticated) ? ResetPwdForm(formKey: _formKey, email: _email, userstate: userstate) : Text('cambio de perfil'),
+                  child: (userstate.status== Status.Unauthenticated) ? ResetPwdForm(formKey: _formKey, email: _email) : Text('cambio de perfil'),
                 ),
               ),
           ),

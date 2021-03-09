@@ -3,6 +3,7 @@ import 'package:frontend/model/theme_model.dart';
 import 'package:frontend/view/widgets/custom_appbar.dart';
 import 'package:frontend/view/widgets/custom_backbutton.dart';
 import 'package:provider/provider.dart';
+import 'package:frontend/view/widgets/error.dart';
 
 import 'custom_drawer.dart';
 //TODO CONTENIDO SEGUN TIPO DE PAGINA -> SWITCH-CASE
@@ -42,6 +43,9 @@ class HomeOptionsWidget extends StatelessWidget {
               //TODO
               body: Container(),));
         }
+        break;
+      default:
+        return Error("Something happened, return to homepage.");
         break;
     }
   }

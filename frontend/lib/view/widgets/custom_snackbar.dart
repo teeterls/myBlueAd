@@ -17,15 +17,4 @@ class CustomSnackBar extends SnackBar {
           onPressed: () => ScaffoldMessenger.of(_context).hideCurrentSnackBar()
         )
       );
-  /* @override
-  Widget build(BuildContext context) {
-    return SnackBar(
-      content: Text(_msg),
-      backgroundColor: Theme.of(context).primaryColor,
-      duration: Duration(seconds: 1),
-      action: SnackBarAction(
-        onPressed: () =>  _scaffoldKey.currentState.hideCurrentSnackBar()
-      )
-    );
-  }*/
 }

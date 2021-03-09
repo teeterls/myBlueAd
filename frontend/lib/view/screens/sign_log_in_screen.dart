@@ -3,19 +3,24 @@ import 'package:frontend/model/user_state.dart';
 import 'package:frontend/view/widgets/custom_appbar.dart';
 import 'package:frontend/view/widgets/custom_backbutton.dart';
 import 'package:frontend/view/widgets/custom_drawer.dart';
-import 'package:frontend/view/widgets/forms_widget.dart';
+import 'package:frontend/view/widgets/home_forms_widget.dart';
 import 'package:provider/provider.dart';
 
 //se muestra primero login email-pwd
 //TODO APPLE LOGIN
-class SignInScreen extends StatefulWidget {
+class SignLogInScreen extends StatefulWidget {
+  //parametro que le llega de la clase nombrada (lo añadimos al constructor)
+  final String _option;
+  SignLogInScreen(this._option);
   @override
-  _SignInScreenState createState() => _SignInScreenState();
+  _SignLogInScreenState createState() => _SignLogInScreenState();
 }
 
-class _SignInScreenState extends State<SignInScreen> {
+class _SignLogInScreenState extends State<SignLogInScreen> {
   TextEditingController _email;
   TextEditingController _password;
+  TextEditingController _password2;
+  TextEditingController _username;
   //keys
   final _formKey = GlobalKey<FormState>();
   final _scaffoldkey = GlobalKey<ScaffoldState>();
@@ -26,8 +31,9 @@ class _SignInScreenState extends State<SignInScreen> {
     //vacios
     _email = TextEditingController(text: "");
     _password = TextEditingController(text: "");
+    _password2 = TextEditingController(text: "");
+    _username= TextEditingController(text:"");
   }
-  //TODO VALIDATIONS FORM
   @override
   Widget build(BuildContext context) {
     //userstate para controlar estados
@@ -43,7 +49,7 @@ class _SignInScreenState extends State<SignInScreen> {
             child: Card(
               elevation: 0,
               color: Colors.transparent,
-              child: SignInForm(formKey: _formKey, email: _email, password: _password, userstate: userstate),
+              child: widget._option=="Sign in" ? SignInForm(formKey: _formKey, email: _email, password: _password, userstate: userstate) : RegisterForm(formKey: _formKey, email: _email, password: _password, password2: _password2,userstate: userstate, username: _username),
             ),
                 ),
         ),
@@ -56,6 +62,7 @@ class _SignInScreenState extends State<SignInScreen> {
   void dispose() {
     _email.dispose();
     _password.dispose();
+    _password2.dispose();
     super.dispose();
   }
 }
@@ -69,5 +76,4 @@ void hideKeyboard(BuildContext context) {
   }
 }
 
-//TODO VALIDATOR
 

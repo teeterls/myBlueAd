@@ -32,7 +32,7 @@ class HomeScreenWidget extends StatelessWidget {
                           //registrarse
                           child: Text('Log in'),
                           callback: () {
-                            Navigator.of(context).pushNamed('/login');
+                            Navigator.of(context).pushNamed('/signlogin', arguments: "Log in");
                           },
                           gradient: Gradients.jShine,
                           shadowColor: Gradients.jShine.colors.last.withOpacity(
@@ -44,7 +44,7 @@ class HomeScreenWidget extends StatelessWidget {
                           //entrar
                           child: Text('Sign in'),
                           callback: () {
-                            Navigator.of(context).pushNamed('/signin');
+                            Navigator.of(context).pushNamed('/signlogin', arguments: "Sign in");
                           },
                           gradient: Gradients.hotLinear,
                           shadowColor: Gradients.hotLinear.colors.last

@@ -4,7 +4,7 @@ import 'package:flutter_signin_button/flutter_signin_button.dart';
 import 'package:frontend/model/theme_model.dart';
 import 'package:provider/provider.dart';
 //clase donde se encuentran los botones sign in
-//TODO ONPRESSED DE TODOS
+
 class SigninButtons extends StatelessWidget {
 
   @override
@@ -17,7 +17,9 @@ class SigninButtons extends StatelessWidget {
           mini:true,
           icon: Icons.phone,
           text:"",
-          onPressed: () {},
+          onPressed: () {
+            Navigator.of(context).pushNamed('/signinoptions', arguments: 'Phone');
+          },
           splashColor: Colors.blue,
           iconColor: Provider.of<ThemeModel>(context, listen: false).mode==ThemeMode.dark ? Colors.black : Colors.white,
           backgroundColor: Provider.of<ThemeModel>(context, listen: false).mode==ThemeMode.dark ? Colors.yellow : Theme.of(context).primaryColor,
@@ -30,19 +32,25 @@ class SigninButtons extends StatelessWidget {
           backgroundColor: Provider.of<ThemeModel>(context, listen: false).mode==ThemeMode.dark ? Colors.yellow : Theme.of(context).primaryColor,
           mini:true,
           text:"",
-          onPressed: () {},
+          onPressed: () {
+            Navigator.of(context).pushNamed('/signinoptions', arguments: 'Link');
+          },
         ),
+        //TODO 3rd part auth
         SignInButton(
           Buttons.Facebook,
           mini:true,
-          onPressed: () {},
+          onPressed: () {
+            Navigator.of(context).pushNamed('/signinsocial', arguments: 'facebook');},
           text:"",
 
         ),
         SignInButton(
           Buttons.Twitter,
           mini:true,
-          onPressed: () {},
+          onPressed: () {
+            Navigator.of(context).pushNamed('/signinsocial', arguments: 'twitter');
+          },
           text:"",
         ),
 
