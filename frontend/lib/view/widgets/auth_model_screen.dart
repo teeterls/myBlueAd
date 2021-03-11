@@ -1,8 +1,6 @@
-import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
-import 'package:frontend/model/user_state.dart';
+import 'package:frontend/model/user_state_auth.dart';
 import 'package:frontend/view/screens/home_screen.dart';
-import 'package:frontend/view/screens/sign_log_in_screen.dart';
 import 'package:frontend/view/screens/user_home_screen.dart';
 import 'package:provider/provider.dart';
 

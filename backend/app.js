@@ -7,7 +7,6 @@ admin.initializeApp({ credential: admin.credential.cert(serviceAccount)
 //instancia cloud firestore -> bbdd en tiempo real
 const db= admin.firestore();
 
-getQuote();
 var createError = require('http-errors');
 var express = require('express');
 var path = require('path');
@@ -50,11 +49,3 @@ app.use(function(err, req, res, next) {
 
 module.exports = app;
 
-function getQuote() {
-  const quoteData = {
-    quote: "random",
-    author: "String"
-  };
-  return db.collection("sampleData").doc("ins").set(quoteData).then(() => {
-    console.log("new quote was written to the database");})
-}

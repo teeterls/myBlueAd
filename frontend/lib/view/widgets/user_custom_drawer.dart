@@ -1,6 +1,11 @@
 //TODO DISTINGUIR SI ES ANONIMO O NO, PARA ENSEÑARLE UNA COSA U OTRA. si es anonimo no se le enseña su perfil, solo sign out y about us help
 import 'package:flutter/material.dart';
 
+/*
+
+
+signout
+ */
 class UserCustomDrawer extends StatefulWidget {
   @override
   _UserCustomDrawerState createState() => _UserCustomDrawerState();

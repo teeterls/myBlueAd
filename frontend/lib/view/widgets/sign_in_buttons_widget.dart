@@ -2,11 +2,13 @@ import 'package:flutter/material.dart';
 import 'package:flutter_signin_button/button_builder.dart';
 import 'package:flutter_signin_button/flutter_signin_button.dart';
 import 'package:frontend/model/theme_model.dart';
+import 'package:frontend/model/user_state_auth.dart';
+import 'package:frontend/view/widgets/custom_snackbar.dart';
 import 'package:provider/provider.dart';
 //clase donde se encuentran los botones sign in
 
 class SigninButtons extends StatelessWidget {
-
+  Pattern pattern = r'^(([^<>()[\]\\.,;:\s@\"]+(\.[^<>()[\]\\.,;:\s@\"]+)*)|(\".+\"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$';
   @override
   Widget build(BuildContext context) {
     return Row(
@@ -19,6 +21,7 @@ class SigninButtons extends StatelessWidget {
           text:"",
           onPressed: () {
             Navigator.of(context).pushNamed('/signinoptions', arguments: 'Phone');
+            //Navigator.of(context).pushNamed('/phone');
           },
           splashColor: Colors.blue,
           iconColor: Provider.of<ThemeModel>(context, listen: false).mode==ThemeMode.dark ? Colors.black : Colors.white,
@@ -40,16 +43,74 @@ class SigninButtons extends StatelessWidget {
         SignInButton(
           Buttons.Facebook,
           mini:true,
-          onPressed: () {
-            Navigator.of(context).pushNamed('/signinsocial', arguments: 'facebook');},
+          onPressed: () async {
+            //metodo signin fb
+            List e= await Provider.of<UserState>(context, listen:false).signInWithFacebook();
+            print (e);
+            if (e[0]!=null) {
+              RegExp regex = new RegExp(pattern);
+              //es email
+              if (regex.hasMatch(e[0])) {
+                List <dynamic> _credarg = ["Facebook", e[0]];
+                //recibimos la pwd asociada al email.
+                Navigator.of(context).pushNamed(
+                    '/credentials', arguments: _credarg).then((pwd) async {
+                  String er = await Provider.of<UserState>(
+                      context, listen: false).emailPwdCredentials(
+                      e[0], pwd, e[1]);
+                  if (er != null)
+                    ScaffoldMessenger.of(context).showSnackBar(CustomSnackBar(
+                        "Sign in in failed with: ${er}.", context));
+                  else {
+                    //ok
+                    Navigator.of(context).pushNamed("/userhome");
+                  }
+                });
+              } else
+                ScaffoldMessenger.of(context).showSnackBar(
+                    CustomSnackBar("Sign in in failed with: ${e}.", context));
+            }
+            else {
+              //ok
+              Navigator.of(context).pushNamed("/userhome");
+            }
+            },
           text:"",
 
         ),
         SignInButton(
           Buttons.Twitter,
           mini:true,
-          onPressed: () {
-            Navigator.of(context).pushNamed('/signinsocial', arguments: 'twitter');
+          onPressed: () async {
+            //metodo signin fb
+            List e= await Provider.of<UserState>(context, listen:false).signInWithTwitter();
+            if (e[0]!=null) {
+              RegExp regex = new RegExp(pattern);
+              //es email
+              if (regex.hasMatch(e[0])) {
+                List <dynamic> _credarg = ["Twitter", e[0]];
+                //recibimos la pwd asociada al email.
+                Navigator.of(context).pushNamed(
+                    '/credentials', arguments: _credarg).then((pwd) async {
+                  String er = await Provider.of<UserState>(
+                      context, listen: false).emailPwdCredentials(
+                      e[0], pwd, e[1]);
+                  if (er != null)
+                    ScaffoldMessenger.of(context).showSnackBar(CustomSnackBar(
+                        "Sign in in failed with: ${er}.", context));
+                  else {
+                    //ok
+                    Navigator.of(context).pushNamed("/userhome");
+                  }
+                });
+              } else
+                ScaffoldMessenger.of(context).showSnackBar(
+                    CustomSnackBar("Sign in in failed with: ${e}.", context));
+            }
+            else {
+              //ok
+              Navigator.of(context).pushNamed("/userhome");
+            }
           },
           text:"",
         ),

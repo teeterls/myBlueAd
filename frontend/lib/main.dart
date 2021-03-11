@@ -8,7 +8,7 @@ import 'package:provider/provider.dart';
 
 import 'package:frontend/model/theme_model.dart';
 
-import 'model/user_state.dart';
+import 'model/user_state_auth.dart';
 
 void main() {
   //widgets de flutter inicializado

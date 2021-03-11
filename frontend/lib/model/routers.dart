@@ -1,13 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:frontend/view/screens/about_screen.dart';
-import 'package:frontend/view/screens/changes_screen.dart';
+import 'package:frontend/view/screens/user_signin_action_screen.dart';
 import 'package:frontend/view/screens/home_screen.dart';
 import 'package:frontend/view/screens/sign_log_in_screen.dart';
 import 'package:frontend/view/screens/user_home_screen.dart';
 import 'package:frontend/view/widgets/error.dart';
 import 'package:frontend/view/widgets/home_options_widget.dart';
-import 'package:frontend/view/widgets/main_screen_widget.dart';
-import 'package:frontend/view/widgets/signin_social_widget.dart';
+import 'package:frontend/view/widgets/auth_model_screen.dart';
 import 'package:frontend/view/widgets/signin_phone_link_widget.dart';
 
 class Routers {
@@ -32,13 +31,19 @@ class Routers {
       case '/userhome':
         return MaterialPageRoute(builder: (_) => UserHomeScreen());
       case '/changes':
-        return MaterialPageRoute(builder: (_) => ChangesScreen());
+        return MaterialPageRoute(builder: (_) => UserActionScreen());
+      case '/credentials':
+        //se le envia el provider y el email en conflicto de credentials
+        var credentials = settings.arguments as List;
+        return MaterialPageRoute(builder: (_) => PwdCredentials(credentials));
       case '/signinoptions':
         var options = settings.arguments as String;
         return MaterialPageRoute(builder: (_) => SignInPhoneLink(options));
-      case '/signinsocial':
-        var options = settings.arguments as String;
-        return MaterialPageRoute(builder: (_) => SigninSocial(options));
+      case '/phone':
+        return MaterialPageRoute(builder: (_) => UserActionScreen());
+     /* case '/changepwd':
+        var email = settings.arguments as String;
+        return MaterialPageRoute(builder: (_) => ChangePwd(email));*/
         //error default
       default:
         return MaterialPageRoute(builder: (_) {

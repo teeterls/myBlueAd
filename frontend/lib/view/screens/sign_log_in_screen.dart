@@ -1,10 +1,8 @@
 import 'package:flutter/material.dart';
-import 'package:frontend/model/user_state.dart';
 import 'package:frontend/view/widgets/custom_appbar.dart';
 import 'package:frontend/view/widgets/custom_backbutton.dart';
 import 'package:frontend/view/widgets/custom_drawer.dart';
 import 'package:frontend/view/widgets/home_forms_widget.dart';
-import 'package:provider/provider.dart';
 
 //se muestra primero login email-pwd
 //TODO APPLE LOGIN
@@ -36,8 +34,6 @@ class _SignLogInScreenState extends State<SignLogInScreen> {
   }
   @override
   Widget build(BuildContext context) {
-    //userstate para controlar estados
-    final userstate = Provider.of<UserState>(context);
     return SafeArea(
       child: Scaffold(
         key: _scaffoldkey,
@@ -49,7 +45,7 @@ class _SignLogInScreenState extends State<SignLogInScreen> {
             child: Card(
               elevation: 0,
               color: Colors.transparent,
-              child: widget._option=="Sign in" ? SignInForm(formKey: _formKey, email: _email, password: _password, userstate: userstate) : RegisterForm(formKey: _formKey, email: _email, password: _password, password2: _password2,userstate: userstate, username: _username),
+              child: widget._option=="Sign in" ? SignInForm(formKey: _formKey, email: _email, password: _password) : RegisterForm(formKey: _formKey, email: _email, password: _password, password2: _password2, username: _username),
             ),
                 ),
         ),
