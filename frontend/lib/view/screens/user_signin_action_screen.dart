@@ -56,16 +56,20 @@ class _PwdCredentialsState extends State<PwdCredentials> {
   }
 }
 
-//screen donde el usuario (que exista registrado) realizara cambios
-//dos opciones, se ha autenticado -> cambio en el perfil, o no se ha autenticado -> cambio de contraseña
+//cambio de contraseña o sign in anonimo/phone -> updateanonym o resetpwd
 
 class UserActionScreen extends StatefulWidget {
+
+  final String _option;
+  UserActionScreen(this._option);
+
   @override
   _UserActionScreenState createState() => _UserActionScreenState();
 }
 
 class _UserActionScreenState extends State<UserActionScreen> {
   TextEditingController _email;
+  TextEditingController _pwd;
   //keys
   final _formKey = GlobalKey<FormState>();
   final _scaffoldkey = GlobalKey<ScaffoldState>();
@@ -75,6 +79,7 @@ class _UserActionScreenState extends State<UserActionScreen> {
     super.initState();
     //vacio
     _email = TextEditingController(text: "");
+    _pwd = TextEditingController(text: "");
   }
   @override
   Widget build(BuildContext context) {
@@ -89,8 +94,7 @@ class _UserActionScreenState extends State<UserActionScreen> {
                 child: Card(
                   elevation: 0,
                   color: Colors.transparent,
-                  //TODO CHANGES USER
-                  child: Provider.of<UserState>(context, listen:false).status== Status.Unauthenticated ? ResetPwdForm(formKey: _formKey, email: _email) : Text("changes user"),
+                  child: widget._option=="resetpwd" ? ResetPwdForm(formKey: _formKey, email: _email) : UpdateAnonym(formKey: _formKey, email: _email, pwd: _pwd),
                 ),
               ),
           ),
@@ -190,6 +194,81 @@ class _ResetPwdFormState extends State<ResetPwdForm> with WidgetsBindingObserver
       }
   }*/
 }
+
+class UpdateAnonym extends StatefulWidget {
+
+  UpdateAnonym({
+    @required GlobalKey<FormState> formKey,
+    @required TextEditingController email,
+    @required TextEditingController pwd
+  }) : _formKey = formKey, _email = email, _pwd=pwd;
+
+  final GlobalKey<FormState> _formKey;
+  final TextEditingController _email;
+  final TextEditingController _pwd;
+  @override
+  _UpdateAnonymState createState() => _UpdateAnonymState();
+}
+
+class _UpdateAnonymState extends State<UpdateAnonym> {
+  @override
+  Widget build(BuildContext context) {
+    return Form(
+      autovalidateMode: AutovalidateMode.onUserInteraction,
+      key: widget._formKey,
+      child: Center(
+        child: Padding(
+          padding: const EdgeInsets.all(16.0),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: <Widget>[
+              SizedBox(
+                height: 50,
+              ),
+              Text("Update your account with an email and a password!", style: TextStyle(
+                fontSize: 16,
+                fontWeight: FontWeight.bold,
+                color: Provider.of<ThemeModel>(context, listen: false).mode==ThemeMode.dark ? Colors.blueAccent: Theme.of(context).primaryColor,
+              ),),
+              myFormField(controller: widget._email, icon: Icon(Icons.mail), label: "Email", validate: validateEmail, type: TextInputType.emailAddress),
+              myFormField(controller: widget._pwd, icon: Icon(Icons.lock), label: "Password", validate: validatePwd, type: TextInputType.visiblePassword),
+              Padding(
+                padding: const EdgeInsets.symmetric(horizontal: 16.0, vertical: 5.0),
+                child: GradientButton(
+                  child: Icon(Icons.add),
+                  callback: () async {
+                    //validar formulario todos los campos
+                    if (widget._formKey.currentState.validate()) {
+                      String e= await Provider.of<UserState>(context, listen:false).updateAnonymous(widget._email.text, widget._pwd.text);
+                      if (e!=null) {
+                        ScaffoldMessenger.of(context).showSnackBar(
+                            CustomSnackBar(
+                                "Updating your account failed with: ${e}", context));
+                      }
+                      else {
+                        //update ok -> vuelve a la pagina anterior
+                        widget._formKey.currentState.save();
+                        ScaffoldMessenger.of(context).showSnackBar(
+                            CustomSnackBar(
+                                "Welcome, ${widget._email.text}. Now your preferences and favorite blue ads will be saved!",
+                                context));
+                        //Navigator.of(context).pushNamed('/userhome', arguments: widget._email.text);
+                        Navigator.of(context).pop(widget._email.text);
+                      }
+                    }
+                  },
+                  gradient: Gradients.jShine,
+                  shadowColor: Gradients.jShine.colors.last.withOpacity(
+                      0.25),
+                ),
+              ),
+            ],
+          ),),
+      ),
+    );
+  }
+}
+
 
 /*class  ChangePwd extends StatefulWidget {
   final String _email;

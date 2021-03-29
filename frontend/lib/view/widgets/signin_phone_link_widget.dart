@@ -106,7 +106,7 @@ class _SignInPhoneFormState extends State<SignInPhoneForm> {
                 fontWeight: FontWeight.bold,
                 color: Provider.of<ThemeModel>(context, listen: false).mode==ThemeMode.dark ? Colors.blueAccent: Theme.of(context).primaryColor,
               ),),
-              myFormField(controller: widget._phone, icon: Icon(Icons.phone), label: "Phone", validate: validatePhone, type: TextInputType.phone),
+              myFormField(controller: widget._phone, icon: Icon(Icons.phone), label: "Phone (+34)", validate: validatePhone, type: TextInputType.phone),
               Center(
                 child: Padding(
                   padding: const EdgeInsets.only(left: 10.0, right: 10.0),

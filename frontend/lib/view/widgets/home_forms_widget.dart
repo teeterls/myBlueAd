@@ -4,7 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_signin_button/flutter_signin_button.dart';
 import 'package:frontend/model/theme_model.dart';
 import 'package:frontend/model/user_state_auth.dart';
-import 'package:frontend/view/widgets/sign_in_buttons_widget.dart';
+import 'package:frontend/view/widgets/sign_inout_buttons_widget.dart';
 import 'package:gradient_widgets/gradient_widgets.dart';
 import 'package:provider/provider.dart';
 
@@ -115,7 +115,7 @@ class _RegisterFormState extends State<RegisterForm> with WidgetsBindingObserver
   @override
   void didChangeAppLifecycleState(AppLifecycleState state) async {
     if (state == AppLifecycleState.resumed) {
-      Navigator.of(context).pushNamed('/changepwd', arguments: widget._email.text);
+      Navigator.of(context).pushNamed('/userhome');
     }
   }
 }
@@ -223,7 +223,7 @@ class _SignInFormState extends State<SignInForm> {
                   TextButton(
                     onPressed: () async {
                       try {
-                        Navigator.of(context).pushNamed('/changes', arguments: "resetpwd").then((result)
+                        Navigator.of(context).pushNamed('/useraction', arguments: "resetpwd").then((result)
                             {
                             setState(() {
                           if (result!=null) {
@@ -362,14 +362,14 @@ class _myFormFieldState extends State<myFormField> {
       child: TextFormField(
         keyboardType: widget._type,
         obscureText: widget._label=="Password" || widget._label=="New password" || widget._label=="Repeat password" ? _obscureText : false,
-        cursorColor: Provider.of<ThemeModel>(context, listen: false).mode==ThemeMode.dark ? Colors.yellow : Theme.of(context).primaryColor,
+        cursorColor: Provider.of<ThemeModel>(context, listen: false).mode==ThemeMode.dark ? Colors.tealAccent : Theme.of(context).primaryColor,
         controller: widget._controller,
         validator: widget._validate,
         decoration: InputDecoration(
           errorMaxLines: 10,
           errorStyle: TextStyle(
             fontWeight: FontWeight.w500,
-            color: Provider.of<ThemeModel>(context, listen: false).mode==ThemeMode.dark ? Colors.yellow : Theme.of(context).primaryColor,
+            color: Provider.of<ThemeModel>(context, listen: false).mode==ThemeMode.dark ? Colors.tealAccent : Theme.of(context).primaryColor,
             fontSize: 13,
           ),
           prefixIcon: widget._icon,

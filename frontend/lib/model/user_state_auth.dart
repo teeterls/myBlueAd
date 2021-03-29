@@ -44,12 +44,19 @@ class UserState with ChangeNotifier {
      await user.updateProfile(displayName: username);
       try
           {
-            await _user.sendEmailVerification(
-              _getactionCodeSettings('emailverification'));
-            if (_user.emailVerified)
+            if (_user.emailVerified) {
+              _status = Status.Authenticated;
+              notifyListeners();
               return null;
-            else
-              return "Verify";
+            }
+
+            else {
+              _status = Status.Unauthenticated;
+              notifyListeners();
+              await _user.sendEmailVerification(
+                  _getactionCodeSettings('emailverification'));
+             return "Verify";
+              }
           } on FirebaseAuthException catch (e) {
         _status = Status.Unauthenticated;
         notifyListeners();
@@ -96,18 +103,61 @@ class UserState with ChangeNotifier {
         return e.code;
     }
   }
-
   Future <String> signinAnonymously() async {
     //authenticating
     _status = Status.Authenticating;
     notifyListeners();
     try {
-      //no hay usuario
       await _auth.signInAnonymously();
+       /*print(uc.user);
+       //DETECTA ALREADY IN USE
+       uc.user.updateEmail("teeterls12@gmail.com");
+       uc.user.updatePassword("teresa12@");
+       uc.user.updateProfile(displayName: "teeterls");*/
+
       return null;
     } on FirebaseAuthException catch (e) {
       _status = Status.Unauthenticated;
       notifyListeners();
+      return e.code;
+    }
+  }
+
+  //ya esta autenticado, solo queremos hacer update. no tocamos el estado.
+  //nos pasa el email y pwd del form
+  Future <String> updateAnonymous (String email, String password) async {
+    try
+        {
+          //obtenemos el current user que esta autenticado (es anonimo)
+          print("hola");
+          await _auth.currentUser.updateEmail(email);
+          await _auth.currentUser.updatePassword(password);
+          user.updateEmail(email);
+          notifyListeners();
+          return null;
+        } on FirebaseAuthException catch (e) {
+      //gestionar e -> email already in use o credentials used (por otro provider)
+        if (e.code== 'email-already-in-use') {
+          print("hola");
+          return "Email already in use. Use another email to update your profile";
+        }
+        if (e.code== 'credential-already-in-use')
+          {
+            return (await linkAnonymus(e.credential));
+
+          }
+      else
+      return e.code;
+    }
+
+  }
+
+  Future <String> linkAnonymus (AuthCredential credential) async {
+    try {
+       await _auth.signInWithCredential(credential);
+      return null;
+    } on FirebaseAuthException catch (e)
+    {
       return e.code;
     }
   }
@@ -270,14 +320,21 @@ class UserState with ChangeNotifier {
 
         case FacebookLoginStatus.error:
           e="An error ocurred when trying to sign in with Facebook.";
+          _status = Status.Unauthenticated;
+          notifyListeners();
+
           break;
 
         case FacebookLoginStatus.cancel:
           e="User cancelled sign in with Facebook.";
+          _status = Status.Unauthenticated;
+          notifyListeners();
           break;
 
         default:
           e="An error ocurred when trying to sign in with Facebook.";
+          _status = Status.Unauthenticated;
+          notifyListeners();
           break;
       }
 
@@ -315,12 +372,19 @@ class UserState with ChangeNotifier {
           break;
         case TwitterLoginStatus.cancelledByUser:
           e="cancel";
+          _status = Status.Unauthenticated;
+          notifyListeners();
           break;
         case TwitterLoginStatus.error:
           e=res.errorMessage;
+          _status = Status.Unauthenticated;
+          notifyListeners();
           break;
         default:
           e="error";
+          _status = Status.Unauthenticated;
+          notifyListeners();
+
       }
       return [e, null];
       //firebase error
@@ -448,9 +512,9 @@ class UserState with ChangeNotifier {
   //forgot password of a user, status se mantiene igual porque no llega a sign in todavia
   Future<bool> resetPasswordWithEmail(String email) async {
     try {
+      _status=Status.Unauthenticated;
+      notifyListeners();
       await _auth.sendPasswordResetEmail(email: email);//actionCodeSettings: _getactionCodeSettings('resetpwd'));
-      /*_status=Status.Unauthenticated;
-      notifyListeners();*/
       return true;
     }  catch (e) {
       return false;

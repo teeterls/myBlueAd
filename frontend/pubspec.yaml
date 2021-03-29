@@ -44,6 +44,7 @@ dependencies:
   flutter_switch: ^0.2.0
   flutter_login_facebook: ^1.0.0
   flutter_twitter_login: ^1.1.0
+  cloud_functions: ^1.0.0
 
 
 dev_dependencies:

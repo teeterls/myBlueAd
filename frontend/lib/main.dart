@@ -1,7 +1,7 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:firebase_core/firebase_core.dart';
-import 'package:frontend/view/app.dart';
+import 'package:frontend/view/myBlueAdapp.dart';
 import 'package:frontend/view/widgets/error.dart';
 import 'package:frontend/view/widgets/loading.dart';
 import 'package:provider/provider.dart';
