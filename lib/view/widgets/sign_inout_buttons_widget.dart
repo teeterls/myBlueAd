@@ -124,7 +124,7 @@ class SigninButtons extends StatelessWidget {
 }
 
 //boton signout
-
+//TODO DIALOG
 class mySignOutButton extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
@@ -154,7 +154,7 @@ class mySignOutButton extends StatelessWidget {
     }
 }
 
-class ButtonQuickSignIn extends StatelessWidget {
+/*class ButtonQuickSignIn extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return GradientButton(
@@ -177,7 +177,7 @@ class ButtonQuickSignIn extends StatelessWidget {
           0.25),
     );
   }
-}
+}*/
 
 
 

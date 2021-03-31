@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'prin_blue_nouser.dart';
 import 'prin_blue.dart';
 import '../../model/theme_model.dart';
 import '../../services/user_state_auth.dart';
@@ -42,7 +43,8 @@ class _UserHomeScreenState extends State<UserHomeScreen> {
         {
           _screens=<Widget>
           [
-            PrincipalBlue(),
+            UserProfile(),
+            PrincipalBlueNoUser(),
           ];
         }
 
@@ -99,6 +101,10 @@ class _UserHomeScreenState extends State<UserHomeScreen> {
       ];
     else
       return [
+        BottomNavigationBarItem(
+            icon: Icon(Icons.person_add),
+            label:"Create profile"
+        ),
         BottomNavigationBarItem(
             icon: new Icon(Icons.bluetooth),
             label: "Blue nearby"

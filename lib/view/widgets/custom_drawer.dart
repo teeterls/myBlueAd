@@ -43,6 +43,7 @@ class _CustomDrawerState extends State<CustomDrawer> {
                 .user
                 .phoneNumber} has succesfully signed out'
                 : 'Signed out succesfully', context));
+            //todo dialog signout
             await Provider.of<UserState>(context, listen: false).signOut();
             //vuelta a pagina inicio
             Navigator.of(context).pushNamed('/');
