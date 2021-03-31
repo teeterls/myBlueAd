@@ -2,14 +2,11 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_signin_button/flutter_signin_button.dart';
-import 'package:frontend/model/theme_model.dart';
-import 'file:///C:/Users/teete/Documents/ICAI/TFG/myBlueAd/lib/services/user_state_auth.dart';
-import 'package:frontend/view/widgets/sign_inout_buttons_widget.dart';
+import '../../model/theme_model.dart';
+import '../../services/user_state_auth.dart';
+import '../widgets/sign_inout_buttons_widget.dart';
 import 'package:gradient_widgets/gradient_widgets.dart';
 import 'package:provider/provider.dart';
-
-import 'package:sms_autofill/sms_autofill.dart';
-
 import 'custom_snackbar.dart';
 
 class RegisterForm extends StatefulWidget {
@@ -300,8 +297,7 @@ class _CredentialPwdFormState extends State<CredentialPwdForm> {
             //validar formulario todos los campos
             if (widget._formKey.currentState.validate()) {
               widget._formKey.currentState.save();
-              //devuelve a la pagina la contraseña
-              //Navigator.of(context).pop(widget._pwd.text);
+              Navigator.of(context).pop(widget._pwd.text);
             }
           },
           gradient: Gradients.jShine,

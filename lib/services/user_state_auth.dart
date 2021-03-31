@@ -5,9 +5,11 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_dynamic_links/firebase_dynamic_links.dart';
 import 'package:flutter_login_facebook/flutter_login_facebook.dart';
 import 'package:flutter_twitter_login/flutter_twitter_login.dart';
-
 import 'package:google_sign_in/google_sign_in.dart';
-//TODO USER NODE.JS LOGICA DE USUARIOS TODO. enviar al server
+
+import 'firestore_db.dart' as db;
+import '../model/user.dart';
+
 //clase que se encarga de gestionar las sesiones y recoge los metodos de auth firebase
 //4 tipos de estado
 enum Status { Uninitialized, Authenticated, Authenticating, Unauthenticated }
@@ -34,19 +36,23 @@ class UserState with ChangeNotifier {
   Status get status => _status;
 
   User get user => _user;
-
   Future <String> register(String email, String password, String username) async {
+    //authenticating
+    _status = Status.Authenticating;
+    notifyListeners();
     try {
-      //authenticating
-      _status = Status.Authenticating;
-      notifyListeners();
-     final User user = (await _auth.createUserWithEmailAndPassword(
-          email: email, password: password)).user;
-     await user.updateProfile(displayName: username);
+     await _auth.createUserWithEmailAndPassword(
+          email: email, password: password).then((currentUser) async
+         {
+           User us= currentUser.user;
+           await us.updateProfile(displayName: username);
+           Usuario _usuario = Usuario(us.uid,us.email,username: username);
+           await db.registerUser(us.uid, _usuario);
+         });
       try
           {
             if (_user.emailVerified) {
-              _status = Status.Authenticated;
+             _status = Status.Authenticated;
               notifyListeners();
               return null;
             }
@@ -82,11 +88,16 @@ class UserState with ChangeNotifier {
     _status = Status.Authenticating;
     notifyListeners();
     try {
-      final User user = (await _auth.signInWithEmailAndPassword(
+      await _auth.signInWithEmailAndPassword(
         email: email,
         password: password,
-      ))
-          .user;
+      ).then((currentUser) async
+          {
+            User us= currentUser.user;
+            Usuario _usuario = Usuario(us.uid,us.email);
+            await db.signUser(us.uid, _usuario);
+
+          });
       return null;
     } on FirebaseAuthException catch (e) {
       _status = Status.Unauthenticated;
@@ -123,7 +134,7 @@ class UserState with ChangeNotifier {
       return e.code;
     }
   }
-
+  //TODO changes anonimo
   //ya esta autenticado, solo queremos hacer update. no tocamos el estado.
   //nos pasa el email y pwd del form
   Future <String> updateAnonymous (String email, String password) async {
@@ -180,15 +191,20 @@ class UserState with ChangeNotifier {
   }
   //TODO DIFERENTES OPCIONES DE LINK
   Future <String> getInitialLink(String email) async {
+    print("aqui");
     String er=null;
     final PendingDynamicLinkData data =
     await FirebaseDynamicLinks.instance.getInitialLink();
     if( data?.link != null ) {
-      handleLink(data?.link, email);
+      print("aqui2");
+           handleLink(data?.link, email);
     }
+    print("aqui3");
     FirebaseDynamicLinks.instance.onLink(
         onSuccess: (PendingDynamicLinkData dynamicLink) async {
+          print("uri");
           final Uri deepLink = dynamicLink?.link;
+          print("prehandle");
           handleLink(deepLink, email);
         },
         onError: (OnLinkErrorException e) async {
@@ -198,13 +214,23 @@ class UserState with ChangeNotifier {
   }
 
   Future <String> handleLink(Uri link, String email) async {
+    print("handle");
     try {
       if (link != null) {
-        final User user = (await _auth.signInWithEmailLink(
+        print(link);
+        print(email);
+        print(link.toString());
+        //TODO NO CREA USUARIO, falla
+        await _auth.signInWithEmailLink(
           email: email,
           emailLink: link.toString(),
-        ))
-            .user;
+        ).then((currentUser) async {
+            User us= currentUser.user;
+            Usuario _usuario = Usuario(us.uid,us.email);
+            print(_usuario.email);
+            print(_usuario.uid);
+            await db.signUser(user.uid, _usuario);
+        });
         return null;
       }
     } on FirebaseAuthException catch (e)
@@ -279,7 +305,14 @@ class UserState with ChangeNotifier {
     notifyListeners();
     try {
       //ok, se crea user
-      final User user = (await _auth.signInWithCredential(await _credentialGoogle())).user;
+      await _auth.signInWithCredential(await _credentialGoogle()).
+      then((currentUser) async
+      {
+        User us= currentUser.user;
+        Usuario _usuario = Usuario(us.uid,us.email);
+        await db.signUser(us.uid, _usuario);
+
+      });
         return null;
     } on FirebaseAuthException catch (e) {
       _status = Status.Unauthenticated;
@@ -299,7 +332,6 @@ class UserState with ChangeNotifier {
     notifyListeners();
     String e=null;
     try {
-      UserCredential userCredential;
       final res= await FacebookLogin().logIn(
         permissions:
           [
@@ -316,7 +348,13 @@ class UserState with ChangeNotifier {
         final FacebookAccessToken fbToken = res.accessToken;
         //authcredential
         final FacebookAuthCredential fbauthCredential = FacebookAuthProvider.credential(fbToken.token);
-        final User user = (await _auth.signInWithCredential(fbauthCredential)).user;
+        await _auth.signInWithCredential(fbauthCredential).then((currentUser) async
+        {
+          User us= currentUser.user;
+          Usuario _usuario = Usuario(us.uid,us.email);
+          await db.signUser(us.uid, _usuario);
+
+        });
           break;
 
         case FacebookLoginStatus.error:
@@ -368,8 +406,14 @@ class UserState with ChangeNotifier {
       final TwitterLoginResult res = await TwitterLogin(consumerKey: TWITTER_API, consumerSecret: TWITTER_SECRET).authorize();
       switch (res.status) {
         case TwitterLoginStatus.loggedIn:
-          final User user = (await _auth.signInWithCredential(
-              await _credentialTwitter(res.session))).user;
+          await _auth.signInWithCredential(
+              await _credentialTwitter(res.session)).then((currentUser) async
+          {
+            User us= currentUser.user;
+            Usuario _usuario = Usuario(us.uid,us.email);
+            await db.signUser(us.uid, _usuario);
+
+          });
           break;
         case TwitterLoginStatus.cancelledByUser:
           e="cancel";
@@ -422,7 +466,7 @@ class UserState with ChangeNotifier {
       }
       else if (userSignInMethods.first == 'facebook.com')
         // Sign the user in with the  current Facebook credential
-        UserCredential userCredential = await _auth.signInWithCredential(await (_credentialFacebook()));
+         usercredential = await _auth.signInWithCredential(await (_credentialFacebook()));
 
       else if (userSignInMethods.first == 'google.com')
         // Sign the user in with current Google credential
@@ -432,9 +476,13 @@ class UserState with ChangeNotifier {
         usercredential = await _auth.signInWithCredential(await (_credentialTwitter((await TwitterLogin(consumerKey: TWITTER_API, consumerSecret: TWITTER_SECRET).authorize()).session)));
 
       // Link the pending credential with the existing account
-      User user = (await usercredential.user.linkWithCredential(credential))
-          .user;
+      await usercredential.user.linkWithCredential(credential).then((currentUser) async
+    {
+    User us= currentUser.user;
+    Usuario _usuario = Usuario(us.uid,us.email);
+    await db.signUser(us.uid, _usuario);
 
+    });
       return null;
 
     } on FirebaseAuthException catch (e) {
@@ -500,8 +548,13 @@ class UserState with ChangeNotifier {
       );
 
       // Link the pending credential with the existing account
-      User user = (await userCredential.user.linkWithCredential(credential))
-          .user;
+      await userCredential.user.linkWithCredential(credential).then((currentUser) async
+    {
+    User us= currentUser.user;
+    Usuario _usuario = Usuario(us.uid,us.email);
+    await db.signUser(us.uid, _usuario);
+
+    });
       return null;
     } on FirebaseAuthException catch (e) {
       _status = Status.Unauthenticated;
@@ -567,7 +620,7 @@ class UserState with ChangeNotifier {
 ActionCodeSettings _getactionCodeSettings(String url) => ActionCodeSettings(
       url:  'https://myblueadapp.page.link/' + url,
       handleCodeInApp: true,
-      androidMinimumVersion: '12',
+      androidMinimumVersion: '21',
       //iOSBundleId: 'io.flutter.plugins.firebaseAuthExample',
       androidPackageName: 'com.mybluead.frontend');
 

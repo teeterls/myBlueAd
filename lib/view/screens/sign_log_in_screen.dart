@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
-import 'package:frontend/view/widgets/custom_appbar.dart';
-import 'package:frontend/view/widgets/custom_backbutton.dart';
-import 'package:frontend/view/widgets/custom_drawer.dart';
-import 'package:frontend/view/widgets/home_forms_widget.dart';
+import '../widgets/custom_appbar.dart';
+import '../widgets/custom_backbutton.dart';
+import '../widgets/custom_drawer.dart';
+import '../widgets/home_forms_widget.dart';
 
 //se muestra primero login email-pwd
 //TODO APPLE LOGIN
@@ -54,13 +54,6 @@ class _SignLogInScreenState extends State<SignLogInScreen> {
     );
   }
 
-  @override
-  void dispose() {
-    _email.dispose();
-    _password.dispose();
-    _password2.dispose();
-    super.dispose();
-  }
 }
 
 

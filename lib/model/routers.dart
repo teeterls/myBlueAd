@@ -1,12 +1,12 @@
 import 'package:flutter/material.dart';
-import 'package:frontend/view/screens/user_signin_action_screen.dart';
-import 'package:frontend/view/screens/home_screen.dart';
-import 'package:frontend/view/screens/sign_log_in_screen.dart';
-import 'package:frontend/view/screens/user_home_screen.dart';
-import 'package:frontend/view/widgets/error.dart';
-import 'package:frontend/view/widgets/drawer_options_widget.dart';
-import 'package:frontend/view/widgets/auth_landing_screen.dart';
-import 'package:frontend/view/widgets/signin_phone_link_widget.dart';
+import '../view/screens/user_signin_action_screen.dart';
+import '../view/screens/home_screen.dart';
+import '../view/screens/sign_log_in_screen.dart';
+import '../view/screens/user_home_screen.dart';
+import '../view/widgets/error.dart';
+import '../view/widgets/drawer_options_widget.dart';
+import '../view/widgets/auth_landing_screen.dart';
+import '../view/widgets/signin_phone_link_widget.dart';
 
 class Routers {
   static Route<dynamic> generateRoute(RouteSettings settings) {

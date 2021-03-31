@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
-import 'package:frontend/model/theme_model.dart';
-import 'file:///C:/Users/teete/Documents/ICAI/TFG/myBlueAd/lib/services/user_state_auth.dart';
-import 'package:frontend/view/widgets/custom_snackbar.dart';
+import '../../model/theme_model.dart';
+import '../../services/user_state_auth.dart';
+import 'custom_snackbar.dart';
 import 'package:provider/provider.dart';
 
 class CustomDrawer extends StatefulWidget {

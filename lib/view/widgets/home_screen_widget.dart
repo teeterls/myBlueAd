@@ -1,9 +1,5 @@
 import 'package:flutter/material.dart';
-import 'file:///C:/Users/teete/Documents/ICAI/TFG/myBlueAd/lib/services/user_state_auth.dart';
 import 'package:gradient_widgets/gradient_widgets.dart';
-import 'package:provider/provider.dart';
-
-import 'custom_snackbar.dart';
 
 //logo y botones registro e iniciar sesion
 class HomeScreenWidget extends StatelessWidget {

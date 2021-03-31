@@ -1,9 +1,7 @@
 import 'package:flutter/material.dart';
-import 'package:frontend/model/theme_model.dart';
-import 'package:frontend/view/widgets/custom_appbar.dart';
-import 'package:frontend/view/widgets/custom_backbutton.dart';
-import 'package:provider/provider.dart';
-import 'package:frontend/view/widgets/error.dart';
+import 'custom_appbar.dart';
+import 'custom_backbutton.dart';
+import 'error.dart';
 
 import 'custom_drawer.dart';
 

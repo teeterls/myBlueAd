@@ -1,16 +1,14 @@
-import 'package:firebase_auth/firebase_auth.dart';
-import 'package:firebase_dynamic_links/firebase_dynamic_links.dart';
+
 import 'package:flutter/material.dart';
-import 'package:frontend/model/theme_model.dart';
-import 'file:///C:/Users/teete/Documents/ICAI/TFG/myBlueAd/lib/services/user_state_auth.dart';
-import 'package:frontend/view/screens/sign_log_in_screen.dart';
-import 'package:frontend/view/widgets/custom_snackbar.dart';
-import 'package:frontend/view/widgets/home_forms_widget.dart';
+import '../../model/theme_model.dart';
+import '../../services/user_state_auth.dart';
+import '../screens/sign_log_in_screen.dart';
 import 'package:gradient_widgets/gradient_widgets.dart';
 import 'package:provider/provider.dart';
 import 'package:sms_autofill/sms_autofill.dart';
 
-
+import 'custom_snackbar.dart';
+import 'home_forms_widget.dart';
 import 'custom_appbar.dart';
 import 'custom_backbutton.dart';
 import 'custom_drawer.dart';

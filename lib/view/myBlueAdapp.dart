@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:frontend/model/routers.dart';
-import 'package:frontend/model/theme_model.dart';
+import '../model/routers.dart';
+import '../model/theme_model.dart';
 
 import 'package:provider/provider.dart';
 

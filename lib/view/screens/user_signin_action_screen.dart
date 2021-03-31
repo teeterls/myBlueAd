@@ -1,13 +1,13 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:frontend/model/theme_model.dart';
-import 'file:///C:/Users/teete/Documents/ICAI/TFG/myBlueAd/lib/services/user_state_auth.dart';
-import 'package:frontend/view/screens/sign_log_in_screen.dart';
-import 'package:frontend/view/widgets/custom_appbar.dart';
-import 'package:frontend/view/widgets/custom_backbutton.dart';
-import 'package:frontend/view/widgets/custom_drawer.dart';
-import 'package:frontend/view/widgets/custom_snackbar.dart';
-import 'package:frontend/view/widgets/home_forms_widget.dart';
+import '../../model/theme_model.dart';
+import '../../services/user_state_auth.dart';
+import '../screens/sign_log_in_screen.dart';
+import '../widgets/custom_appbar.dart';
+import '../widgets/custom_backbutton.dart';
+import '../widgets/custom_drawer.dart';
+import '../widgets/custom_snackbar.dart';
+import '../widgets/home_forms_widget.dart';
 import 'package:gradient_widgets/gradient_widgets.dart';
 import 'package:provider/provider.dart';
 

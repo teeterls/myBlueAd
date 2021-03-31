@@ -1,10 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_signin_button/button_builder.dart';
 import 'package:flutter_signin_button/flutter_signin_button.dart';
-import 'package:frontend/model/theme_model.dart';
-import 'file:///C:/Users/teete/Documents/ICAI/TFG/myBlueAd/lib/services/user_state_auth.dart';
-import 'package:frontend/view/screens/user_signin_action_screen.dart';
-import 'package:frontend/view/widgets/custom_snackbar.dart';
+import '../../model/theme_model.dart';
+import '../../services/user_state_auth.dart';
+import 'custom_snackbar.dart';
 import 'package:gradient_widgets/gradient_widgets.dart';
 import 'package:provider/provider.dart';
 //clase donde se encuentran los botones sign in
@@ -57,6 +56,7 @@ class SigninButtons extends StatelessWidget {
                 //recibimos la pwd asociada al email.
                 Navigator.of(context).pushNamed(
                     '/credentials', arguments: _credarg).then((pwd) async {
+                      print(pwd);
                   String er = await Provider.of<UserState>(
                       context, listen: false).emailPwdCredentials(
                       e[0], pwd, e[1]);
@@ -94,6 +94,7 @@ class SigninButtons extends StatelessWidget {
                 //recibimos la pwd asociada al email.
                 Navigator.of(context).pushNamed(
                     '/credentials', arguments: _credarg).then((pwd) async {
+                      print(pwd);
                   String er = await Provider.of<UserState>(
                       context, listen: false).emailPwdCredentials(
                       e[0], pwd, e[1]);
@@ -131,7 +132,7 @@ class mySignOutButton extends StatelessWidget {
     return IconButton(
       icon: Icon(Icons.logout),
       splashColor: Colors.blue,
-      color: Provider.of<ThemeModel>(context, listen: false).mode==ThemeMode.dark ? Colors.black : Theme.of(context).primaryColor,
+      color: Provider.of<ThemeModel>(context, listen: false).mode==ThemeMode.dark ? Colors.teal: Theme.of(context).primaryColor,
       tooltip: "Sign out",
       onPressed: () async {
         ScaffoldMessenger.of(context).showSnackBar(CustomSnackBar(userstate

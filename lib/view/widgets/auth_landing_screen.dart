@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
-import 'file:///C:/Users/teete/Documents/ICAI/TFG/myBlueAd/lib/services/user_state_auth.dart';
-import 'package:frontend/view/screens/home_screen.dart';
-import 'package:frontend/view/screens/user_home_screen.dart';
+import '../../services/user_state_auth.dart';
+import '../screens/home_screen.dart';
+import '../screens/user_home_screen.dart';
 import 'package:provider/provider.dart';
 
 import 'loading.dart';

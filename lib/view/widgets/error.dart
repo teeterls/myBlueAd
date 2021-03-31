@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
-import 'package:frontend/view/widgets/custom_appbar.dart';
-import 'package:frontend/view/widgets/custom_backbutton.dart';
-import 'package:frontend/view/widgets/custom_drawer.dart';
+import 'custom_appbar.dart';
+import 'custom_backbutton.dart';
+import 'custom_drawer.dart';
 //error widget
 class Error extends StatelessWidget {
   //error msg

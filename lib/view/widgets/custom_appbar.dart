@@ -1,6 +1,6 @@
 //TODO CUSTOMAPPBAR SHAREPREFERENCE IDIOMA Y THEME
 import 'package:flutter/material.dart';
-import 'package:frontend/model/theme_model.dart';
+import '../../model/theme_model.dart';
 import 'package:provider/provider.dart';
 
 import 'custom_switch.dart';

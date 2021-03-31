@@ -1,8 +1,7 @@
 import 'package:flutter/material.dart';
-import 'package:frontend/model/theme_model.dart';
-import 'package:frontend/view/widgets/custom_backbutton.dart';
-import 'package:frontend/view/widgets/custom_appbar.dart';
-import 'package:frontend/view/widgets/custom_drawer.dart';
+import '../widgets/custom_backbutton.dart';
+import '../widgets/custom_appbar.dart';
+import '../widgets/custom_drawer.dart';
 import 'package:provider/provider.dart';
 
 //TODO CONTENIDO ENTERO Y LO DE MOSTRAR PAGINA DE FACEBOOK (TENGO QUE CREARLA), Y PODER ENVIAR UN CORREO

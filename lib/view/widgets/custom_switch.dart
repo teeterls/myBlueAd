@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_switch/flutter_switch.dart';
-import 'package:frontend/model/theme_model.dart';
+import '../../model/theme_model.dart';
 
 class CustomSwitch extends StatefulWidget {
   final ThemeModel _model;

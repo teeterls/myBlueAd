@@ -1,14 +1,14 @@
 
 import 'package:flutter/material.dart';
 import 'package:firebase_core/firebase_core.dart';
-import 'package:frontend/view/myBlueAdapp.dart';
-import 'package:frontend/view/widgets/error.dart';
-import 'package:frontend/view/widgets/loading.dart';
+import '/view/myBlueAdapp.dart';
+import '/view/widgets/error.dart';
+import '/view/widgets/loading.dart';
 import 'package:provider/provider.dart';
 
-import 'package:frontend/model/theme_model.dart';
+import '/model/theme_model.dart';
 
-import 'services/user_state_auth.dart';
+import '/services/user_state_auth.dart';
 
 void main() {
   //widgets de flutter inicializado
