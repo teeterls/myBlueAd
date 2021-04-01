@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import '../view/screens/update_profile.dart';
 import '../view/widgets/add_profile.dart';
 import '../view/screens/user_signin_action_screen.dart';
 import '../view/screens/home_screen.dart';
@@ -40,9 +39,10 @@ class Routers {
         var options = settings.arguments as String;
         return MaterialPageRoute(builder: (_) => UserActionScreen(options));
       case '/addprofile':
-        return MaterialPageRoute(builder: (_) => AddProfile());
-      case '/updateprofile':
-        return MaterialPageRoute(builder: (_) => UpdateProfile());
+        var options = settings.arguments as String;
+        return MaterialPageRoute(builder: (_) => AddProfileScreen(options));
+      /*case '/updateprofile':
+        return MaterialPageRoute(builder: (_) => UpdateProfile());*/
      /* case '/changepwd':
         var email = settings.arguments as String;
         return MaterialPageRoute(builder: (_) => ChangePwd(email));*/

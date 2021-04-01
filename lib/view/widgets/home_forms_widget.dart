@@ -16,6 +16,7 @@ class RegisterForm extends StatefulWidget {
     @required TextEditingController password,
     @required TextEditingController password2,
     @required TextEditingController username,
+
   }) : _formKey = formKey,_email = email, _password = password, _password2 = password2, _username=username;
 
   final GlobalKey<FormState> _formKey;
@@ -40,6 +41,9 @@ class _RegisterFormState extends State<RegisterForm> with WidgetsBindingObserver
   void dispose() {
     WidgetsBinding.instance.removeObserver(this);
     widget._email.dispose();
+    widget._username.dispose();
+    widget._password2.dispose();
+    widget._password.dispose();
     super.dispose();
   }
 
@@ -370,6 +374,9 @@ class _myFormFieldState extends State<myFormField> {
           ),
           prefixIcon: widget._icon,
           labelText: widget._label,
+          labelStyle: TextStyle(
+           fontSize:14,
+          ),
           suffixIcon: widget._label=="Password" || widget._label=="New password" || widget._label=="Repeat password" ? Row(
           mainAxisAlignment: MainAxisAlignment.spaceBetween, // added line
           mainAxisSize: MainAxisSize.min, // added line

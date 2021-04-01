@@ -84,8 +84,11 @@ Widget _buildAndroidAlertDialog(BuildContext context) {
     actions: [
       TextButton.icon(
       onPressed: () {
-        Navigator.of(context).pushNamed('/addprofile');
+        Navigator.of(context).pushNamed('/addprofile', arguments: Provider.of<UserState>(context, listen:false).user.phoneNumber);
       },
+        onLongPress: () {
+          Navigator.of(context).pushNamed('/addprofile', arguments: Provider.of<UserState>(context, listen:false).user.phoneNumber);
+        },
         icon: Icon(Icons.add, color: Provider
             .of<ThemeModel>(context, listen: false)
             .mode == ThemeMode.dark ? Colors.tealAccent : Colors.blueAccent),
@@ -97,6 +100,9 @@ Widget _buildAndroidAlertDialog(BuildContext context) {
           ),
       TextButton.icon(
         onPressed: () {
+          Navigator.of(context).pop();
+        },
+        onLongPress: () {
           Navigator.of(context).pop();
         },
         icon:Icon(Icons.cancel_outlined, color: Colors.red),
@@ -132,7 +138,10 @@ Widget _buildiOSAlertDialog(BuildContext context) {
     actions: [
       TextButton.icon(
         onPressed: () {
-          Navigator.of(context).pushNamed('/addprofile');
+          Navigator.of(context).pushNamed('/addprofile',  arguments: Provider.of<UserState>(context, listen: false).user.phoneNumber);
+        },
+        onLongPress: () {
+          Navigator.of(context).pushNamed('/addprofile',  arguments: Provider.of<UserState>(context, listen: false).user.phoneNumber);
         },
         icon: Icon(Icons.add, color: Provider
             .of<ThemeModel>(context, listen: false)
@@ -145,6 +154,9 @@ Widget _buildiOSAlertDialog(BuildContext context) {
       ),
       TextButton.icon(
         onPressed: () {
+          Navigator.of(context).pop();
+        },
+        onLongPress: () {
           Navigator.of(context).pop();
         },
         icon:Icon(Icons.cancel_outlined, color: Colors.red),

@@ -9,8 +9,8 @@ class FirestoreUserPath {
   static String beaconscollection() => 'beacons';
 //one beacon-> uid
   static String beacon(String beaconid) => 'beacons/$beaconid';
-  //all retail stores
+  //TODO all retail stores
 
-//one retail store
+//TODO one retail store
 
 }

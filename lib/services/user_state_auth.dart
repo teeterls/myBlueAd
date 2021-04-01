@@ -46,7 +46,7 @@ class UserState with ChangeNotifier {
          {
            User us= currentUser.user;
            await us.updateProfile(displayName: username);
-           Usuario _usuario = Usuario(us.uid,us.email,username: username);
+           Usuario _usuario = Usuario(us.uid,email: us.email,username: username);
            await db.registerUser(us.uid, _usuario);
          });
       try
@@ -94,7 +94,7 @@ class UserState with ChangeNotifier {
       ).then((currentUser) async
           {
             User us= currentUser.user;
-            Usuario _usuario = Usuario(us.uid,us.email);
+            Usuario _usuario = Usuario(us.uid, email: us.email);
             await db.signUser(us.uid, _usuario);
 
           });
@@ -121,12 +121,6 @@ class UserState with ChangeNotifier {
     notifyListeners();
     try {
       await _auth.signInAnonymously();
-       /*print(uc.user);
-       //DETECTA ALREADY IN USE
-       uc.user.updateEmail("teeterls12@gmail.com");
-       uc.user.updatePassword("teresa12@");
-       uc.user.updateProfile(displayName: "teeterls");*/
-
       return null;
     } on FirebaseAuthException catch (e) {
       _status = Status.Unauthenticated;
@@ -220,13 +214,12 @@ class UserState with ChangeNotifier {
         print(link);
         print(email);
         print(link.toString());
-        //TODO NO CREA USUARIO, falla
         await _auth.signInWithEmailLink(
           email: email,
           emailLink: link.toString(),
         ).then((currentUser) async {
             User us= currentUser.user;
-            Usuario _usuario = Usuario(us.uid,us.email);
+            Usuario _usuario = Usuario(us.uid, email: us.email);
             print(_usuario.email);
             print(_usuario.uid);
             await db.signUser(user.uid, _usuario);
@@ -247,12 +240,18 @@ class UserState with ChangeNotifier {
       _status = Status.Authenticating;
       notifyListeners();
       try {
-        print(_verificationId);
+        //print(_verificationId);
         final AuthCredential credential = PhoneAuthProvider.credential(
           verificationId: _verificationId,
           smsCode: smscode,
         );
-        final User user = (await _auth.signInWithCredential(credential)).user;
+        await _auth.signInWithCredential(credential).then((currentUser) async {
+          User us= currentUser.user;
+          Usuario _usuario = Usuario(us.uid, phone: us.phoneNumber);
+          print(_usuario.phone);
+          print(_usuario.uid);
+          await db.signUser(user.uid, _usuario);
+        });;
         return null;
       } on FirebaseAuthException catch (e) {
         _status = Status.Unauthenticated;
@@ -309,7 +308,7 @@ class UserState with ChangeNotifier {
       then((currentUser) async
       {
         User us= currentUser.user;
-        Usuario _usuario = Usuario(us.uid,us.email);
+        Usuario _usuario = Usuario(us.uid, email: us.email);
         await db.signUser(us.uid, _usuario);
 
       });
@@ -351,7 +350,7 @@ class UserState with ChangeNotifier {
         await _auth.signInWithCredential(fbauthCredential).then((currentUser) async
         {
           User us= currentUser.user;
-          Usuario _usuario = Usuario(us.uid,us.email);
+          Usuario _usuario = Usuario(us.uid, email: us.email);
           await db.signUser(us.uid, _usuario);
 
         });
@@ -410,7 +409,7 @@ class UserState with ChangeNotifier {
               await _credentialTwitter(res.session)).then((currentUser) async
           {
             User us= currentUser.user;
-            Usuario _usuario = Usuario(us.uid,us.email);
+            Usuario _usuario = Usuario(us.uid, email: us.email);
             await db.signUser(us.uid, _usuario);
 
           });
@@ -479,7 +478,7 @@ class UserState with ChangeNotifier {
       await usercredential.user.linkWithCredential(credential).then((currentUser) async
     {
     User us= currentUser.user;
-    Usuario _usuario = Usuario(us.uid,us.email);
+    Usuario _usuario = Usuario(us.uid, email: us.email);
     await db.signUser(us.uid, _usuario);
 
     });
@@ -551,7 +550,7 @@ class UserState with ChangeNotifier {
       await userCredential.user.linkWithCredential(credential).then((currentUser) async
     {
     User us= currentUser.user;
-    Usuario _usuario = Usuario(us.uid,us.email);
+    Usuario _usuario = Usuario(us.uid, email: us.email);
     await db.signUser(us.uid, _usuario);
 
     });
