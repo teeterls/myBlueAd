@@ -14,14 +14,17 @@ class _HomeScreenState extends State<HomeScreen> {
 
   @override
   Widget build(BuildContext context) {
-    return SafeArea(
-      child: Scaffold(
-        key: _scaffoldKey,
-        drawer: CustomDrawer(),
-            appBar:CustomAppBar( _scaffoldKey, context),
-        //pagina principal
-        body: HomeScreenWidget(),
-        ),
+    return WillPopScope(
+      onWillPop: () async => false,
+      child: SafeArea(
+        child: Scaffold(
+          key: _scaffoldKey,
+          drawer: CustomDrawer(),
+              appBar:CustomAppBar( _scaffoldKey, context),
+          //pagina principal
+          body: HomeScreenWidget(),
+          ),
+      ),
     );
   }
 }

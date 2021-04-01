@@ -30,6 +30,8 @@ class RegisterForm extends StatefulWidget {
 }
 //ad widgetbinding observer
 class _RegisterFormState extends State<RegisterForm> with WidgetsBindingObserver {
+  bool _check=false;
+  bool _visible=false;
 
   @override
   void initState() {
@@ -58,6 +60,14 @@ class _RegisterFormState extends State<RegisterForm> with WidgetsBindingObserver
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: <Widget>[
+              Padding(
+                padding: const EdgeInsets.only(left: 10.0, top: 5.0),
+                child: Text("Become a blue user", style: TextStyle(
+                  fontSize: 18,
+                  fontWeight: FontWeight.bold,
+                  color: Provider.of<ThemeModel>(context, listen: false).mode==ThemeMode.dark ? Colors.blueAccent: Theme.of(context).primaryColor,
+                ),),
+              ),
               myFormField(controller: widget._username, icon: Icon(Icons.account_circle), label: "Username", validate: validateUsername, type: TextInputType.text),
               myFormField(controller: widget._email, icon: Icon(Icons.mail), label: "Email", validate: validateEmail, type: TextInputType.emailAddress),
              myFormField(controller: widget._password, icon: Icon(Icons.lock), label: "Password", validate: validatePwd, type: TextInputType.visiblePassword),
@@ -67,6 +77,25 @@ class _RegisterFormState extends State<RegisterForm> with WidgetsBindingObserver
                 Center(child: CircularProgressIndicator()) else
               //no hay ningun usuario logeado todavia, por lo que no le muestra directamente su pagina
                 if (Provider.of<UserState>(context, listen:false).status== Status.Unauthenticated)
+                  Row(
+                    children:<Widget>
+                    [Checkbox
+                        (
+                        value: _check,
+                        activeColor: Provider.of<ThemeModel>(context, listen: false).mode==ThemeMode.dark ? Colors.tealAccent: Theme.of(context).primaryColor,
+                        onChanged: (value)
+                        {
+                          setState(() {
+                            _check=value;
+                          });
+                        },
+                      ),
+                      Text("I agree with terms and conditions", style: TextStyle( fontSize: 13,
+                        fontWeight: FontWeight.bold,
+                        color: Provider.of<ThemeModel>(context, listen: false).mode==ThemeMode.dark ? Colors.tealAccent: Theme.of(context).primaryColor,
+                      ),),
+                    ],
+                  ),
                   Padding(
                     padding: const EdgeInsets.symmetric(horizontal: 16.0, vertical: 5.0),
                     child: GradientButton(
@@ -74,7 +103,10 @@ class _RegisterFormState extends State<RegisterForm> with WidgetsBindingObserver
                           Icons.login,),
                       callback: () async {
                         //validar formulario todos los campos
-                        if (widget._formKey.currentState.validate()) {
+                        if (widget._formKey.currentState.validate() && _check==true) {
+                          setState(() {
+                            _visible=false;
+                          });
                           String e = await Provider.of<UserState>(context, listen:false).register(widget._email.text,
                               widget._password.text, widget._username.text);
                           if (e=="Verify")
@@ -99,6 +131,17 @@ class _RegisterFormState extends State<RegisterForm> with WidgetsBindingObserver
                           0.25),
                     ),
                   ),
+              Visibility(
+                visible: _visible,
+                child: Padding(
+                  padding: const EdgeInsets.only(top: 10.0, left: 10.0),
+                  child: Text("To continue you must agree with terms and conditions.", style: TextStyle(
+                    fontSize: 13,
+                    fontWeight: FontWeight.bold,
+                    color: Provider.of<ThemeModel>(context, listen: false).mode==ThemeMode.dark ? Colors.tealAccent: Theme.of(context).primaryColor,
+                  ),),
+                ),
+              )
             ],
           ),)
         ,),
@@ -147,6 +190,14 @@ class _SignInFormState extends State<SignInForm> {
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: <Widget>[
+              Padding(
+                padding: const EdgeInsets.only(left: 10.0, top: 5.0),
+                child: Text("Sign in", style: TextStyle(
+                  fontSize: 18,
+                  fontWeight: FontWeight.bold,
+                  color: Provider.of<ThemeModel>(context, listen: false).mode==ThemeMode.dark ? Colors.blueAccent: Theme.of(context).primaryColor,
+                ),),
+              ),
               myFormField(controller: widget._email, icon: Icon(Icons.mail), label: "Email", validate: validateEmail, type: TextInputType.emailAddress),
               myFormField(controller: widget._password, icon: Icon(Icons.lock), label: "Password", validate: validatePwd, type: TextInputType.visiblePassword),
               if (Provider.of<UserState>(context, listen:false).status == Status.Authenticating)
@@ -519,16 +570,18 @@ String validateUsername(String value) {
   if (value.isEmpty)
     return 'Please enter a username.';
 
-Pattern pattern = r'^[a-zA-Z0-9._]{6,30}$';
+Pattern pattern = r'^[a-zA-Z0-9._]{6,15}$';
   RegExp regex = new RegExp(pattern);
   if (!regex.hasMatch(value))
-    return 'Invalid username.\nUsername must be between 6 and 30 characters long.\n'
+    return 'Invalid username.\nUsername must be between 6 and 15 characters long.\n'
     'Only allowed:\n'
         'Upper case characters [A-Z]\n'
         'Lower case characters [a-z]\n'
         'Digit numbers [0-9]\n'
     'Period (.) and underscore (_)\n'
-    'No white spaces allowed\n\n'
+    'No white spaces allowed\n'
         'Example: blue_123';
     return null;
 }
+
+

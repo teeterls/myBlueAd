@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import '../widgets/add_profile.dart';
 import 'prin_blue_nouser.dart';
 import 'prin_blue.dart';
 import '../../model/theme_model.dart';
@@ -43,34 +44,38 @@ class _UserHomeScreenState extends State<UserHomeScreen> {
         {
           _screens=<Widget>
           [
-            UserProfile(),
+            AddProfileScreen(userstate.user.phoneNumber),
             PrincipalBlueNoUser(),
           ];
         }
 
-    return SafeArea(
-        child: Scaffold(
-          key: _scaffoldKey,
-          appBar: CustomAppBar(_scaffoldKey, context),
-          drawer: CustomDrawer(),
-         body: SingleChildScrollView(
-           child: _screens[_currentIndex],
-    ),
-          floatingActionButton: mySignOutButton(),
-         //custombottonnavigation bar: email o no?
-         bottomNavigationBar: BottomNavigationBar(
-           elevation: 2.0,
-            selectedItemColor: Provider
-                .of<ThemeModel>(context, listen: false)
-                .mode == ThemeMode.dark ? Colors.tealAccent : Theme
-                .of(context)
-                .primaryColor,
-            type: BottomNavigationBarType.fixed,
-           onTap: _onTabTapped,
-           currentIndex: _currentIndex,
-           items: _getBottomItems(userstate.user.email),
-          ),
-        ),);
+    return WillPopScope(
+      onWillPop: () async => false,
+      child: SafeArea(
+          child: Scaffold(
+            key: _scaffoldKey,
+            appBar: CustomAppBar(_scaffoldKey, context),
+            drawer: CustomDrawer(),
+           body: SingleChildScrollView(
+             child: _screens[_currentIndex],
+      ),
+            floatingActionButton: mySignOutButton(),
+           //custombottonnavigation bar: email o no?
+
+           bottomNavigationBar: BottomNavigationBar(
+             elevation: 2.0,
+              selectedItemColor: Provider
+                  .of<ThemeModel>(context, listen: false)
+                  .mode == ThemeMode.dark ? Colors.tealAccent : Theme
+                  .of(context)
+                  .primaryColor,
+              type: BottomNavigationBarType.fixed,
+             onTap: _onTabTapped,
+             currentIndex: _currentIndex,
+             items: _getBottomItems(userstate.user.email),
+            ),
+          ),),
+    );
 
   }
 

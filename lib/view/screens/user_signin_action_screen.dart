@@ -35,22 +35,25 @@ class _PwdCredentialsState extends State<PwdCredentials> {
 
   @override
   Widget build(BuildContext context) {
-    return SafeArea(
-      child: Scaffold(
-        key: _scaffoldkey,
-        drawer: CustomDrawer(),
-        appBar: CustomAppBar(_scaffoldkey, context),
-        body: SingleChildScrollView(
-          child: GestureDetector(
-            onTap: ()=> hideKeyboard(context),
-            child: Card(
-              elevation: 0,
-              color: Colors.transparent,
-               child: CredentialPwdForm(provider: widget._credentials[0], email: widget._credentials[1], formKey: _formKey, pwd: _pwd),
+    return WillPopScope(
+      onWillPop: () async => false,
+      child: SafeArea(
+        child: Scaffold(
+          key: _scaffoldkey,
+          drawer: CustomDrawer(),
+          appBar: CustomAppBar(_scaffoldkey, context),
+          body: SingleChildScrollView(
+            child: GestureDetector(
+              onTap: ()=> hideKeyboard(context),
+              child: Card(
+                elevation: 0,
+                color: Colors.transparent,
+                 child: CredentialPwdForm(provider: widget._credentials[0], email: widget._credentials[1], formKey: _formKey, pwd: _pwd),
+              ),
             ),
           ),
+          floatingActionButton: CustomBackButton(),
         ),
-        floatingActionButton: CustomBackButton(),
       ),
     );
   }

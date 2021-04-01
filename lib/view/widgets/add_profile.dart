@@ -57,21 +57,30 @@ class _AddProfileScreenState extends State<AddProfileScreen> {
 
   @override
   Widget build(BuildContext context) {
-    return SafeArea(
-      child: Scaffold(
-        key: _scaffoldKey,
-        appBar: CustomAppBar(_scaffoldKey, context),
-        drawer: CustomDrawer(),
-        body: Scrollbar(
-          child: SingleChildScrollView(
-            //todo form add profile añadir nuevos
-            child: AddProfileForm(formKey: _formKey, email: _email, password: _password, password2: _password2, username: _username, name: _name, surname: _surname, address: _address, age: _age, phone: _phone)
+    return WillPopScope(
+      onWillPop: () async => false,
+      child: SafeArea(
+        child: Scaffold(
+          key: _scaffoldKey,
+          appBar: CustomAppBar(_scaffoldKey, context),
+          drawer: CustomDrawer(),
+          body: Scrollbar(
+            child: SingleChildScrollView(
+              //todo form add profile añadir nuevos
+              child: GestureDetector(
+                onTap: ()=> hideKeyboard(context),
+                child: Card(
+                  elevation: 0,
+                  color: Colors.transparent,
+                  child: AddProfileForm(formKey: _formKey, email: _email, password: _password, password2: _password2, username: _username, name: _name, surname: _surname, address: _address, age: _age, phone: _phone)
+            ),
           ),
-        ),
-        floatingActionButton: CustomBackButton(),
-        //custombottonnavigation bar: email o no?
+            ),),
+          floatingActionButton: CustomBackButton(),
+          //custombottonnavigation bar: email o no?
 
-      ),);
+        ),),
+    );
   }
 }
 

@@ -43,22 +43,25 @@ class _SignInPhoneLinkState extends State<SignInPhoneLink> {
 
   @override
   Widget build(BuildContext context) {
-    return SafeArea(
-      child: Scaffold(
-          key: _scaffoldkey,
-          drawer: CustomDrawer(),
-          appBar: CustomAppBar(_scaffoldkey, context),
-          body: SingleChildScrollView(
-          child: GestureDetector(
-          onTap: ()=> hideKeyboard(context),
-            child: Card(
-              elevation: 0,
-              color: Colors.transparent,
-              child: widget._option=="Phone" ? SignInPhoneForm(formKey: _formKey, phone: _phoneNumberController, smsCode: _smsController) : SignInLinkForm(formKey: _formKey, email: _emailController),
+    return WillPopScope(
+      onWillPop: () async => false,
+      child: SafeArea(
+        child: Scaffold(
+            key: _scaffoldkey,
+            drawer: CustomDrawer(),
+            appBar: CustomAppBar(_scaffoldkey, context),
+            body: SingleChildScrollView(
+            child: GestureDetector(
+            onTap: ()=> hideKeyboard(context),
+              child: Card(
+                elevation: 0,
+                color: Colors.transparent,
+                child: widget._option=="Phone" ? SignInPhoneForm(formKey: _formKey, phone: _phoneNumberController, smsCode: _smsController) : SignInLinkForm(formKey: _formKey, email: _emailController),
+              ),
             ),
-          ),
-          ),
-        floatingActionButton: CustomBackButton(),
+            ),
+          floatingActionButton: CustomBackButton(),
+        ),
       ),
     );
   }
