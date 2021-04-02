@@ -33,9 +33,10 @@ class _AddProfileScreenState extends State<AddProfileScreen> {
   TextEditingController _address;
   TextEditingController _age;
   TextEditingController _phone;
+  TextEditingController _city;
   //TODO DROPDOWN marital status
   //TODO RADIOTILE gender
-  //TODO DROPDOWN CSC picker
+
 
   //phonenumber o no?
   @override
@@ -50,6 +51,7 @@ class _AddProfileScreenState extends State<AddProfileScreen> {
     _surname= TextEditingController(text:"");
     _address= TextEditingController(text:"");
     _age= TextEditingController(text:"");
+    _city= TextEditingController(text:"");
     //phone?
     widget._option==null? _phone= TextEditingController(text:""): _phone= TextEditingController(text: widget._option);
 
@@ -72,7 +74,7 @@ class _AddProfileScreenState extends State<AddProfileScreen> {
                 child: Card(
                   elevation: 0,
                   color: Colors.transparent,
-                  child: AddProfileForm(formKey: _formKey, email: _email, password: _password, password2: _password2, username: _username, name: _name, surname: _surname, address: _address, age: _age, phone: _phone)
+                  child: AddProfileForm(formKey: _formKey, email: _email, password: _password, password2: _password2, username: _username, name: _name, surname: _surname, address: _address, age: _age, phone: _phone, city: _city)
             ),
           ),
             ),),

@@ -47,7 +47,7 @@ dependencies:
   cloud_functions: ^1.0.0
   image_picker: ^0.7.4
   country_picker: ^2.0.3
-  csc_picker: ^0.0.9
+  csc_picker: ^0.2.0
 
 
 dev_dependencies:

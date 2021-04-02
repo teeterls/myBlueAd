@@ -27,28 +27,15 @@ class _UserHomeScreenState extends State<UserHomeScreen> {
     final userstate = Provider.of<UserState>(context, listen:false);
     //lista de distintos widgets a mostrar por orden!! acorde al bottombar
     //depende de si hay o no email, lo dejamos asi porque va por auth
-    List<Widget> _screens;
-
-    if (userstate.user.email!=null)
-      {
-        _screens=<Widget>
-        [
+    List<Widget> _screens=
+    [
           FavoriteAds(),
           PrincipalBlue(),
           UserProfile(),
 
         ];
-      }
-    //phone o anonym -> solo principal blue -> no user profile, opcion despues con dialog
-    else
-        {
-          _screens=<Widget>
-          [
-            AddProfileScreen(userstate.user.phoneNumber),
-            PrincipalBlueNoUser(),
-          ];
-        }
 
+    if (userstate.user.email!=null)
     return WillPopScope(
       onWillPop: () async => false,
       child: SafeArea(
@@ -76,6 +63,23 @@ class _UserHomeScreenState extends State<UserHomeScreen> {
             ),
           ),),
     );
+
+    //phone o anonym
+    else
+      return WillPopScope(
+        onWillPop: () async => false,
+        child: SafeArea(
+          child: Scaffold(
+            key: _scaffoldKey,
+            appBar: CustomAppBar(_scaffoldKey, context),
+            drawer: CustomDrawer(),
+            body: SingleChildScrollView(
+              child: PrincipalBlueNoUser(),
+            ),
+            floatingActionButton: mySignOutButton(),
+            //custombottonnavigation bar: email o no?
+          ),),
+      );
 
   }
 
@@ -119,4 +123,21 @@ class _UserHomeScreenState extends State<UserHomeScreen> {
 
   }
 }
+
+class AddAccountButton extends StatelessWidget {
+  @override
+  Widget build(BuildContext context) {
+    return IconButton(
+      icon: Icon(Icons.add),
+      splashColor: Colors.blue,
+      color: Provider.of<ThemeModel>(context, listen: false).mode==ThemeMode.dark ? Colors.teal: Theme.of(context).primaryColor,
+      tooltip: "Add acount",
+      onPressed: () async {
+        //pagina register
+        Navigator.of(context).pushNamed('/signlogin', arguments: "Log in");
+      },
+    );
+  }
+}
+
 

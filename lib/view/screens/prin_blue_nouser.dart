@@ -6,6 +6,7 @@ import '../../services/user_state_auth.dart';
 import 'package:provider/provider.dart';
 import 'dart:io' show Platform;
 //TODO BLUETOOTH AND LOCATION
+//TODO FLOATINGACTIONBUTTON + createpperfil
 class PrincipalBlueNoUser extends StatefulWidget {
   @override
   _PrincipalBlueNoUserState createState() => _PrincipalBlueNoUserState();
@@ -39,6 +40,13 @@ class _PrincipalBlueNoUserState extends State<PrincipalBlueNoUser> {
     Text("Waiting for blue ads...", style: TextStyle(color: Colors.blueAccent, fontWeight: FontWeight.bold),),
     SizedBox(height: 20),
     BlueLoading(),
+      TextButton(
+        child: Text("add profile"),
+        onPressed: ()
+        {
+          Navigator.of(context).pushNamed('/signlogin', arguments: "Log in");
+        },
+      )
     ],),
     );
   }
@@ -84,10 +92,10 @@ Widget _buildAndroidAlertDialog(BuildContext context) {
     actions: [
       TextButton.icon(
       onPressed: () {
-        Navigator.of(context).pushNamed('/addprofile', arguments: Provider.of<UserState>(context, listen:false).user.phoneNumber);
+        Navigator.of(context).pushNamed('/signlogin', arguments: "Log in");
       },
         onLongPress: () {
-          Navigator.of(context).pushNamed('/addprofile', arguments: Provider.of<UserState>(context, listen:false).user.phoneNumber);
+          Navigator.of(context).pushNamed('/signlogin', arguments: "Log in");
         },
         icon: Icon(Icons.add, color: Provider
             .of<ThemeModel>(context, listen: false)
@@ -138,10 +146,10 @@ Widget _buildiOSAlertDialog(BuildContext context) {
     actions: [
       TextButton.icon(
         onPressed: () {
-          Navigator.of(context).pushNamed('/addprofile',  arguments: Provider.of<UserState>(context, listen: false).user.phoneNumber);
+          Navigator.of(context).pushNamed('/signlogin',  arguments: "Log in");
         },
         onLongPress: () {
-          Navigator.of(context).pushNamed('/addprofile',  arguments: Provider.of<UserState>(context, listen: false).user.phoneNumber);
+          Navigator.of(context).pushNamed('/signlogin',  arguments: "Log in");
         },
         icon: Icon(Icons.add, color: Provider
             .of<ThemeModel>(context, listen: false)

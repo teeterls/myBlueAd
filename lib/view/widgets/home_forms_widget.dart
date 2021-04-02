@@ -76,7 +76,7 @@ class _RegisterFormState extends State<RegisterForm> with WidgetsBindingObserver
               if (Provider.of<UserState>(context, listen:false).status == Status.Authenticating)
                 Center(child: CircularProgressIndicator()) else
               //no hay ningun usuario logeado todavia, por lo que no le muestra directamente su pagina
-                if (Provider.of<UserState>(context, listen:false).status== Status.Unauthenticated)
+                if (Provider.of<UserState>(context, listen:false).status== Status.Unauthenticated || Provider.of<UserState>(context, listen:false).user.email==null)
                   Row(
                     children:<Widget>
                     [Checkbox
@@ -107,7 +107,31 @@ class _RegisterFormState extends State<RegisterForm> with WidgetsBindingObserver
                           setState(() {
                             _visible=false;
                           });
-                          String e = await Provider.of<UserState>(context, listen:false).register(widget._email.text,
+                          if (Provider.of<UserState>(context, listen:false).user.phoneNumber!=null) {
+                            String e = await Provider.of<UserState>(
+                                context, listen: false).registerwithPhone(widget._email
+                                .text,
+                                widget._password.text, widget._username.text,Provider.of<UserState>(context, listen:false).user.phoneNumber );
+                            if (e == "Verify") {
+                              ScaffoldMessenger.of(context).showSnackBar(
+                                  CustomSnackBar(
+                                      "Please verify your email account to log in.",
+                                      context));
+                            }
+                            else if (e != null) {
+                              ScaffoldMessenger.of(context).showSnackBar(
+                                  CustomSnackBar(
+                                      "Log in failed with: ${e}.", context));
+                            }
+                            else {
+                              widget._formKey.currentState.save();
+                              Navigator.of(context).pushNamed("/userhome");
+                            }
+                          }
+                          else
+
+                          {
+                            String e = await Provider.of<UserState>(context, listen:false).register(widget._email.text,
                               widget._password.text, widget._username.text);
                           if (e=="Verify")
                             {
@@ -123,9 +147,10 @@ class _RegisterFormState extends State<RegisterForm> with WidgetsBindingObserver
                           else {
                           widget._formKey.currentState.save();
                          Navigator.of(context).pushNamed("/userhome");
-                          } }
+                          }
+                          }
 
-                        },
+                        }},
                       gradient: Gradients.jShine,
                       shadowColor: Gradients.jShine.colors.last.withOpacity(
                           0.25),
@@ -220,6 +245,7 @@ class _SignInFormState extends State<SignInForm> {
                         else {
                               //ok
                               widget._formKey.currentState.save();
+                              if (Provider.of<UserState>(context, listen:false).user.emailVerified)
                               Navigator.of(context).pushNamed("/userhome");
                             }
                         }

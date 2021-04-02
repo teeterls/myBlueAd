@@ -124,7 +124,6 @@ class SigninButtons extends StatelessWidget {
 }
 
 //boton signout
-//TODO DIALOG
 class mySignOutButton extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
@@ -135,7 +134,8 @@ class mySignOutButton extends StatelessWidget {
       color: Provider.of<ThemeModel>(context, listen: false).mode==ThemeMode.dark ? Colors.teal: Theme.of(context).primaryColor,
       tooltip: "Sign out",
       onPressed: () async {
-        ScaffoldMessenger.of(context).showSnackBar(CustomSnackBar(userstate
+        //dialog
+        /*ScaffoldMessenger.of(context).showSnackBar(CustomSnackBar(userstate
             .user
             .email != null ? '${userstate
             .user
@@ -148,7 +148,7 @@ class mySignOutButton extends StatelessWidget {
             : 'Signed out succesfully', context));
         await userstate.signOut();
         //vuelta a pagina inicio
-        Navigator.of(context).pushNamed('/');
+        Navigator.of(context).pushNamed('/');*/
       },
     );
     }

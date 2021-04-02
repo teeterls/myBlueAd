@@ -45,6 +45,7 @@ class UserState with ChangeNotifier {
           email: email, password: password).then((currentUser) async
          {
            User us= currentUser.user;
+           //username
            await us.updateProfile(displayName: username);
            Usuario _usuario = Usuario(us.uid,email: us.email,username: username);
            await db.registerUser(us.uid, _usuario);
@@ -82,7 +83,52 @@ class UserState with ChangeNotifier {
       }
     }
 
+  Future<String> registerwithPhone (String email, String pwd,String username, String phone) async
+  {
+    _status = Status.Authenticating;
+    notifyListeners();
+    try {
+      await _auth.createUserWithEmailAndPassword(
+          email: email, password: pwd).then((currentUser) async
+      {
+        User us= currentUser.user;
+        //username
+        await us.updateProfile(displayName: username);
+        Usuario _usuario = Usuario(us.uid,email: us.email,username: username, phone: int.parse(phone));
+        await db.registerUser(us.uid, _usuario);
+      });
+      try
+      {
+        if (_user.emailVerified) {
+          _status = Status.Authenticated;
+          notifyListeners();
+          return null;
+        }
 
+        else {
+          _status = Status.Unauthenticated;
+          notifyListeners();
+          await _user.sendEmailVerification(
+              _getactionCodeSettings('emailverification'));
+          return "Verify";
+        }
+      } on FirebaseAuthException catch (e) {
+        _status = Status.Unauthenticated;
+        notifyListeners();
+        return e.code;
+      }
+    } on FirebaseAuthException catch (e) {
+      _status = Status.Unauthenticated;
+      notifyListeners();
+      if (e.code== 'email-already-in-use')
+      {
+
+        return "This email account already exists.Sign in or reset your password if needed";
+      }
+      else
+        return e.code;
+    }
+  }
   Future<String> signInEmailPwd(String email, String password) async {
     //authenticating
     _status = Status.Authenticating;
@@ -245,13 +291,13 @@ class UserState with ChangeNotifier {
           verificationId: _verificationId,
           smsCode: smscode,
         );
-        await _auth.signInWithCredential(credential).then((currentUser) async {
+        await _auth.signInWithCredential(credential)/*.then((currentUser) async {
           User us= currentUser.user;
-          Usuario _usuario = Usuario(us.uid, phone: us.phoneNumber);
+          Usuario _usuario = Usuario(us.uid, phone: int.parse(us.phoneNumber));
           print(_usuario.phone);
           print(_usuario.uid);
           await db.signUser(user.uid, _usuario);
-        });;
+        });*/;
         return null;
       } on FirebaseAuthException catch (e) {
         _status = Status.Unauthenticated;

@@ -24,11 +24,27 @@ Stream <Usuario> getUserProfile(String userId)
 }
 //funcion sendmessage a Firestore, que recibe id y el mensaje
 //tarda por eso future
-Future<void> registerUser (String userId, Usuario usuario) async {
-  //añadir documento con ADD, pero tiene que recibir Map <String, dynamic>, por eso convertimos el usuario con el metodo toFirestore
-  //add devuelve Future<DocumentReference>, podriamos escuchar cuando se graba
-  //directorio completo
-  await db.doc(FirestoreUserPath.user(userId)).set(usuario.toFirestore());
+Future<String> registerUser (String userId, Usuario usuario) async {
+ try { //añadir documento con ADD, pero tiene que recibir Map <String, dynamic>, por eso convertimos el usuario con el metodo toFirestore
+   //add devuelve Future<DocumentReference>, podriamos escuchar cuando se graba
+   //directorio completo
+   await db.doc(FirestoreUserPath.user(userId)).set(usuario.toFirestore());
+   return null;
+ }catch (e)
+  {
+    return e;
+  }
+}
+
+Future <String> updateUser (String userId, Usuario usuario) async {
+  try {
+
+    return null;
+
+  } catch (e)
+  {
+    return e;
+  }
 }
 
 //email y userId -> 3rd party, link, email-pwd.
@@ -44,6 +60,10 @@ Future <void> signUser (String userId, Usuario usuario) async {
       //update solamente la fecha
     } else {
       db.doc(FirestoreUserPath.user(userId)).update({"lastaccess": usuario.lastaccess});
+      if (usuario.username!=null)
+        db.doc(FirestoreUserPath.user(userId)).update({"username": usuario.username});
+      if (usuario.email!=null)
+        db.doc(FirestoreUserPath.user(userId)).update({"email": usuario.email});
     }
   });
 }

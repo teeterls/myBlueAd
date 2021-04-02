@@ -3,12 +3,12 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 //TODO FOTO -> String url
 class Usuario
 {
-  String _phone, _email, _photoURL, _username, _name, _surname, _gender, _country, _city, _state, _maritalstatus, _address, _uid;
-  int _age;
+  String _email, _photoURL, _username, _name, _surname, _gender, _country, _city, _state, _maritalstatus, _address, _uid;
+  int _age, _phone;
   DateTime _lastaccess;
 
   //constructor -> obligatorios uid, first access, email y username una vez validados.
-  Usuario(this._uid, {String email, String username, String photo, String name, String surname, String gender, String country, String address, String uid, int age, String phone, String city, String status}) :
+  Usuario(this._uid, {String email, String username, String photo, String name, String surname, String gender, String country, String address, String uid, int age,int phone, String city, String status}) :
        _email= email, _username=username, _photoURL = photo, _name = name, _surname= surname, _gender=gender, _country=country, _address=address, _age=age, _phone=phone, _city=city, _maritalstatus=status, _lastaccess = DateTime.now();
 
   //constructor Firebase -> obtener doc user determinado de coleccion users
@@ -60,7 +60,7 @@ class Usuario
   String get city => _city;
   String get uid => _uid;
   int get age => _age;
-  String get phone => _phone;
+  int get phone => _phone;
   DateTime get lastaccess => _lastaccess;
   get maritalstatus => _maritalstatus;
   get state => _state;
@@ -77,7 +77,7 @@ class Usuario
   void set address(String address) =>_address=address;
   void set uid (String uid)=> _uid=uid;
   void set age (int age) => _age=age;
-  void set phonenumber (String phone) => _phone=phone;
+  void set phonenumber (int phone) => _phone=phone;
   void set lastaccess(DateTime time) => _lastaccess=time;
   void set city (String city ) => _city=city;
   void set maritalstatus (String m) => _maritalstatus=m;
