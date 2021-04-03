@@ -29,10 +29,9 @@ class _UserHomeScreenState extends State<UserHomeScreen> {
     //depende de si hay o no email, lo dejamos asi porque va por auth
     List<Widget> _screens=
     [
-          FavoriteAds(),
-          PrincipalBlue(),
           UserProfile(),
-
+          PrincipalBlue(),
+          FavoriteAds(),
         ];
 
     if (userstate.user.email!=null)
@@ -76,7 +75,7 @@ class _UserHomeScreenState extends State<UserHomeScreen> {
             body: SingleChildScrollView(
               child: PrincipalBlueNoUser(),
             ),
-            floatingActionButton: mySignOutButton(),
+            floatingActionButton: AddAccountButton(),
             //custombottonnavigation bar: email o no?
           ),),
       );
@@ -127,10 +126,11 @@ class _UserHomeScreenState extends State<UserHomeScreen> {
 class AddAccountButton extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
-    return IconButton(
-      icon: Icon(Icons.add),
+    return FloatingActionButton(
+      child: Icon(Icons.add, color: Provider.of<ThemeModel>(context, listen: false).mode==ThemeMode.dark ? Colors.teal: Theme.of(context).primaryColor,),
       splashColor: Colors.blue,
-      color: Provider.of<ThemeModel>(context, listen: false).mode==ThemeMode.dark ? Colors.teal: Theme.of(context).primaryColor,
+      hoverColor: Colors.blue,
+      backgroundColor: Colors.white54,
       tooltip: "Add acount",
       onPressed: () async {
         //pagina register

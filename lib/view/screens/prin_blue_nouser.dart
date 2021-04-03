@@ -5,8 +5,7 @@ import '../widgets/loading.dart';
 import '../../services/user_state_auth.dart';
 import 'package:provider/provider.dart';
 import 'dart:io' show Platform;
-//TODO BLUETOOTH AND LOCATION
-//TODO FLOATINGACTIONBUTTON + createpperfil
+//TODO BLUETOOTH AND LOCATION dialogs
 class PrincipalBlueNoUser extends StatefulWidget {
   @override
   _PrincipalBlueNoUserState createState() => _PrincipalBlueNoUserState();
@@ -40,13 +39,6 @@ class _PrincipalBlueNoUserState extends State<PrincipalBlueNoUser> {
     Text("Waiting for blue ads...", style: TextStyle(color: Colors.blueAccent, fontWeight: FontWeight.bold),),
     SizedBox(height: 20),
     BlueLoading(),
-      TextButton(
-        child: Text("add profile"),
-        onPressed: ()
-        {
-          Navigator.of(context).pushNamed('/signlogin', arguments: "Log in");
-        },
-      )
     ],),
     );
   }
