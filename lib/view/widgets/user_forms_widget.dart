@@ -11,16 +11,14 @@ import 'package:provider/provider.dart';
 import 'dart:io' show Platform;
 
 import '../../services/firestore_db.dart' as db;
-//se muestran todas las cajas para cambiar
-//no hay validacion mas que email, user y contraseña, no se le obliga a rellenar ningun detalle personal.
-//se necesita la contraseña
-//TODO FOTO
-class AddProfileForm extends StatefulWidget {
-  AddProfileForm({
+
+//todo photo image picker
+
+class UserProfileForm extends StatefulWidget {
+  UserProfileForm({
     @required GlobalKey<FormState> formKey,
+    @required Usuario usuario,
     @required TextEditingController email,
-    @required TextEditingController password,
-    @required TextEditingController password2,
     @required TextEditingController username,
     @required TextEditingController name,
     @required TextEditingController surname,
@@ -28,12 +26,13 @@ class AddProfileForm extends StatefulWidget {
     @required TextEditingController age,
     @required TextEditingController phone,
     @required TextEditingController city,
-  }) : _formKey = formKey,_email = email, _password2= password2, _password = password, _username=username, _name=name, _surname=surname, _address=address, _age=age, _phone=phone, _city=city;
+    @required TextEditingController country,
+    @required TextEditingController state,
+  }): _formKey=formKey, _usuario=usuario, _email=email, _username=username, _name=name, _surname=surname, _address=address, _age=age, _phone=phone, _country=country, _city=city, _state=state;
 
   final GlobalKey<FormState> _formKey;
+  final Usuario _usuario;
   final TextEditingController _email;
-  final TextEditingController _password;
-  final TextEditingController _password2;
   final TextEditingController _username;
   final TextEditingController _name;
   final TextEditingController _surname;
@@ -41,16 +40,17 @@ class AddProfileForm extends StatefulWidget {
   final TextEditingController _age;
   final TextEditingController _phone;
   final TextEditingController _city;
+  final TextEditingController _country;
+  final TextEditingController _state;
+
   @override
-  _AddProfileFormState createState() => _AddProfileFormState();
+  _UserProfileFormState createState() => _UserProfileFormState();
 }
 
-//email verification
-class _AddProfileFormState extends State<AddProfileForm>  with WidgetsBindingObserver {
-  //csc picker
-  String _countryValue ="";
-  String _stateValue ="";
-  String _cityValue ="";
+class _UserProfileFormState extends State<UserProfileForm> with WidgetsBindingObserver {
+  String _countryValue = "";
+  String _stateValue = "";
+  String _cityValue = "";
   String _genderValue;
   String _mstatusValue;
 
@@ -71,14 +71,9 @@ class _AddProfileFormState extends State<AddProfileForm>  with WidgetsBindingObs
     "Other"
   ];
 
-  bool _check;
-  bool _visible;
-
   @override
   void initState() {
     WidgetsBinding.instance.addObserver(this);
-    _check=false;
-    _visible=false;
     super.initState();
   }
 
@@ -89,391 +84,510 @@ class _AddProfileFormState extends State<AddProfileForm>  with WidgetsBindingObs
     widget._name.dispose();
     widget._username.dispose();
     widget._surname.dispose();
-    widget._password.dispose();
-    widget._password2.dispose();
     widget._address.dispose();
     widget._age.dispose();
     widget._phone.dispose();
     widget._city.dispose();
+    widget._state.dispose();
+    widget._country.dispose();
     super.dispose();
   }
 
-//validate solo
+  //todo
   @override
   Widget build(BuildContext context) {
     return Form(
-        autovalidateMode: AutovalidateMode.onUserInteraction,
-        key: widget._formKey,
-        child: Center(
-          child: Padding(
-            padding: const EdgeInsets.all(6.0),
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: <Widget>[
-                Padding(
-                  padding: const EdgeInsets.only(left: 10.0, top: 5.0),
-                  child: Text("My profile", style: TextStyle(
-                    fontFamily: "Verdana",
-                    fontSize: 22,
-                    fontWeight: FontWeight.bold,
-                    color: Colors.blueAccent,
-                  ),),
+      autovalidateMode: AutovalidateMode.onUserInteraction,
+      key: widget._formKey,
+      child: Center(
+        child: Padding(
+          padding: const EdgeInsets.all(6.0),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: <Widget>[
+              Padding(
+                padding: const EdgeInsets.only(left: 10.0, top: 5.0),
+                child: Text("My profile", style: TextStyle(
+                  fontFamily: "Verdana",
+                  fontSize: 22,
+                  fontWeight: FontWeight.bold,
+                  color: Colors.blueAccent,
+                ),),
+              ),
+              //TODO ESPACIO FOTO Y URL
+
+              Center(
+                child: SizedBox(child: Text("FOTO"),
+                  height: 60,
                 ),
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  children: [
-                    SizedBox(
-                      height:40,
-                    ),
-                    Container(
-                        width:230,
-                        child: myFormField(controller: widget._username, icon: Icon(Icons.account_circle), label: "Username", validate: shortvalidateUsername, type: TextInputType.text)
-                    ),
-                    //TODO row espacio foto y username
-                  ],
-                ),
-                myFormField(controller: widget._email, icon: Icon(Icons.mail), label: "Email", validate: validateEmail, type: TextInputType.emailAddress),
-                myFormField(controller: widget._password, icon: Icon(Icons.lock), label: "Password", validate: shortvalidatePwd, type: TextInputType.visiblePassword),
-                myFormField(controller: widget._password2, icon: Icon(Icons.lock), label: "Repeat password", validate: validatePwd2, type: TextInputType.visiblePassword),
-                  Padding(
-                  padding: const EdgeInsets.only(left: 10.0, top: 12.0),
-                  child: Text("My personal details", style: TextStyle(
-                    fontFamily: "Verdana",
-                    fontSize: 18,
-                    fontWeight: FontWeight.bold,
-                    color: Colors.blueAccent,
-                  ),),
-                ),
-                //no importa si estan vacías, se guarda info vacia
-                //row name surname
-                myFormField(controller: widget._name, icon: Icon(Icons.info), label: "Name", validate: validateName, type: TextInputType.text),
-                myFormField(controller: widget._surname, icon: Icon(Icons.info), label: "Surname", validate: validateSurname, type: TextInputType.text),
-                Row
-                  (
+              ),
+              myUpdateFormField(controller: widget._username,
+                  icon: Icon(Icons.account_circle),
+                  label: "Username",
+                  validate: shortvalidateUsername,
+                  type: TextInputType.text),
+              EmailFormField(controller: widget._email,
+                  icon: Icon(Icons.mail),
+                  label: "Email",
+                  ),
+              Padding(
+                padding: const EdgeInsets.only(left: 10.0, top: 20.0),
+                child: Text("My personal details", style: TextStyle(
+                  fontFamily: "Verdana",
+                  fontSize: 18,
+                  fontWeight: FontWeight.bold,
+                  color: Colors.blueAccent,),),),
+              myUpdateFormField(controller: widget._name,
+                  icon: Icon(Icons.info),
+                  label: "Name",
+                  validate: validateName,
+                  type: TextInputType.text),
+              myUpdateFormField(controller: widget._surname,
+                  icon: Icon(Icons.info),
+                  label: "Surname",
+                  validate: validateSurname,
+                  type: TextInputType.text),
+              Row
+                (
                   mainAxisSize: MainAxisSize.min,
                   children: <Widget>
-                    [
-                    Expanded(flex: 5,child: myFormField(controller: widget._age, icon: Icon(Icons.accessibility_new_sharp), label: "Age", validate: validateAge, type: TextInputType.number)),
-                    Expanded(flex: 6,child: myFormField(controller: widget._phone, icon: Icon(Icons.phone), label: "Phone", validate: shortvalidatePhone, type: TextInputType.phone)),
-                ]),
-                Padding(
-                  padding: const EdgeInsets.all(15.0),
-                  child: Row
-                    (
-                      mainAxisSize: MainAxisSize.min,
-                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                      children: <Widget>
-                      [
-                        Expanded(
-                          flex:5,
-                          child: DropdownButton<String>(
-                                value: _genderValue,
-                                //elevation: 5,
-                                style: TextStyle(fontWeight: FontWeight.bold, color: Provider
-                                    .of<ThemeModel>(context, listen: false)
-                                    .mode == ThemeMode.dark ? Colors.tealAccent : Colors.black),
-                                items: _gender.map<DropdownMenuItem<String>>((String value) {
-                                  return DropdownMenuItem<String>(
-                                    value: value,
-                                    child: Text(value),
-                                  );
-                                }).toList(),
-                                hint: Text(
-                                  "Gender",
-                                  style: TextStyle(
-                                      color: Provider
-                                          .of<ThemeModel>(context, listen: false)
-                                          .mode == ThemeMode.dark ? Colors.tealAccent : Colors.black,
-                                      fontSize: 16,
-                                      fontWeight: FontWeight.bold),
-                                ),
-                                onChanged: (String value) {
-                                  setState(() {
-                                    _genderValue = value;
-                                  });
-                                },
-                              ),
-                        ),
-                          Expanded(
-                            flex:6,
-                            child: DropdownButton<String>(
-                              value: _mstatusValue,
-                              //elevation: 5,
-                              style: TextStyle(fontWeight: FontWeight.bold, color: Provider
-                                  .of<ThemeModel>(context, listen: false)
-                                  .mode == ThemeMode.dark ? Colors.tealAccent : Colors.black),
-                              items: _maritalstatus.map<DropdownMenuItem<String>>((String value) {
-                                return DropdownMenuItem<String>(
-                                  value: value,
-                                  child: Text(value),
-                                );
-                              }).toList(),
-                              hint: Text(
-                                "Marital status",
-                                style: TextStyle(
-                                    color: Provider
-                                        .of<ThemeModel>(context, listen: false)
-                                        .mode == ThemeMode.dark ? Colors.tealAccent : Colors.black,
-                                    fontSize: 16,
-                                    fontWeight: FontWeight.bold),
-                              ),
-                              onChanged: (String value) {
-                                setState(() {
-                                  _mstatusValue = value;
-                                });
-                              },
-                            ),
-                          ),
-                      ]
-                  ),
-                ),
-                //CSC picker y text
-                Column(
-                  children: [
-                    CSCPicker(
-                      ///Enable disable state dropdown
-                      showStates: true,
-
-                      /// Enable disable city drop down -> no hay todas las ciudades
-                      showCities: false,
-
-                      ///Enable (get flat with country name) / Disable (Disable flag) / ShowInDropdownOnly (display flag in dropdown only)
-                      flagState: CountryFlag.SHOW_IN_DROP_DOWN_ONLY,
-
-                      ///Dropdown box decoration to style your dropdown selector [OPTIONAL PARAMETER] (USE with disabledDropdownDecoration)
-                      dropdownDecoration: BoxDecoration(
-                          borderRadius: BorderRadius.all(Radius.circular(30)),
-                          color: Colors.white,
-                          border: Border.all(color: Provider
-                              .of<ThemeModel>(context, listen: false)
-                              .mode == ThemeMode.dark ? Colors.tealAccent : Theme
-                              .of(context)
-                              .primaryColor, width:1)
-                          ),
-                      ///Disabled Dropdown box decoration to style your dropdown selector [OPTIONAL PARAMETER]  (USE with disabled dropdownDecoration)
-                      disabledDropdownDecoration: BoxDecoration(
-                          borderRadius: BorderRadius.all(Radius.circular(30)),
-                          color: Colors.grey.shade300,
-                          border: Border.all(color: Colors.grey.shade300, width: 1)),
-
-                      ///selected item style [OPTIONAL PARAMETER]
-                      selectedItemStyle: TextStyle(color: Colors.black, fontSize: 14, fontWeight: FontWeight.bold),
-
-                      ///DropdownDialog Heading style [OPTIONAL PARAMETER]
-                      dropdownHeadingStyle: TextStyle(color: Provider
-                          .of<ThemeModel>(context, listen: false)
-                          .mode == ThemeMode.dark ? Colors.tealAccent : Theme
-                          .of(context)
-                          .primaryColor, fontSize: 17, fontWeight: FontWeight.bold),
-
-                      ///DropdownDialog Item style [OPTIONAL PARAMETER]
-                      dropdownItemStyle: TextStyle(color: Provider
-                          .of<ThemeModel>(context, listen: false)
-                          .mode == ThemeMode.dark ? Colors.white : Colors.black,fontSize: 14, fontWeight: FontWeight.bold),
-
-                      onCountryChanged: (value) {
-                        setState(() {
-                          _countryValue = value;
-                        });
-                      },
-                      onStateChanged:(value) {
-                        setState(() {
-                          _stateValue = value;
-                        });
-                      },
-                      onCityChanged:(value) {
-                        setState(() {
-                          _cityValue = value;
-                        });
-                      },
-                    ),
-                  ],
-                ),
-                //TODO de momento solo postal code spanish
-                //row city y postal code
-                Row
+                  [
+                    Expanded(flex: 6,
+                        child: myUpdateFormField(controller: widget._age,
+                            icon: Icon(Icons.accessibility_new_sharp),
+                            label: "Age",
+                            validate: validateAge,
+                            type: TextInputType.number)),
+                    Expanded(flex: 6,
+                        child: myUpdateFormField(controller: widget._phone,
+                            icon: Icon(Icons.phone),
+                            label: "Phone",
+                            validate: shortvalidatePhone,
+                            type: TextInputType.phone)),
+                  ]),
+              Padding(
+                padding: const EdgeInsets.all(15.0),
+                child: Row
                   (
                     mainAxisSize: MainAxisSize.min,
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: <Widget>
                     [
-                      //ciudad otro textfield row con address
-                      Expanded(flex: 5,child: myFormField(controller: widget._city, icon: Icon(Icons.apartment_outlined), label: "City", validate: validateCity, type: TextInputType.text)),
-                      Expanded(flex: 6,child: myFormField(controller: widget._address, icon: Icon(Icons.home), label: "Postal code", validate: validatePostalCode, type: TextInputType.number)),
+                      Expanded(
+                        flex: 5,
+                        child: DropdownButton<String>(
+                          //el genero es una de las opciones
+                          value:  _genderValue,
+                          //elevation: 5,
+                          style: TextStyle(
+                              fontWeight: FontWeight.bold, color: Provider
+                              .of<ThemeModel>(context, listen: false)
+                              .mode == ThemeMode.dark ? Colors.white : Colors
+                              .black),
+                          items: _gender.map<DropdownMenuItem<String>>((
+                              String value) {
+                            return DropdownMenuItem<String>(
+                              value: value,
+                              child: Text(value),
+                            );
+                          }).toList(),
+                          hint: Text(widget._usuario.gender != null ? widget
+                              ._usuario.gender :
+                            "Gender",
+                            style: TextStyle(
+                                color: Provider
+                                    .of<ThemeModel>(context, listen: false)
+                                    .mode == ThemeMode.dark
+                                    ? Colors.white
+                                    : Colors.black,
+                                fontSize: 14,
+                                fontWeight: FontWeight.bold),
+                          ),
+                          onChanged: (String value) {
+                            setState(() {
+                              _genderValue = value;
+                            });
+                          },
+                        ),
+                      ),
+                      Expanded(
+                        flex: 6,
+                        child: DropdownButton<String>(
+                          value: _mstatusValue,
+                          //elevation: 5,
+                          style: TextStyle(
+                              fontWeight: FontWeight.bold, color: Provider
+                              .of<ThemeModel>(context, listen: false)
+                              .mode == ThemeMode.dark ? Colors.white : Colors
+                              .black),
+                          items: _maritalstatus.map<DropdownMenuItem<String>>((
+                              String value) {
+                            return DropdownMenuItem<String>(
+                              value: value,
+                              child: Text(value),
+                            );
+                          }).toList(),
+                          hint: Text(widget._usuario.maritalstatus != null ? widget
+                              ._usuario.maritalstatus :
+                          "Marital status",
+                            style: TextStyle(
+                                color: Provider
+                                    .of<ThemeModel>(context, listen: false)
+                                    .mode == ThemeMode.dark
+                                    ? Colors.white
+                                    : Colors.black,
+                                fontSize: 14,
+                                fontWeight: FontWeight.bold),
+                          ),
+                          onChanged: (String value) {
+                            setState(() {
+                              _mstatusValue = value;
+                            });
+                          },
+                        ),
+                      ),
                     ]
                 ),
-                Row(
-                  children:<Widget>
-                  [Checkbox
-                    (
-                    value: _check,
-                    activeColor: Provider.of<ThemeModel>(context, listen: false).mode==ThemeMode.dark ? Colors.tealAccent: Theme.of(context).primaryColor,
-                    onChanged: (value)
-                      {
-                        setState(() {
-                          _check=value;
-                        });
-                      },
-                    ),
-                    Text("I agree with terms and conditions", style: TextStyle( fontSize: 13,
-                      fontWeight: FontWeight.bold,
-                      color: Provider.of<ThemeModel>(context, listen: false).mode==ThemeMode.dark ? Colors.tealAccent: Theme.of(context).primaryColor,
-                    ),),
-                ],
-                ),
-                //boton
-                    Padding(
-                      padding: const EdgeInsets.symmetric(horizontal: 16.0, vertical: 5.0),
-                      child: GradientButton(
-                        child: Icon(
-                          Icons.person_add_alt_1_rounded),
-                        callback: () async {
-                          //validar formulario todos los campos
-                          if (widget._formKey.currentState.validate() && _check==true) {
-                           print(_stateValue);
-                           print(_countryValue);
-                           print(_genderValue);
-                           print(_mstatusValue);
-                            setState(() {
-                              _visible=false;
-                            });
-                            widget._formKey.currentState.save();
-                            //metodo registrarse nuevo -> falla? existe una cuenta ya con ese usuario
-                            String e = await Provider.of<UserState>(context, listen:false).register(widget._email.text,
-                                widget._password.text, widget._username.text);
-                            String err = await addProfile();
-                            if (e=="Verify")
-                            {
-                              ScaffoldMessenger.of(context).showSnackBar(
-                                  CustomSnackBar(
-                                      "Please verify your email account to add your profile.", context));
-                            }
-                            else if (e != null) {
-                              ScaffoldMessenger.of(context).showSnackBar(
-                                  CustomSnackBar(
-                                      "Adding new profile failed with: ${e}.", context));
-                            }
-                            else {
-                            String e= await addProfile();
-                               if (e != null) {
-                                ScaffoldMessenger.of(context).showSnackBar(
-                                    CustomSnackBar(
-                                        "Adding new profile failed with: ${e}.", context));
-                              }
+              ),
+              Padding(
+                padding: const EdgeInsets.only(left: 10.0, top: 20.0),
+                child: Text("My address", style: TextStyle(
+                  fontFamily: "Verdana",
+                  fontSize: 18,
+                  fontWeight: FontWeight.bold,
+                  color: Colors.blueAccent,),),),
+              Row
+                (
+                  mainAxisSize: MainAxisSize.min,
+                  children: <Widget>
+                  [
+                    Expanded(flex: 6,
+                        child: CSCFormField(controller: widget._country,
+                            icon: Icon(Icons.flag),
+                            label: "Country",
+                            validate: validateCountry,
+                            type: TextInputType.text)),
+                    Expanded(flex: 6,
+                        child: CSCFormField(controller: widget._state,
+                            icon: Icon(Icons.location_on),
+                            label: "State",
+                            validate: validateState,
+                            type: TextInputType.text)),
+                  ]),
+              SizedBox(height: 20),
+              //CSC picker y text
+              CSCPicker(
+                showStates: true,
+                //no hay todas las ciudads
+                showCities: false,
 
-                              widget._formKey.currentState.save();
-                              Navigator.of(context).pushNamed("/userhome");
-                            } }
-                          else if (!_check)
-                            {
-                                setState(() {
-                                  _visible=true;
-                                });
-                            }
-                        },
-                        gradient: Gradients.jShine,
-                        shadowColor: Gradients.jShine.colors.last.withOpacity(
-                            0.25),
-                      ),
-                    ),
-                Visibility(
-                  visible: _visible,
-                  child: Padding(
-                    padding: const EdgeInsets.only(top: 10.0, left: 10.0),
-                    child: Text("To continue you must agree with terms and conditions.", style: TextStyle(
-                      fontSize: 13,
-                      fontWeight: FontWeight.bold,
-                      color: Provider.of<ThemeModel>(context, listen: false).mode==ThemeMode.dark ? Colors.tealAccent: Theme.of(context).primaryColor,
-                    ),),
-                  ),
+                flagState: CountryFlag.SHOW_IN_DROP_DOWN_ONLY,
+
+                dropdownDecoration: BoxDecoration(
+                    borderRadius: BorderRadius.all(Radius.circular(30)),
+                    color: Colors.white,
+                    border: Border.all(color: Provider
+                        .of<ThemeModel>(context, listen: false)
+                        .mode == ThemeMode.dark ? Colors.tealAccent : Theme
+                        .of(context)
+                        .primaryColor, width: 1)
                 ),
 
-              ],
-            ),)
-          ,),
-      );
+                disabledDropdownDecoration: BoxDecoration(
+                    borderRadius: BorderRadius.all(Radius.circular(30)),
+                    color: Colors.grey.shade300,
+                    border: Border.all(color: Colors.grey.shade300, width: 1)),
+
+                selectedItemStyle: TextStyle(color: Colors.black,
+                    fontSize: 14,
+                    fontWeight: FontWeight.bold),
+
+                dropdownHeadingStyle: TextStyle(color: Provider
+                    .of<ThemeModel>(context, listen: false)
+                    .mode == ThemeMode.dark ? Colors.tealAccent : Theme
+                    .of(context)
+                    .primaryColor, fontSize: 17, fontWeight: FontWeight.bold),
+
+                dropdownItemStyle: TextStyle(color: Provider
+                    .of<ThemeModel>(context, listen: false)
+                    .mode == ThemeMode.dark ? Colors.white : Colors.black,
+                    fontSize: 14,
+                    fontWeight: FontWeight.bold),
+
+                onCountryChanged: (value) {
+                  setState(() {
+                    _countryValue = value;
+                    widget._country.text = value;
+                  });
+                },
+                onStateChanged: (value) {
+                  setState(() {
+                    _stateValue = value;
+                    widget._state.text = value;
+                  });
+                },
+                onCityChanged: (value) {
+                  setState(() {
+                    _cityValue = value;
+                  });
+                },
+              ),
+              //TODO de momento solo postal code spanish
+              //row city y postal code
+              Row
+                (
+                  mainAxisSize: MainAxisSize.min,
+                  children: <Widget>
+                  [
+                    //ciudad otro textfield row con address
+                    Expanded(flex: 6,
+                        child: myUpdateFormField(controller: widget._city,
+                            icon: Icon(Icons.apartment_outlined),
+                            label: "City",
+                            validate: validateCity,
+                            type: TextInputType.text)),
+                    Expanded(flex: 6,
+                        child: myUpdateFormField(controller: widget._address,
+                            icon: Icon(Icons.home),
+                            label: "Postal code",
+                            validate: validatePostalCode,
+                            type: TextInputType.number)),
+                  ]
+              ),
+              //boton
+              Padding(
+                padding: const EdgeInsets.symmetric(
+                    horizontal: 16.0, vertical: 5.0),
+                child: GradientButton(
+                  child: Icon(
+                      Icons.person_add_alt_1_rounded),
+                  callback: () async {
+                    //validar formulario todos los campos
+                    if (widget._formKey.currentState.validate()) {
+                      print(_stateValue);
+                      print(_countryValue);
+                      print(_genderValue);
+                      print(_mstatusValue);
+                      widget._formKey.currentState.save();
+                      //todo metodo update
+                      /*String e = await Provider.of<UserState>(context, listen:false).register(widget._email.text,
+                           widget._password.text, widget._username.text);
+                       String err = await addProfile();
+
+
+                         widget._formKey.currentState.save();
+                         //customsnackbar;
+                       }
+                       */
+                    }
+                  },
+                  gradient: Gradients.jShine,
+                  shadowColor: Gradients.jShine.colors.last.withOpacity(
+                      0.25),
+                ),
+              ),
+            ],
+          ),)
+        ,),
+    );
   }
+}
+Future <void> updateProfile() async
+{
 
-Future <String> addProfile () async
-  {
-    print (_countryValue);
-    print(_stateValue);
-    try {
-      String uid = Provider
-          .of<UserState>(context, listen: false)
-          .user
-          .uid;
-      //comprobamos todos los campos y creamos usuario
-      Usuario _usuario = Usuario(
-          uid, email: widget._email.text, username: widget._username.text);
-      if (widget._name.text != "")
-        _usuario.name = widget._name.text;
-      else
-        _usuario.name=null;
-      if (widget._surname.text != "")
-        _usuario.surname=widget._surname.text;
-      else
-        _usuario.surname=null;
-      if (_genderValue!= "")
-      _usuario.gender=_genderValue;
-      else
-        _usuario.gender=null;
-    if (_mstatusValue!="")
-      _usuario.maritalstatus=_mstatusValue;
-    else
-      _usuario.maritalstatus=null;
-  //parsear movil y age
-  if (Provider.of<UserState>(context, listen:false).user.phoneNumber!="")
-  _usuario.phonenumber= int.parse(Provider.of<UserState>(context, listen:false).user.phoneNumber);
-  else
-    _usuario.phonenumber=null;
-  if (widget._age.text!="")
-  _usuario.age=int.parse(widget._age.text);
-  else
-    _usuario.age=null;
-  if (_countryValue!="")
-  _usuario.country=_countryValue;
-  else
-    _usuario.country=null;
-  if (_stateValue!="")
-  _usuario.state=_stateValue;
-  else
-    _usuario.state=null;
-  if (widget._city.text!="")
-  _usuario.city=widget._city.text;
-  else
-    _usuario.city=null;
-  //TODO ADDRESS COMPLETA
-  if (widget._address.text!="")
-  _usuario.address=widget._address.text;
-  else
-    _usuario.address=null;
-  print(uid);
-  print(_usuario);
-  //metodo bbdd
-  String e = await db.registerUser(uid, _usuario);
-  //si todo esta ok es null
-  return e;
-  } catch (e)
-    {
-      return e.toString();
-    }
+
 }
 
-  String validatePwd2 (String value)
-  {
-    if (value.isEmpty)
-      return 'Please enter a password.';
-    if (value!= widget._password.text)
-      return 'Passwords do not match.';
 
+//no es posible cambiarlo desde aqui, hay que ir a settings. tampoco se valida.
+class EmailFormField extends StatefulWidget {
+  const EmailFormField({
+    @required TextEditingController controller,
+    @required Icon icon,
+    @required String label,
+  }): _controller=controller, _icon=icon, _label=label;
+
+  final TextEditingController _controller;
+  final Icon _icon;
+  final String _label;
+  @override
+  _EmailFormFieldState createState() => _EmailFormFieldState();
+}
+
+class _EmailFormFieldState extends State<EmailFormField> {
+  @override
+  Widget build(BuildContext context) {
+    return Padding(
+      padding: const EdgeInsets.all(8.0),
+      child: Row(
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            Expanded(
+              flex:9,
+              child: TextFormField(
+                //no se puede editar
+                enabled: false,
+                  //nos muestra el email del usuario autenticado
+                  controller: widget._controller,
+                  decoration: InputDecoration(
+                    prefixIcon: widget._icon,
+                    labelText: widget._label,
+                    labelStyle: TextStyle(
+                      fontSize:14,
+                    ),
+                  )
+              ),
+            ),
+            Container(
+              width:30,
+              child: IconButton(
+                  tooltip: "Go to settings",
+                  onPressed: () =>Navigator.of(context).pushNamed('/draweroptions', arguments: 'Settings'),
+                  icon: Icon(Icons.settings, color: Provider
+                      .of<ThemeModel>(context, listen: false)
+                      .mode == ThemeMode.dark
+                      ? Colors.tealAccent
+                      : Theme.of(context).primaryColor),
+            ),),
+          ]),
+    );
+  }
+}
+
+class CSCFormField extends StatefulWidget {
+  const CSCFormField({
+    @required TextEditingController controller,
+    @required Icon icon,
+    @required String label,
+    @required String Function(String) validate,
+    @required TextInputType type,
+}): _controller=controller, _icon=icon, _label=label, _validate=validate,_type=type;
+
+  final TextEditingController _controller;
+  final Icon _icon;
+  final String _label;
+  final String Function(String) _validate;
+  final TextInputType _type;
+  @override
+  _CSCFormFieldState createState() => _CSCFormFieldState();
+}
+
+class _CSCFormFieldState extends State<CSCFormField> {
+  @override
+  Widget build(BuildContext context) {
+    return Padding(
+      padding: const EdgeInsets.all(8.0),
+      child:TextFormField(
+                  keyboardType: widget._type,
+                  cursorColor: Provider.of<ThemeModel>(context, listen: false).mode==ThemeMode.dark ? Colors.tealAccent : Theme.of(context).primaryColor,
+                  controller: widget._controller,
+                  validator: widget._validate,
+                  decoration: InputDecoration(
+                    errorMaxLines: 10,
+                    errorStyle: TextStyle(
+                      fontWeight: FontWeight.w500,
+                      color: Provider.of<ThemeModel>(context, listen: false).mode==ThemeMode.dark ? Colors.tealAccent : Theme.of(context).primaryColor,
+                      fontSize: 13,
+                    ),
+                    prefixIcon: widget._icon,
+                    labelText: widget._label,
+                    labelStyle: TextStyle(
+                      fontSize:14,
+                    ),
+                    suffixIcon:
+                    IconButton(
+                      icon: Icon(Icons.clear),
+                      onPressed:() =>widget._controller.clear(),
+                    ),
+                  ),
+              ),
+            );
+  }
+}
+
+//recibe controller, icono, label, validator, key type
+//enable o not enable?
+class myUpdateFormField extends StatefulWidget {
+  const myUpdateFormField({
+    Key key,
+    @required TextEditingController controller,
+    @required Icon icon,
+    @required String label,
+    @required String Function(String) validate,
+    @required TextInputType type,
+  }) : _type=type, _label=label, _validate=validate, _controller=controller, _icon=icon, super(key: key);
+
+  final TextEditingController _controller;
+  final Icon _icon;
+  final String _label;
+  final String Function(String) _validate;
+  final TextInputType _type;
+
+  @override
+  _myUpdateFormFieldState createState() => _myUpdateFormFieldState();
+}
+
+class _myUpdateFormFieldState extends State<myUpdateFormField> {
+  bool _enable;
+
+  @override
+  void initState() {
+    _enable=false;
+    super.initState();
   }
 
-  //TODO TRAS VALIDATOR. VA A HABER UN NUEVO USUARIO Y SE LE ENVIA A USERHOME
   @override
-  void didChangeAppLifecycleState(AppLifecycleState state) async {
-    if (state == AppLifecycleState.resumed) {
-      Navigator.of(context).pushNamed('/userhome');
-    }
+  Widget build(BuildContext context) {
+    return Padding(
+      padding: const EdgeInsets.all(8.0),
+      child: Row(
+        mainAxisSize: MainAxisSize.min,
+          children: [
+            Expanded(
+              flex:9,
+              child: TextFormField(
+          enabled: _enable,
+                keyboardType: widget._type,
+                cursorColor: Provider.of<ThemeModel>(context, listen: false).mode==ThemeMode.dark ? Colors.tealAccent : Theme.of(context).primaryColor,
+                controller: widget._controller,
+                validator: widget._validate,
+                decoration: InputDecoration(
+                  errorMaxLines: 10,
+                  errorStyle: TextStyle(
+                    fontWeight: FontWeight.w500,
+                    color: Provider.of<ThemeModel>(context, listen: false).mode==ThemeMode.dark ? Colors.tealAccent : Theme.of(context).primaryColor,
+                    fontSize: 13,
+                  ),
+                  prefixIcon: widget._icon,
+                  labelText: widget._label,
+                  labelStyle: TextStyle(
+                    fontSize:14,
+                  ),
+                  suffixIcon:
+                      IconButton(
+                        icon: Icon(Icons.clear),
+                        onPressed:() =>widget._controller.clear(),
+                      ),
+                  )
+                ),
+            ),
+            Container(
+              width:30,
+              child: IconButton(
+                tooltip: _enable==true? "Edit off" : "Edit field",
+                  onPressed: ()
+                {
+                  setState(() {
+                    _enable = !_enable;
+                  });
+                }, icon: Icon(_enable==true? Icons.edit_off : Icons.edit, color: Provider
+                  .of<ThemeModel>(context, listen: false)
+                  .mode == ThemeMode.dark
+                  ? Colors.tealAccent
+                  : Theme.of(context).primaryColor)),
+            ),
+        ]),
+    );
   }
 }
 
@@ -555,12 +669,36 @@ String validateSurname (String value)
 
 String validateCity (String value)
 {
-  Pattern pattern= r'^([a-zA-Z])*$';
+  Pattern pattern= r'^([a-zA-Z\s])*$';
   RegExp regex = new RegExp(pattern);
   if (!regex.hasMatch(value))
     return 'Invalid city (only letters)';
-  if (value.length>30)
+  if (value.length>20)
     return 'City too long.';
+  else
+    return null;
+}
+
+String validateCountry (String value)
+{
+  Pattern pattern= r'^([a-zA-Z\s])*$';
+  RegExp regex = new RegExp(pattern);
+  if (!regex.hasMatch(value))
+    return 'Invalid country (only letters)';
+  if (value.length>20)
+    return 'Country too long.';
+  else
+    return null;
+}
+
+String validateState (String value)
+{
+  Pattern pattern= r'^([a-zA-Z\s])*$';
+  RegExp regex = new RegExp(pattern);
+  if (!regex.hasMatch(value))
+    return 'Invalid state (only letters)';
+  if (value.length>20)
+    return 'State too long.';
   else
     return null;
 }
@@ -594,3 +732,6 @@ String shortvalidatePhone (String value)
   else
     return null;
 }
+
+
+

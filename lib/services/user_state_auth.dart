@@ -620,23 +620,17 @@ class UserState with ChangeNotifier {
     }
   }
 
-  /*Future <bool> resetPassword (String email, String pwdnew, String pwdold) async
-  {
-    try {
-      await _auth.confirmPasswordReset(code: code, newPassword: newPassword)
-      await user.updatePassword(pwd);
-      String e= await signInEmailPwd(email, pwd);
-      print (e);
-      if (e==null)
-      return true;
-      else
-        return false;
-    } catch (e)
-    {
-      print (e);
-      return false;
-    }
-  }*/
+  //no tocamos el estado
+  Future <String> resetPasswordUser (String email) async {
+    try
+        {
+          await _auth.sendPasswordResetEmail(email: email);
+          return null;
+        } on FirebaseAuthException catch (e)
+        {
+          return e.code;
+        }
+  }
 
   //sign out
   Future signOut() async {
@@ -646,6 +640,23 @@ class UserState with ChangeNotifier {
     notifyListeners();
     return Future.delayed(Duration.zero);
   }
+
+  Future <String> deleteUser() async  {
+    try
+    {
+      /*_auth.signOut();
+      _status = Status.Unauthenticated;
+      notifyListeners();*/
+      await _auth.currentUser.delete();
+      await db.deleteUser(user.uid);
+      return null;
+
+    } on FirebaseAuthException catch (e)
+    {
+      return e.code;
+    }
+  }
+
 
   //metodo avisar listeners cambios FirebaseAuth
   Future<void> _onAuthStateChanged(User firebaseUser) async {

@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:myBlueAd/view/widgets/settings_widget.dart';
 import 'custom_appbar.dart';
 import 'custom_backbutton.dart';
 import 'error.dart';
@@ -49,8 +50,9 @@ Widget _drawerOptionWidget (String option)
       return Text("help");
       break;
 
+      //usuario registrado
     case "Settings":
-      return Text("settings");
+      return UserSettings();
       break;
 
     default:

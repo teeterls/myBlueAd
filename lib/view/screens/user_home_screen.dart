@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import '../widgets/add_profile.dart';
 import 'prin_blue_nouser.dart';
 import 'prin_blue.dart';
 import '../../model/theme_model.dart';
@@ -36,6 +35,7 @@ class _UserHomeScreenState extends State<UserHomeScreen> {
 
     if (userstate.user.email!=null)
     return WillPopScope(
+      //no deja ir para atras
       onWillPop: () async => false,
       child: SafeArea(
           child: Scaffold(

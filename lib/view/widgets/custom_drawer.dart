@@ -31,6 +31,7 @@ class _CustomDrawerState extends State<CustomDrawer> {
         myDrawerHeader(),
         myListTile(label: "About", icondata: Icons.info),
         myListTile(label: "Help", icondata: Icons.help),
+        if (userstate.user.email!=null)
         myListTile(label: "Settings", icondata: Icons.settings),
         //sign out distinto
         ListTile(

@@ -42,7 +42,6 @@ class SigninButtons extends StatelessWidget {
             Navigator.of(context).pushNamed('/signinoptions', arguments: 'Link');
           },
         ),
-        //TODO 3rd part auth
         SignInButton(
           Buttons.Facebook,
           mini:true,
@@ -170,7 +169,7 @@ class mySignOutButton extends StatelessWidget {
       ),
       content:
       Provider.of<UserState>(context, listen: false).user.email!=null?
-      Text("All your info & fav blue ads will be saved! Goodbye! :)"):Text("Goodbye! :)"),
+      Text("All your info & fav blue ads will be saved! See you soon! :)"):Text("See you soon! :)"),
       actions: [
         TextButton.icon(
           onPressed: () async {
@@ -185,7 +184,6 @@ class mySignOutButton extends StatelessWidget {
                 .user
                 .phoneNumber} has succesfully signed out'
                 : 'Signed out succesfully', context));
-            //todo dialog signout
             await Provider.of<UserState>(context, listen: false).signOut();
             //vuelta a pagina inicio
             Navigator.of(context).pushNamed('/');
@@ -247,7 +245,7 @@ class mySignOutButton extends StatelessWidget {
       ),
       content:
       Provider.of<UserState>(context, listen: false).user.email!=null?
-      Text("All your info & fav blue ads will be saved! Goodbye! :)"):Text("Goodbye! :)"),
+      Text("All your info & fav blue ads will be saved! See you soon! :)"):Text("See you soon! :)"),
       actions: [
         TextButton.icon(
           onPressed: () async {
@@ -307,8 +305,6 @@ class mySignOutButton extends StatelessWidget {
       ],
     );
   }
-
-
 
 }
 
