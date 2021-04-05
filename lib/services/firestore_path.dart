@@ -1,4 +1,4 @@
-class FirestoreUserPath {
+class FirestorePath {
   /*static String restaurantUserRating(String restaurantId, String uid) =>
       'restaurants/$restaurantId/ratings/$uid';*/
   //all users

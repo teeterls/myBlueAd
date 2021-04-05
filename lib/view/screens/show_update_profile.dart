@@ -57,8 +57,8 @@ class _ShowUpdateProfileState extends State<ShowUpdateProfile> {
     _country= TextEditingController(text: widget._usuario.country==null ? "" : widget._usuario.country);
     _state= TextEditingController(text: widget._usuario.state==null ? "" : widget._usuario.state);
      _phone= TextEditingController(text: widget._usuario.phone==null? "" : (widget._usuario.phone).toString());
-
   }
+
   @override
   Widget build(BuildContext context) {
     return Scrollbar(

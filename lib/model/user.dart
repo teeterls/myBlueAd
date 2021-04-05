@@ -1,4 +1,3 @@
-import 'package:flutter/material.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 //TODO FOTO -> String url
 class Usuario
@@ -46,7 +45,6 @@ class Usuario
         'lastaccess': _lastaccess,
       };
 
-  //TODO UPDATE y otros signin?? ->  reescribe el documento con los nuevos valores. no añade uno nuevo porque al estar autenticado no cambia uid.
 
   //getters
   String get email => _email;
@@ -95,8 +93,6 @@ List<Usuario> toUserList(QuerySnapshot query)
 
 Usuario toUser(DocumentSnapshot doc)
 {
-  //List<DocumentSnapshot> docs= query.docs;
-  //iterate, para cada documento almacenado se crea un objeto mensaje
-  //lista forzada, porque map devuelve un iterable, no una lista
+
   return Usuario.fromFirestore(doc);
 }

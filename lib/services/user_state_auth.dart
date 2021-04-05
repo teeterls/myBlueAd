@@ -7,7 +7,7 @@ import 'package:flutter_login_facebook/flutter_login_facebook.dart';
 import 'package:flutter_twitter_login/flutter_twitter_login.dart';
 import 'package:google_sign_in/google_sign_in.dart';
 
-import 'firestore_db.dart' as db;
+import 'firestore_db_user.dart' as db;
 import '../model/user.dart';
 
 //clase que se encarga de gestionar las sesiones y recoge los metodos de auth firebase
@@ -48,7 +48,8 @@ class UserState with ChangeNotifier {
            //username
            await us.updateProfile(displayName: username);
            Usuario _usuario = Usuario(us.uid,email: us.email,username: username);
-           await db.registerUser(us.uid, _usuario);
+           String e= await db.registerUser(us.uid, _usuario);
+           if (e!=null)return e;
          });
       try
           {
@@ -95,10 +96,10 @@ class UserState with ChangeNotifier {
           {
             User us= currentUser.user;
             Usuario _usuario = Usuario(us.uid, email: us.email);
-            await db.signUser(us.uid, _usuario);
-
+            String e= await db.signUser(us.uid, _usuario);
+            return e;
           });
-      return null;
+
     } on FirebaseAuthException catch (e) {
       _status = Status.Unauthenticated;
       notifyListeners();
@@ -180,11 +181,9 @@ class UserState with ChangeNotifier {
         ).then((currentUser) async {
             User us= currentUser.user;
             Usuario _usuario = Usuario(us.uid, email: us.email);
-            print(_usuario.email);
-            print(_usuario.uid);
-            await db.signUser(user.uid, _usuario);
+           String e= await db.signUser(user.uid, _usuario);
+           return e;
         });
-        return null;
       }
     } on FirebaseAuthException catch (e)
     {
@@ -205,13 +204,7 @@ class UserState with ChangeNotifier {
           verificationId: _verificationId,
           smsCode: smscode,
         );
-        await _auth.signInWithCredential(credential)/*.then((currentUser) async {
-          User us= currentUser.user;
-          Usuario _usuario = Usuario(us.uid, phone: int.parse(us.phoneNumber));
-          print(_usuario.phone);
-          print(_usuario.uid);
-          await db.signUser(user.uid, _usuario);
-        });*/;
+        await _auth.signInWithCredential(credential);
         return null;
       } on FirebaseAuthException catch (e) {
         _status = Status.Unauthenticated;
@@ -269,10 +262,10 @@ class UserState with ChangeNotifier {
       {
         User us= currentUser.user;
         Usuario _usuario = Usuario(us.uid, email: us.email);
-        await db.signUser(us.uid, _usuario);
-
+       String e= await db.signUser(us.uid, _usuario);
+        return e;
       });
-        return null;
+
     } on FirebaseAuthException catch (e) {
       _status = Status.Unauthenticated;
       notifyListeners();
@@ -311,7 +304,7 @@ class UserState with ChangeNotifier {
         {
           User us= currentUser.user;
           Usuario _usuario = Usuario(us.uid, email: us.email);
-          await db.signUser(us.uid, _usuario);
+          e= await db.signUser(us.uid, _usuario);
 
         });
           break;
@@ -370,7 +363,7 @@ class UserState with ChangeNotifier {
           {
             User us= currentUser.user;
             Usuario _usuario = Usuario(us.uid, email: us.email);
-            await db.signUser(us.uid, _usuario);
+            e= await db.signUser(us.uid, _usuario);
 
           });
           break;
@@ -511,10 +504,9 @@ class UserState with ChangeNotifier {
     {
     User us= currentUser.user;
     Usuario _usuario = Usuario(us.uid, email: us.email);
-    await db.signUser(us.uid, _usuario);
-
+    String e= await db.signUser(us.uid, _usuario);
+    return e;
     });
-      return null;
     } on FirebaseAuthException catch (e) {
       _status = Status.Unauthenticated;
       notifyListeners();
@@ -576,8 +568,8 @@ class UserState with ChangeNotifier {
       _status = Status.Unauthenticated;
       notifyListeners();*/
       await _auth.currentUser.delete();
-      await db.deleteUser(user.uid);
-      return null;
+     String e= await db.deleteUser(user.uid);
+      return e;
 
     } on FirebaseAuthException catch (e)
     {

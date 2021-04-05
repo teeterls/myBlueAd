@@ -3,7 +3,7 @@ import 'package:provider/provider.dart';
 import '../screens/show_update_profile.dart';
 import '../../model/user.dart';
 import '../../model/theme_model.dart';
-import '../../services/firestore_db.dart' as db;
+import '../../services/firestore_db_user.dart' as db;
 import '../../services/user_state_auth.dart';
 import 'loading.dart';
 import 'error.dart';
@@ -30,7 +30,7 @@ class _UserProfileState extends State<UserProfile> {
             return Error(snapshot.error);
           }
           if (!snapshot.hasData) {
-            return Loading();
+            return Center(child: Loading());
           }
           //hay datos del perfil del usuario identificado con el uid al sign in/register
           //

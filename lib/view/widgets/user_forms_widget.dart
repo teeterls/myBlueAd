@@ -1,16 +1,15 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:gradient_widgets/gradient_widgets.dart';
+import 'package:myBlueAd/services/user_state_auth.dart';
 import '../../model/user.dart';
 import '../../model/theme_model.dart';
-import '../../services/user_state_auth.dart';
-import 'custom_snackbar.dart';
-import 'home_forms_widget.dart';
 import 'package:csc_picker/csc_picker.dart';
 import 'package:provider/provider.dart';
 import 'dart:io' show Platform;
-
-import '../../services/firestore_db.dart' as db;
+//bbdd
+import '../../services/firestore_db_user.dart' as db;
+import 'custom_snackbar.dart';
 
 //todo photo image picker
 
@@ -58,7 +57,8 @@ class _UserProfileFormState extends State<UserProfileForm> with WidgetsBindingOb
   [
     "Male",
     "Female",
-    "Other"
+    "Other",
+    "No answer"
   ];
   List <String> _maritalstatus =
   [
@@ -68,7 +68,8 @@ class _UserProfileFormState extends State<UserProfileForm> with WidgetsBindingOb
     "Divorced",
     "Separated",
     "Registered partnership",
-    "Other"
+    "Other",
+    "No answer"
   ];
 
   @override
@@ -354,6 +355,7 @@ class _UserProfileFormState extends State<UserProfileForm> with WidgetsBindingOb
                             type: TextInputType.number)),
                   ]
               ),
+              SizedBox(height:20),
               //boton
               Padding(
                 padding: const EdgeInsets.symmetric(
@@ -364,21 +366,22 @@ class _UserProfileFormState extends State<UserProfileForm> with WidgetsBindingOb
                   callback: () async {
                     //validar formulario todos los campos
                     if (widget._formKey.currentState.validate()) {
-                      print(_stateValue);
-                      print(_countryValue);
-                      print(_genderValue);
-                      print(_mstatusValue);
                       widget._formKey.currentState.save();
-                      //todo metodo update
-                      /*String e = await Provider.of<UserState>(context, listen:false).register(widget._email.text,
-                           widget._password.text, widget._username.text);
-                       String err = await addProfile();
+                      String e= await _updateProfile();
+                      if (e!=null)
+                        {
+                          ScaffoldMessenger.of(context).showSnackBar(
+                              CustomSnackBar(
+                                  "Update profile failed with: ${e}", context));
+                        }
+                      else
+                        //se le envia a algun sitio?
+                        {
+                          ScaffoldMessenger.of(context).showSnackBar(
+                              CustomSnackBar(
+                                  "Your user profile has been updated succesfully :)", context));
+                        }
 
-
-                         widget._formKey.currentState.save();
-                         //customsnackbar;
-                       }
-                       */
                     }
                   },
                   gradient: Gradients.jShine,
@@ -391,10 +394,81 @@ class _UserProfileFormState extends State<UserProfileForm> with WidgetsBindingOb
         ,),
     );
   }
-}
-Future <void> updateProfile() async
-{
+  //TODO METODO UPDATE PROFILE
+  Future <String> _updateProfile() async
+  {
+    try
+        {
+          String uid= Provider.of<UserState>(context, listen:false).user.uid;
+          Usuario usuario= Usuario(uid, email: widget._email.text);
+          //comprobar todos los campos-> "" es vacio VIP
+          if (widget._username.text!="")
+            usuario.username= widget._username.text;
+          else
+            usuario.username=null;
 
+          if (widget._name.text!="")
+            usuario.name= widget._name.text;
+          else
+            usuario.name=null;
+
+          if (widget._surname.text!="")
+            usuario.surname= widget._surname.text;
+          else
+            usuario.surname=null;
+
+          if (widget._age.text!="")
+            usuario.age= int.parse(widget._age.text);
+          else
+            usuario.age=null;
+
+          if (widget._phone.text!="")
+            usuario.phonenumber= int.parse(widget._phone.text);
+          else
+            usuario.phonenumber=null;
+
+          if (widget._city.text!="")
+            usuario.city= widget._city.text;
+          else
+            usuario.city=null;
+
+          if (widget._address.text!="")
+            usuario.address= widget._address.text;
+          else
+            usuario.address=null;
+
+          //countryvalue -> se copia en el formfield
+          if (widget._country.text!="")
+            usuario.country= widget._country.text;
+          else
+            usuario.country=null;
+
+          //statevalue -> se copia en el formfield
+          if (widget._state.text!="")
+            usuario.state= widget._state.text;
+          else
+            usuario.state=null;
+
+          //gendervalue distinto al hint
+          if (_genderValue!="Gender" || _genderValue!="No answer" )
+            usuario.gender=_genderValue;
+          else
+            usuario.gender=null;
+
+          //mstatusvalue distinto al hint
+            if (_mstatusValue!="Marital status" || _mstatusValue!="No answer")
+              usuario.maritalstatus=_mstatusValue;
+            else
+              usuario.maritalstatus=null;
+
+            String e= await db.updateUser(uid, usuario);
+            return e;
+
+        } catch (e)
+    {
+      return e.toString();
+    }
+  }
 
 }
 

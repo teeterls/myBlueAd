@@ -12,8 +12,24 @@ class PrincipalBlue extends StatefulWidget {
 //TODO DETECTAR BLUETOOTH Y LOCATION
 
 class _PrincipalBlueState extends State<PrincipalBlue> {
+  //boton
+  bool _pressed;
+  List <String> _lista= <String> [];
+
+  @override
+  void initState() {
+    // TODO: implement initState
+    _pressed=false;
+  }
   @override
   Widget build(BuildContext context) {
+    _lista.add("Hola");
+    _lista.add("Hola1");
+    _lista.add("Hola2");
+    _lista.add("Hola3");
+    _lista.add("Hola4");
+    _lista.add("Hola5");
+    _lista.shuffle();
     //control estado, porque no se guardan anonimos o phone en la bbdd -> uid cambia cada vez.
     final userstate = Provider.of<UserState>(context, listen: false);
     if (userstate.user.email != null) {
@@ -27,7 +43,20 @@ class _PrincipalBlueState extends State<PrincipalBlue> {
             SizedBox(height:20),
             Text("Waiting for blue ads...", style: TextStyle(color: Colors.blueAccent, fontWeight: FontWeight.bold),),
             SizedBox(height: 20),
-            BlueLoading()
+            Visibility(visible: !_pressed, child: BlueLoading()),
+            //BOTON QUE AÑADE BEACONS
+            FlatButton(
+              child: Text("shuffle"),
+              onPressed: ()
+                {
+                  setState(() {
+                    _pressed = !_pressed;
+                  });
+                  print(_lista);
+                  _lista.shuffle();
+                  print(_lista);
+                }
+            )
           ],),
       );
     }
