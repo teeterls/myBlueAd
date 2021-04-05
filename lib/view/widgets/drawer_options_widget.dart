@@ -22,7 +22,7 @@ class DrawerOptionsWidget extends StatelessWidget {
             drawer: CustomDrawer(),
             appBar: CustomAppBar(_scaffoldKey, context),
             floatingActionButton: CustomBackButton(),
-            body: _drawerOptionWidget(_option),
+            body: Scrollbar(child: SingleChildScrollView(child: _drawerOptionWidget(_option))),
           ),
     );
   }

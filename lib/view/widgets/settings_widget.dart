@@ -54,90 +54,93 @@ class SettingsButtons extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Column(
-            children: <Widget>[
+    return Center(
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.center,
+              children: <Widget>[
+        Container(
+        width: 300,
+        height:60,
+        child: ElevatedButton(
+
+          onPressed: () async => Navigator.of(context).pushNamed('/useraction', arguments: "changeemail"),
+          child: Row (
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              mainAxisSize: MainAxisSize.max,
+              children : <Widget> [
+                Text("Change email", style: TextStyle(color:Colors.white, fontSize: 16)),
+                Icon(Icons.arrow_forward_ios, color:Provider.of<ThemeModel>(context, listen: false).mode==ThemeMode.dark ? Colors.tealAccent : Colors.yellowAccent),
+              ]
+          ),
+          style: OutlinedButton.styleFrom(
+              backgroundColor: Provider.of<ThemeModel>(context, listen: false).mode==ThemeMode.dark ? Colors.blueAccent : Theme.of(context).primaryColor,
+              shape: RoundedRectangleBorder(
+                borderRadius: BorderRadius.circular(30.0),
+              ),
+              elevation:3.0
+          ),
+        ),
+      ),
+                SizedBox(height:20),
       Container(
       width: 300,
       height:60,
       child: ElevatedButton(
-
-        onPressed: () async => Navigator.of(context).pushNamed('/useraction', arguments: "changeemail"),
-        child: Row (
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-            mainAxisSize: MainAxisSize.max,
-            children : <Widget> [
-              Text("Change email", style: TextStyle(color:Colors.white, fontSize: 16)),
-              Icon(Icons.arrow_forward_ios, color:Provider.of<ThemeModel>(context, listen: false).mode==ThemeMode.dark ? Colors.tealAccent : Colors.yellowAccent),
-            ]
-        ),
-        style: OutlinedButton.styleFrom(
-            backgroundColor: Provider.of<ThemeModel>(context, listen: false).mode==ThemeMode.dark ? Colors.blueAccent : Theme.of(context).primaryColor,
-            shape: RoundedRectangleBorder(
-              borderRadius: BorderRadius.circular(30.0),
-            ),
-            elevation:3.0
-        ),
-      ),
-    ),
-              SizedBox(height:20),
-    Container(
-    width: 300,
-    height:60,
-    child: ElevatedButton(
-    onPressed: () async
-    {
-      String e= await Provider.of<UserState>(context, listen:false).resetPasswordUser(Provider.of<UserState>(context, listen:false).user.email);
-      if (e!=null)
+      onPressed: () async
       {
-        ScaffoldMessenger.of(context).showSnackBar(
-            CustomSnackBar("Change password failed with: ${e}.", context));
-      } else
-        //se queda donde esta
-        ScaffoldMessenger.of(context).showSnackBar(
-            CustomSnackBar(
-                "Email sent to ${Provider.of<UserState>(context, listen:false).user.email} to reset your password",
-                context));
-    },
-    child: Row (
-    mainAxisAlignment: MainAxisAlignment.spaceBetween,
-    mainAxisSize: MainAxisSize.max,
-    children : <Widget> [
-    Text("Change password", style: TextStyle(color:Colors.white, fontSize: 16)),
-    Icon(Icons.arrow_forward_ios, color:Provider.of<ThemeModel>(context, listen: false).mode==ThemeMode.dark ? Colors.tealAccent : Colors.yellowAccent),
-    ]
-    ),
-    style: OutlinedButton.styleFrom(
-    backgroundColor: Provider.of<ThemeModel>(context, listen: false).mode==ThemeMode.dark ? Colors.blueAccent : Theme.of(context).primaryColor,
-    shape: RoundedRectangleBorder(
-    borderRadius: BorderRadius.circular(30.0),
-    ),
-    elevation:3.0
-    ),
-    ),
-    ),
-              SizedBox(height:20),
-              Container(
-              width: 300,
-    height:60,
-    child: ElevatedButton(
-    onPressed: () async => _showSignOutDialog(context),
-    child: Row (
-    mainAxisAlignment: MainAxisAlignment.spaceBetween,
-    mainAxisSize: MainAxisSize.max,
-    children : <Widget> [
-    Text("Delete my account", style: TextStyle(color:Colors.white, fontSize: 16)),
-    Icon(Icons.arrow_forward_ios, color:Provider.of<ThemeModel>(context, listen: false).mode==ThemeMode.dark ? Colors.tealAccent : Colors.yellowAccent),
-    ]
-    ),
-    style: OutlinedButton.styleFrom(
-    backgroundColor: Provider.of<ThemeModel>(context, listen: false).mode==ThemeMode.dark ? Colors.blueAccent : Theme.of(context).primaryColor,
-    shape: RoundedRectangleBorder(
-    borderRadius: BorderRadius.circular(30.0),
-    ),
-    elevation:3.0
-    ),
-    ),),
-      ],
+        String e= await Provider.of<UserState>(context, listen:false).resetPasswordUser(Provider.of<UserState>(context, listen:false).user.email);
+        if (e!=null)
+        {
+          ScaffoldMessenger.of(context).showSnackBar(
+              CustomSnackBar("Change password failed with: ${e}.", context));
+        } else
+          //se queda donde esta
+          ScaffoldMessenger.of(context).showSnackBar(
+              CustomSnackBar(
+                  "Email sent to ${Provider.of<UserState>(context, listen:false).user.email} to reset your password",
+                  context));
+      },
+      child: Row (
+      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+      mainAxisSize: MainAxisSize.max,
+      children : <Widget> [
+      Text("Change password", style: TextStyle(color:Colors.white, fontSize: 16)),
+      Icon(Icons.arrow_forward_ios, color:Provider.of<ThemeModel>(context, listen: false).mode==ThemeMode.dark ? Colors.tealAccent : Colors.yellowAccent),
+      ]
+      ),
+      style: OutlinedButton.styleFrom(
+      backgroundColor: Provider.of<ThemeModel>(context, listen: false).mode==ThemeMode.dark ? Colors.blueAccent : Theme.of(context).primaryColor,
+      shape: RoundedRectangleBorder(
+      borderRadius: BorderRadius.circular(30.0),
+      ),
+      elevation:3.0
+      ),
+      ),
+      ),
+                SizedBox(height:20),
+                Container(
+                width: 300,
+      height:60,
+      child: ElevatedButton(
+      onPressed: () async => _showSignOutDialog(context),
+      child: Row (
+      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+      mainAxisSize: MainAxisSize.max,
+      children : <Widget> [
+      Text("Delete my account", style: TextStyle(color:Colors.white, fontSize: 16)),
+      Icon(Icons.arrow_forward_ios, color:Provider.of<ThemeModel>(context, listen: false).mode==ThemeMode.dark ? Colors.tealAccent : Colors.yellowAccent),
+      ]
+      ),
+      style: OutlinedButton.styleFrom(
+      backgroundColor: Provider.of<ThemeModel>(context, listen: false).mode==ThemeMode.dark ? Colors.blueAccent : Theme.of(context).primaryColor,
+      shape: RoundedRectangleBorder(
+      borderRadius: BorderRadius.circular(30.0),
+      ),
+      elevation:3.0
+      ),
+      ),),
+        ],
+      ),
     );
   }
 

@@ -264,27 +264,21 @@ class _ChangeEmailFormState extends State<ChangeEmailForm> {
                     //validar formulario todos los campos
                     if (widget._formKey.currentState.validate()) {
                       String e= await Provider.of<UserState>(context, listen:false).updateEmail(widget._email.text, widget._pwd.text, widget._newemail.text);
-                      /*if (e=="Verify"){
-                        ScaffoldMessenger.of(context).showSnackBar(
-                            CustomSnackBar(
-                                "Email sent to ${widget._email.text} to verify your new email account",
-                                context));
-                      } else if (e!=null)
+                      if (e!=null)
                         {
                           ScaffoldMessenger.of(context).showSnackBar(
                               CustomSnackBar(
                                   "Changing email account failed with: ${e}",
                                   context));
                         }
-
                       else {
                         widget._formKey.currentState.save();
                         ScaffoldMessenger.of(context).showSnackBar(
                             CustomSnackBar(
-                                "ok",
+                                "Change email succesfully. Email sent to ${widget._newemail.text} to undo the change.",
                                 context));
                         Navigator.of(context).pop();
-                      }*/
+                      }
                     }
                   },
                   gradient: Gradients.jShine,

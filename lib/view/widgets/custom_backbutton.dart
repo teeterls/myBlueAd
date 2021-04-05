@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:myBlueAd/services/user_state_auth.dart';
 import '../../model/theme_model.dart';
 import 'package:provider/provider.dart';
 import 'dart:io' show Platform;
@@ -10,7 +11,15 @@ class CustomBackButton extends StatelessWidget {
         hoverColor: Colors.blue,
         splashColor: Colors.blue,
         backgroundColor: Colors.white54,
-      onPressed: () =>Navigator.of(context).pop()
+      onPressed: ()
+        {
+          if (Provider.of<UserState>(context, listen:false).user==null)
+            {
+              Navigator.of(context).pushNamed('/home');
+            }
+          else
+          Navigator.of(context).pop();
+        }
     );
   }
 }

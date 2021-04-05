@@ -125,7 +125,10 @@ class _RegisterFormState extends State<RegisterForm> with WidgetsBindingObserver
                           if (Provider.of<UserState>(context, listen:false).user.emailVerified)
                          Navigator.of(context).pushNamed("/userhome");
                           }
-                          }
+                          } else if (!_check)
+                          setState(() {
+                            _visible=true;
+                          });
                         },
                       gradient: Gradients.jShine,
                       shadowColor: Gradients.jShine.colors.last.withOpacity(
