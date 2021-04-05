@@ -16,16 +16,14 @@ class DrawerOptionsWidget extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return WillPopScope(
-      onWillPop: () async => false,
-      child: SafeArea(
+    return  SafeArea(
           child: Scaffold(
             key: _scaffoldKey,
             drawer: CustomDrawer(),
             appBar: CustomAppBar(_scaffoldKey, context),
             floatingActionButton: CustomBackButton(),
             body: _drawerOptionWidget(_option),
-          )),
+          ),
     );
   }
 }

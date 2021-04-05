@@ -126,7 +126,7 @@ class _UserProfileFormState extends State<UserProfileForm> with WidgetsBindingOb
                   label: "Username",
                   validate: shortvalidateUsername,
                   type: TextInputType.text),
-              EmailFormField(controller: widget._email,
+              EmailFormField(settings: false, controller: widget._email,
                   icon: Icon(Icons.mail),
                   label: "Email",
                   ),
@@ -402,14 +402,16 @@ Future <void> updateProfile() async
 //no es posible cambiarlo desde aqui, hay que ir a settings. tampoco se valida.
 class EmailFormField extends StatefulWidget {
   const EmailFormField({
+    @required bool settings,
     @required TextEditingController controller,
     @required Icon icon,
     @required String label,
-  }): _controller=controller, _icon=icon, _label=label;
+  }): _controller=controller, _icon=icon, _label=label, _settings=settings;
 
   final TextEditingController _controller;
   final Icon _icon;
   final String _label;
+  final bool _settings;
   @override
   _EmailFormFieldState createState() => _EmailFormFieldState();
 }
@@ -417,6 +419,7 @@ class EmailFormField extends StatefulWidget {
 class _EmailFormFieldState extends State<EmailFormField> {
   @override
   Widget build(BuildContext context) {
+    if (!widget._settings)
     return Padding(
       padding: const EdgeInsets.all(8.0),
       child: Row(
@@ -451,6 +454,23 @@ class _EmailFormFieldState extends State<EmailFormField> {
             ),),
           ]),
     );
+    else
+      return Padding(
+        padding: const EdgeInsets.all(8.0),
+        child: TextFormField(
+                  //no se puede editar
+                    enabled: false,
+                    //nos muestra el email del usuario autenticado
+                    controller: widget._controller,
+                    decoration: InputDecoration(
+                      prefixIcon: widget._icon,
+                      labelText: widget._label,
+                      labelStyle: TextStyle(
+                        fontSize:14,
+                      ),
+                    )
+                ),
+      );
   }
 }
 

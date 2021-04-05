@@ -83,52 +83,6 @@ class UserState with ChangeNotifier {
       }
     }
 
-  Future<String> registerwithPhone (String email, String pwd,String username, String phone) async
-  {
-    _status = Status.Authenticating;
-    notifyListeners();
-    try {
-      await _auth.createUserWithEmailAndPassword(
-          email: email, password: pwd).then((currentUser) async
-      {
-        User us= currentUser.user;
-        //username
-        await us.updateProfile(displayName: username);
-        Usuario _usuario = Usuario(us.uid,email: us.email,username: username, phone: int.parse(phone));
-        await db.registerUser(us.uid, _usuario);
-      });
-      try
-      {
-        if (_user.emailVerified) {
-          _status = Status.Authenticated;
-          notifyListeners();
-          return null;
-        }
-
-        else {
-          _status = Status.Unauthenticated;
-          notifyListeners();
-          await _user.sendEmailVerification(
-              _getactionCodeSettings('emailverification'));
-          return "Verify";
-        }
-      } on FirebaseAuthException catch (e) {
-        _status = Status.Unauthenticated;
-        notifyListeners();
-        return e.code;
-      }
-    } on FirebaseAuthException catch (e) {
-      _status = Status.Unauthenticated;
-      notifyListeners();
-      if (e.code== 'email-already-in-use')
-      {
-
-        return "This email account already exists.Sign in or reset your password if needed";
-      }
-      else
-        return e.code;
-    }
-  }
   Future<String> signInEmailPwd(String email, String password) async {
     //authenticating
     _status = Status.Authenticating;
@@ -174,46 +128,6 @@ class UserState with ChangeNotifier {
       return e.code;
     }
   }
-  //TODO changes anonimo
-  //ya esta autenticado, solo queremos hacer update. no tocamos el estado.
-  //nos pasa el email y pwd del form
-  Future <String> updateAnonymous (String email, String password) async {
-    try
-        {
-          //obtenemos el current user que esta autenticado (es anonimo)
-          print("hola");
-          await _auth.currentUser.updateEmail(email);
-          await _auth.currentUser.updatePassword(password);
-          user.updateEmail(email);
-          notifyListeners();
-          return null;
-        } on FirebaseAuthException catch (e) {
-      //gestionar e -> email already in use o credentials used (por otro provider)
-        if (e.code== 'email-already-in-use') {
-          print("hola");
-          return "Email already in use. Use another email to update your profile";
-        }
-        if (e.code== 'credential-already-in-use')
-          {
-            return (await linkAnonymus(e.credential));
-
-          }
-      else
-      return e.code;
-    }
-
-  }
-
-  Future <String> linkAnonymus (AuthCredential credential) async {
-    try {
-       await _auth.signInWithCredential(credential);
-      return null;
-    } on FirebaseAuthException catch (e)
-    {
-      return e.code;
-    }
-  }
-
 
   Future <String> signInWithLink(String email) async {
     //authenticating
@@ -631,6 +545,20 @@ class UserState with ChangeNotifier {
           return e.code;
         }
   }
+
+
+  Future <String> updateEmail(String email, String password, String newemail) async {
+    try {
+      await _auth.currentUser.updateEmail(newemail);
+      _auth.signOut();
+      //puede que de algun fallo.
+      String er= await signInEmailPwd(newemail, password);
+      return er;
+    } on FirebaseAuthException catch (e)
+    {
+      return e.code;
+    }
+    }
 
   //sign out
   Future signOut() async {

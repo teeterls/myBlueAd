@@ -54,7 +54,7 @@ Future <void> signUser (String userId, Usuario usuario) async {
 
   await userRef.get().then((userdoc) async
   {
-    //no existe, se crea uno nuevo (pero sin username)
+    //no existe, se crea uno nuevo
     if (!userdoc.exists) {
       await db.doc(FirestoreUserPath.user(userId)).set(usuario.toFirestore());
       //update solamente la fecha
@@ -64,6 +64,7 @@ Future <void> signUser (String userId, Usuario usuario) async {
         db.doc(FirestoreUserPath.user(userId)).update({"username": usuario.username});
       if (usuario.email!=null)
         db.doc(FirestoreUserPath.user(userId)).update({"email": usuario.email});
+      //todo comprobar resto de campos
     }
   });
 }

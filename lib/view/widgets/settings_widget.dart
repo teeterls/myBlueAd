@@ -7,12 +7,15 @@ import 'package:gradient_widgets/gradient_widgets.dart';
 import 'package:myBlueAd/model/theme_model.dart';
 import 'package:myBlueAd/model/user.dart';
 import 'package:myBlueAd/services/user_state_auth.dart';
+import 'package:myBlueAd/view/widgets/custom_drawer.dart';
 import 'package:provider/provider.dart';
 
+import 'custom_appbar.dart';
 import 'custom_snackbar.dart';
 
 //TODO cambios email + dialog
 //reset pwd y delete account
+//TODO SCAFFOLD con drawer
 
 class UserSettings extends StatefulWidget {
   @override
@@ -20,27 +23,28 @@ class UserSettings extends StatefulWidget {
 }
 
 class _UserSettingsState extends State<UserSettings> {
+  final GlobalKey<ScaffoldState> _scaffoldKey = new GlobalKey<ScaffoldState>();
   @override
   Widget build(BuildContext context) {
     return Padding(
-      padding: const EdgeInsets.all(16.0),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-            children: <Widget>
-              [
-              Padding(
-                padding: const EdgeInsets.only(left:5, top: 10.0),
-                child: Text("Settings", style: TextStyle(
-                  fontFamily: "Verdana",
-                  fontSize: 22,
-                  fontWeight: FontWeight.bold,
-                  color: Colors.blueAccent,
-                ),),
-              ),
-              SettingsButtons(),
-
-            ]
-      ),
+          padding: const EdgeInsets.all(16.0),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+                children: <Widget>
+                  [
+                  Padding(
+                    padding: const EdgeInsets.only(left:5, top: 20.0),
+                    child: Text("Settings", style: TextStyle(
+                      fontFamily: "Verdana",
+                      fontSize: 22,
+                      fontWeight: FontWeight.bold,
+                      color: Colors.blueAccent,
+                    ),),
+                  ),
+                  SizedBox(height:40),
+                  SettingsButtons(),
+                ]
+          ),
     );
   }
 }
@@ -50,56 +54,89 @@ class SettingsButtons extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Row(
-      mainAxisSize: MainAxisSize.max,
-      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-      children: <Widget>[
-        SignInButtonBuilder(
-          shape: StadiumBorder(),
-          icon: Icons.link,
-          splashColor: Colors.blue,
-          iconColor: Provider.of<ThemeModel>(context, listen: false).mode==ThemeMode.dark ? Colors.black : Colors.white,
-          backgroundColor: Provider.of<ThemeModel>(context, listen: false).mode==ThemeMode.dark ? Colors.tealAccent : Theme.of(context).primaryColor,
-          mini:true,
-          text:"",
-          onPressed: () {
+    return Column(
+            children: <Widget>[
+      Container(
+      width: 300,
+      height:60,
+      child: ElevatedButton(
 
-          },
+        onPressed: () async => Navigator.of(context).pushNamed('/useraction', arguments: "changeemail"),
+        child: Row (
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            mainAxisSize: MainAxisSize.max,
+            children : <Widget> [
+              Text("Change email", style: TextStyle(color:Colors.white, fontSize: 16)),
+              Icon(Icons.arrow_forward_ios, color:Provider.of<ThemeModel>(context, listen: false).mode==ThemeMode.dark ? Colors.tealAccent : Colors.yellowAccent),
+            ]
         ),
-        GradientButton(
-          increaseWidthBy: 15.0,
-          increaseHeightBy: 10.0,
-          shapeRadius: BorderRadius.circular(10.0),
-          //registrarse
-          child: Center(child: Text('Reset password')),
-          callback: () async {
-            String e= await Provider.of<UserState>(context, listen:false).resetPasswordUser(Provider.of<UserState>(context).user.email);
-            if (e!=null)
-            {
-              ScaffoldMessenger.of(context).showSnackBar(
-                  CustomSnackBar("Change password failed with: ${e}.", context));
-            } else
-              //se queda donde esta
-              ScaffoldMessenger.of(context).showSnackBar(
-                  CustomSnackBar(
-                      "Email sent to ${Provider.of<UserState>(context).user.email} to reset your password",
-                      context));
-          },
-          gradient: Gradients.jShine,
-          shadowColor: Gradients.jShine.colors.last.withOpacity(
-              0.25),
+        style: OutlinedButton.styleFrom(
+            backgroundColor: Provider.of<ThemeModel>(context, listen: false).mode==ThemeMode.dark ? Colors.blueAccent : Theme.of(context).primaryColor,
+            shape: RoundedRectangleBorder(
+              borderRadius: BorderRadius.circular(30.0),
+            ),
+            elevation:3.0
         ),
-        GradientButton(
-          increaseWidthBy: 15.0,
-          increaseHeightBy: 10.0,
-          //entrar
-          child: Text('Delete account'),
-          callback: () async => _showSignOutDialog(context),
-          shapeRadius: BorderRadius.circular(10.0),
-          gradient: Gradients.ali,
-          shadowColor: Gradients.ali.colors.last
-              .withOpacity(0.25),
-        ),
+      ),
+    ),
+              SizedBox(height:20),
+    Container(
+    width: 300,
+    height:60,
+    child: ElevatedButton(
+    onPressed: () async
+    {
+      String e= await Provider.of<UserState>(context, listen:false).resetPasswordUser(Provider.of<UserState>(context, listen:false).user.email);
+      if (e!=null)
+      {
+        ScaffoldMessenger.of(context).showSnackBar(
+            CustomSnackBar("Change password failed with: ${e}.", context));
+      } else
+        //se queda donde esta
+        ScaffoldMessenger.of(context).showSnackBar(
+            CustomSnackBar(
+                "Email sent to ${Provider.of<UserState>(context, listen:false).user.email} to reset your password",
+                context));
+    },
+    child: Row (
+    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+    mainAxisSize: MainAxisSize.max,
+    children : <Widget> [
+    Text("Change password", style: TextStyle(color:Colors.white, fontSize: 16)),
+    Icon(Icons.arrow_forward_ios, color:Provider.of<ThemeModel>(context, listen: false).mode==ThemeMode.dark ? Colors.tealAccent : Colors.yellowAccent),
+    ]
+    ),
+    style: OutlinedButton.styleFrom(
+    backgroundColor: Provider.of<ThemeModel>(context, listen: false).mode==ThemeMode.dark ? Colors.blueAccent : Theme.of(context).primaryColor,
+    shape: RoundedRectangleBorder(
+    borderRadius: BorderRadius.circular(30.0),
+    ),
+    elevation:3.0
+    ),
+    ),
+    ),
+              SizedBox(height:20),
+              Container(
+              width: 300,
+    height:60,
+    child: ElevatedButton(
+    onPressed: () async => _showSignOutDialog(context),
+    child: Row (
+    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+    mainAxisSize: MainAxisSize.max,
+    children : <Widget> [
+    Text("Delete my account", style: TextStyle(color:Colors.white, fontSize: 16)),
+    Icon(Icons.arrow_forward_ios, color:Provider.of<ThemeModel>(context, listen: false).mode==ThemeMode.dark ? Colors.tealAccent : Colors.yellowAccent),
+    ]
+    ),
+    style: OutlinedButton.styleFrom(
+    backgroundColor: Provider.of<ThemeModel>(context, listen: false).mode==ThemeMode.dark ? Colors.blueAccent : Theme.of(context).primaryColor,
+    shape: RoundedRectangleBorder(
+    borderRadius: BorderRadius.circular(30.0),
+    ),
+    elevation:3.0
+    ),
+    ),),
       ],
     );
   }
@@ -250,3 +287,4 @@ class SettingsButtons extends StatelessWidget {
     );
   }
 }
+

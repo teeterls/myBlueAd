@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:myBlueAd/view/screens/show_update_profile.dart';
 import 'package:myBlueAd/view/widgets/user_profile_widget.dart';
 import '../view/screens/user_signin_action_screen.dart';
 import '../view/screens/home_screen.dart';
@@ -38,8 +39,6 @@ class Routers {
       case '/useraction':
         var options = settings.arguments as String;
         return MaterialPageRoute(builder: (_) => UserActionScreen(options));
-      case '/userprofile':
-        return MaterialPageRoute(builder: (_) => UserProfile());
         //error default
       default:
         return MaterialPageRoute(builder: (_) {

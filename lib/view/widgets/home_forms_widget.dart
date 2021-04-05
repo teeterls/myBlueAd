@@ -107,30 +107,6 @@ class _RegisterFormState extends State<RegisterForm> with WidgetsBindingObserver
                           setState(() {
                             _visible=false;
                           });
-                          if (Provider.of<UserState>(context, listen:false).user.phoneNumber!=null) {
-                            String e = await Provider.of<UserState>(
-                                context, listen: false).registerwithPhone(widget._email
-                                .text,
-                                widget._password.text, widget._username.text,Provider.of<UserState>(context, listen:false).user.phoneNumber );
-                            if (e == "Verify") {
-                              ScaffoldMessenger.of(context).showSnackBar(
-                                  CustomSnackBar(
-                                      "Please verify your email account to log in.",
-                                      context));
-                            }
-                            else if (e != null) {
-                              ScaffoldMessenger.of(context).showSnackBar(
-                                  CustomSnackBar(
-                                      "Log in failed with: ${e}.", context));
-                            }
-                            else {
-                              widget._formKey.currentState.save();
-                              Navigator.of(context).pushNamed("/userhome");
-                            }
-                          }
-                          else
-
-                          {
                             String e = await Provider.of<UserState>(context, listen:false).register(widget._email.text,
                               widget._password.text, widget._username.text);
                           if (e=="Verify")
@@ -146,11 +122,11 @@ class _RegisterFormState extends State<RegisterForm> with WidgetsBindingObserver
                           }
                           else {
                           widget._formKey.currentState.save();
+                          if (Provider.of<UserState>(context, listen:false).user.emailVerified)
                          Navigator.of(context).pushNamed("/userhome");
                           }
                           }
-
-                        }},
+                        },
                       gradient: Gradients.jShine,
                       shadowColor: Gradients.jShine.colors.last.withOpacity(
                           0.25),
@@ -227,8 +203,6 @@ class _SignInFormState extends State<SignInForm> {
               myFormField(controller: widget._password, icon: Icon(Icons.lock), label: "Password", validate: validatePwd, type: TextInputType.visiblePassword),
               if (Provider.of<UserState>(context, listen:false).status == Status.Authenticating)
                 Center(child: CircularProgressIndicator()) else
-              //no hay ningun usuario logeado todavia, por lo que no le muestra directamente su pagina
-                if (Provider.of<UserState>(context, listen:false).status== Status.Unauthenticated)
                   Padding(
                     padding: const EdgeInsets.symmetric(horizontal: 16.0, vertical: 5.0),
                     child: GradientButton(
@@ -245,7 +219,6 @@ class _SignInFormState extends State<SignInForm> {
                         else {
                               //ok
                               widget._formKey.currentState.save();
-                              if (Provider.of<UserState>(context, listen:false).user.emailVerified)
                               Navigator.of(context).pushNamed("/userhome");
                             }
                         }
@@ -438,7 +411,7 @@ class _myFormFieldState extends State<myFormField> {
       padding: const EdgeInsets.all(16.0),
       child: TextFormField(
         keyboardType: widget._type,
-        obscureText: widget._label=="Password" || widget._label=="New password" || widget._label=="Repeat password" ? _obscureText : false,
+        obscureText: widget._label=="Password" || widget._label=="New password" || widget._label=="Repeat password" || widget._label== "Current password"? _obscureText : false,
         cursorColor: Provider.of<ThemeModel>(context, listen: false).mode==ThemeMode.dark ? Colors.tealAccent : Theme.of(context).primaryColor,
         controller: widget._controller,
         validator: widget._validate,
@@ -454,7 +427,7 @@ class _myFormFieldState extends State<myFormField> {
           labelStyle: TextStyle(
            fontSize:14,
           ),
-          suffixIcon: widget._label=="Password" || widget._label=="New password" || widget._label=="Repeat password" ? Row(
+          suffixIcon: widget._label=="Password" || widget._label=="New password" || widget._label=="Repeat password" || widget._label== "Current password" ? Row(
           mainAxisAlignment: MainAxisAlignment.spaceBetween, // added line
           mainAxisSize: MainAxisSize.min, // added line
           children: <Widget>[
