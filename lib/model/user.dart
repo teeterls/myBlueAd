@@ -85,10 +85,10 @@ class Usuario
 //mapear stream de querysnapshots a stream de List<User>
 List<Usuario> toUserList(QuerySnapshot query)
 {
-  //List<DocumentSnapshot> docs= query.docs;
+  List<DocumentSnapshot> docs= query.docs;
   //iterate, para cada documento almacenado se crea un objeto mensaje
   //lista forzada, porque map devuelve un iterable, no una lista
-  return query.docs.map((doc) => Usuario.fromFirestore(doc)).toList();
+  return docs.map((doc) => Usuario.fromFirestore(doc)).toList();
 }
 
 Usuario toUser(DocumentSnapshot doc)

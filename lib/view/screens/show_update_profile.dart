@@ -13,12 +13,6 @@ import 'package:provider/provider.dart';
 import 'package:provider/provider.dart';
 
 //TODO IMAGEPICKER
-//row
-//TODO BOTON RECUPERAR CONTRASEÑA
-//TODO BOTON DELETE ACOUNT
-//TODO MYFORMFIELDNUEVO QUE SE PUEDA DISABLE
-//TODO VISIBLE COUNTRY PICKER Y BOTON
-//TODO INITIAL VALUE DROPDOWNS
 class ShowUpdateProfile extends StatefulWidget {
   Usuario _usuario;
   ShowUpdateProfile(this._usuario);

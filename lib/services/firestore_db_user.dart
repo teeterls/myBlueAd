@@ -1,4 +1,6 @@
 import 'dart:async';
+import 'package:myBlueAd/model/beacon.dart';
+
 import '../model/user.dart';
 import 'firestore_path.dart';
 
@@ -9,11 +11,13 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 var db = FirebaseFirestore.instance;
 
 
-//metodo map -> pasar una funcion que convierte los QuerySnapshots a List (o lo que sea)
+/*//metodo map -> pasar una funcion que convierte los QuerySnapshots a List (o lo que sea)
 Stream <List<Usuario>> getUsers() {
   //togrouplist recibe un querysnapshot. mapeamos el stream de querysnapshots y se genera un stream de listgroups
+  //return db.collection(FirestorePath.userscollection()).orderBy('firstaccess').snapshots().map(toUserList);
   return db.collection(FirestorePath.userscollection()).orderBy('firstaccess').snapshots().map(toUserList);
 }
+*/
 
 
 Stream <Usuario> getUserProfile(String userId)
