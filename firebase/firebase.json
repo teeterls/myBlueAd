@@ -1,8 +1,46 @@
 {
-  "firestore": {
-    "rules": "firestore.rules",
-    "indexes": "firestore.indexes.json"
+  "hosting":
+  [
+    {
+    "target": "user",
+    "public": "hosting/user",
+      "ignore": [
+        "firebase.json",
+        "**/.*",
+        "**/node_modules/**"
+      ],
+      "appAssociation": "AUTO",
+      "rewrites": [
+        {
+          "source": "/",
+          "destination": "/myblueadstore.html"
+        },
+        {
+          "regex": "/jewelry(/.*)?",
+          "destination": "/jewelry/jewelry.html",
+          "dynamicLinks": true
+        },
+        {
+          "regex": "/perfumes(/.*)?",
+        "destination": "/404.html",
+        "dynamicLinks": true
+      },
+         {
+          "source": "!/@(js|css)/**",
+          "destination": "/myblueadstore.html"
+        }
+      ]
   },
-  "functions": {
-  }
+    {
+      "target": "admin",
+      "public": "hosting/admin",
+      "ignore": [
+        "firebase.json",
+        "**/.*",
+        "**/node_modules/**"
+      ],
+      "appAssociation": "AUTO",
+      "rewrites": [ { "source": "/**", "dynamicLinks": true } ]
+    }
+    ]
 }

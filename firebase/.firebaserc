@@ -1,5 +1,17 @@
 {
   "projects": {
     "default": "mybluead-tfg"
+  },
+  "targets": {
+    "mybluead-tfg": {
+      "hosting": {
+        "admin": [
+          "myblueadstore-admin"
+        ],
+        "user": [
+          "myblueadstore-user"
+        ]
+      }
+    }
   }
 }

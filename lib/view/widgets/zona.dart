@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:myBlueAd/model/beacon.dart';
 import 'package:myBlueAd/model/user.dart';
 import 'package:myBlueAd/services/firestore_path.dart';
+import 'package:url_launcher/url_launcher.dart';
 import 'package:webview_flutter/webview_flutter.dart';
 import 'custom_backbutton.dart';
 import 'error.dart';
@@ -66,15 +67,17 @@ class _ShowBeaconState extends State<ShowBeacon> {
   @override
   Widget build(BuildContext context) {
     return Column(
-        children: <Widget> [
-          Container(
-            height: 600,
-            child: WebView(
+      children: <Widget>[
+        Container(
+          height: 600,
+          child:WebView(
             javascriptMode: JavascriptMode.unrestricted,
             initialUrl: widget._be.first.url,
-        ),
-          ), Text("hola")],
+        )
+        ), Text("hola")],
     );
   }
+
+
 }
 

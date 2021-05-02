@@ -38,7 +38,6 @@ class _PrincipalBlueState extends State<PrincipalBlue> {
     _lista.add("Zapateria");
     _lista.add("Joyeria");
     _lista.add("Perfumeria");
-    _lista.add("Goodbye");
     _lista.shuffle();
     //control estado, porque no se guardan anonimos o phone en la bbdd -> uid cambia cada vez.
     final userstate = Provider.of<UserState>(context, listen: false);
@@ -58,37 +57,35 @@ class _PrincipalBlueState extends State<PrincipalBlue> {
                 color: Colors.blueAccent, fontWeight: FontWeight.bold),),
             SizedBox(height: 20),
             Visibility(visible: !_pressed, child: BlueLoading()),
-            //BOTON QUE AÑADE BEACONS
-            FlatButton(
-                child: Text("Beacon"),
-                onPressed: () {
-                  setState(() {
-                    _pressed = !_pressed;
-                  });
-                  //print(_lista);
-                  _lista.shuffle();
-                  print(_lista[0]);
-                  Baliza b = Baliza(url: "https://www.google.com", zona: "prueba");
-                  _lista.add("prueba");
-                  db.registerBeacon(b);
-                  Navigator.of(context).pushNamed('/ads', arguments: _lista[0]);
-                  //string aleatorio
-                  //print(_lista);
-                }
+            //BOTON QUE MUESTRA BEACONS
+            Center(
+              child: OutlinedButton(
+                  child: Text("Beacon", style: TextStyle(color: Colors.white),),
+                  style: ButtonStyle(
+                    backgroundColor: MaterialStateProperty.all(Colors.blueAccent),
+                      shape: MaterialStateProperty.all(RoundedRectangleBorder(borderRadius: BorderRadius.circular(30.0)))
+                  ),
+                  onPressed: () {
+                    setState(() {
+                      _pressed = !_pressed;
+                    });
+                    //print(_lista);
+                    _lista.shuffle();
+                    print(_lista[0]);
+                    //Baliza b = Baliza(url: "https://www.google.com", zona: "prueba");
+                   // _lista.add("prueba");
+                    //db.registerBeacon(b);
+                    Navigator.of(context).pushNamed('/ads', arguments: _lista[0]);
+                    //string aleatorio
+                    //print(_lista);
+                  }
+              ),
             )
           ],),
       );
     }
   }
- /* _loadHtmlFromAssets() async {
-    String fileText = await rootBundle.loadString('assets/goodbye.html');
-    String _url =Uri.dataFromString(
-        fileText,
-        mimeType: 'text/html',
-        encoding: Encoding.getByName('utf-8')
-    ).toString();
-    await canLaunch(_url) ? await launch(_url) : throw 'Could not launch $_url';
-  }*/
+
 }
 
 
