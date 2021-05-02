@@ -6,9 +6,11 @@ import '../../model/user.dart';
 import '../../model/theme_model.dart';
 import 'package:csc_picker/csc_picker.dart';
 import 'package:provider/provider.dart';
-import 'dart:io' show Platform;
+import 'package:image_picker/image_picker.dart';
+import 'dart:io' show File, Platform;
 //bbdd
 import '../../services/firestore_db_user.dart' as db;
+import '../../services/firebase_storage.dart' as storage;
 import 'custom_snackbar.dart';
 
 //todo photo image picker
@@ -27,7 +29,8 @@ class UserProfileForm extends StatefulWidget {
     @required TextEditingController city,
     @required TextEditingController country,
     @required TextEditingController state,
-  }): _formKey=formKey, _usuario=usuario, _email=email, _username=username, _name=name, _surname=surname, _address=address, _age=age, _phone=phone, _country=country, _city=city, _state=state;
+    @required String url
+  }): _formKey=formKey, _usuario=usuario, _email=email, _username=username, _name=name, _surname=surname, _address=address, _age=age, _phone=phone, _country=country, _city=city, _state=state, _url=url;
 
   final GlobalKey<FormState> _formKey;
   final Usuario _usuario;
@@ -41,12 +44,20 @@ class UserProfileForm extends StatefulWidget {
   final TextEditingController _city;
   final TextEditingController _country;
   final TextEditingController _state;
+  final String _url;
 
   @override
   _UserProfileFormState createState() => _UserProfileFormState();
 }
 
 class _UserProfileFormState extends State<UserProfileForm> with WidgetsBindingObserver {
+  //img picker
+  final ImagePicker _picker = ImagePicker();
+  PickedFile _image;
+  String _error;
+  bool _picked;
+
+
   String _countryValue = "";
   String _stateValue = "";
   String _cityValue = "";
@@ -76,6 +87,7 @@ class _UserProfileFormState extends State<UserProfileForm> with WidgetsBindingOb
   void initState() {
     WidgetsBinding.instance.addObserver(this);
     super.initState();
+    _picked=false;
   }
 
   @override
@@ -96,7 +108,7 @@ class _UserProfileFormState extends State<UserProfileForm> with WidgetsBindingOb
 
   //todo
   @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext context){
     return Form(
       autovalidateMode: AutovalidateMode.onUserInteraction,
       key: widget._formKey,
@@ -115,11 +127,45 @@ class _UserProfileFormState extends State<UserProfileForm> with WidgetsBindingOb
                   color: Colors.blueAccent,
                 ),),
               ),
-              //TODO ESPACIO FOTO Y URL
-
               Center(
-                child: SizedBox(child: Text("FOTO"),
-                  height: 60,
+                child: GestureDetector(
+                    onTap: () {
+                      _showPicker(context);
+                    },
+                    child: CircleAvatar(
+                      radius: 55,
+                      backgroundColor: Provider
+                          .of<ThemeModel>(context, listen: false)
+                          .mode == ThemeMode.dark ? Colors.tealAccent: Theme.of(context).primaryColor,
+                      child: widget._url!=null && _picked==false ?  ClipRRect(
+                        borderRadius: BorderRadius.circular(50),
+                        child: Image.network(
+                          widget._url,
+                          width: 100,
+                          height: 100,
+                          fit: BoxFit.fill,
+                        )) : _picked==true && _image != null
+                          ? ClipRRect(
+                        borderRadius: BorderRadius.circular(50),
+                        child: Image.file(
+                          File(_image.path),
+                          width: 100,
+                          height: 100,
+                          fit: BoxFit.fill,
+                        ),
+                      )
+                          : Container(
+                        decoration: BoxDecoration(
+                            color: Colors.grey[200],
+                            borderRadius: BorderRadius.circular(50)),
+                        width: 100,
+                        height: 100,
+                        child: Icon(
+                          Icons.camera_alt,
+                          color: Colors.grey[800],
+                        ),
+                      ),
+                    ),
                 ),
               ),
               myUpdateFormField(controller: widget._username,
@@ -368,6 +414,25 @@ class _UserProfileFormState extends State<UserProfileForm> with WidgetsBindingOb
                     if (widget._formKey.currentState.validate()) {
                       widget._formKey.currentState.save();
                       String e= await _updateProfile();
+                      //todo metodo upload picker si la imagen en distinta de null
+                      if (_image!=null)
+                        {
+                          //Provider.of<UserState>(context, listen:false).user.updateProfile(photoURL: _image.path);
+                          String uid= Provider.of<UserState>(context, listen:false).user.uid;
+                            await storage.uploadUserImage(File(_image.path),uid);
+                         await db.setPhotoURL(uid, await storage.downloadUserImage(uid));
+                        }
+                      else if (_image==null)
+                        {
+                          //todo metodos delete en firestore y storage
+                          String uid= Provider.of<UserState>(context, listen:false).user.uid;
+                          await storage.deleteUserImage(uid);
+                          await db.deletePhotoURL(uid);
+
+                          ScaffoldMessenger.of(context).showSnackBar(
+                              CustomSnackBar(
+                                  "Delete profile photo succesfully", context));
+                        }
                       if (e!=null)
                         {
                           ScaffoldMessenger.of(context).showSnackBar(
@@ -394,7 +459,91 @@ class _UserProfileFormState extends State<UserProfileForm> with WidgetsBindingOb
         ,),
     );
   }
-  //TODO METODO UPDATE PROFILE
+
+  _imgFromCamera() async {
+
+    PickedFile image = await _picker.getImage(
+        source: ImageSource.camera, imageQuality: 50
+    );
+
+    setState(() {
+      _picked=true;
+      _image = image;
+    });
+  }
+
+  _imgFromGallery() async {
+    PickedFile image = await  _picker.getImage(
+        source: ImageSource.gallery, imageQuality: 50
+    );
+
+    setState(() {
+      _picked=true;
+      _image = image;
+    });
+  }
+
+  _deleteImg() {
+    setState(() {
+      _picked=true;
+      _image=null;
+    });
+  }
+
+  Future<void> retrieveLostData() async {
+    final LostData response = await _picker.getLostData();
+    if (response.isEmpty) {
+      return;
+    }
+    if (response.file != null) {
+        setState(() {
+          _image = response.file;
+        });
+      }
+    else {
+      _error = response.exception.code;
+    }
+  }
+
+
+  void _showPicker(context) {
+    showModalBottomSheet(
+        context: context,
+        builder: (BuildContext bc) {
+          return SafeArea(
+            child: Container(
+              child:  Wrap(
+                children: <Widget>[
+                  ListTile(
+                      leading: new Icon(Icons.photo_library),
+                      title: new Text('Photo Library'),
+                      onTap: () {
+                        _imgFromGallery();
+                        Navigator.of(context).pop();
+                      }),
+                   ListTile(
+                    leading: new Icon(Icons.photo_camera),
+                    title: new Text('Camera'),
+                    onTap: () {
+                      _imgFromCamera();
+                      Navigator.of(context).pop();
+                    },
+                  ),
+                   ListTile(
+                      leading: new Icon(Icons.delete, color: Colors.red,),
+                      title: new Text('Delete photo', style: TextStyle(color: Colors.red, fontWeight: FontWeight.bold),),
+                      onTap: () {
+                        _deleteImg();
+                        Navigator.of(context).pop();
+                      }),
+                ],
+              ),
+            ),
+          );
+        }
+    );
+  }
+
   Future <String> _updateProfile() async
   {
     try
@@ -683,6 +832,8 @@ class _myUpdateFormFieldState extends State<myUpdateFormField> {
         ]),
     );
   }
+
+
 }
 
 //metodos validaciones

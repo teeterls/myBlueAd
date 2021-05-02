@@ -25,7 +25,8 @@ class Usuario
         _lastaccess= (doc.data()['lastaccess'] as Timestamp).toDate(),
         _city=doc.data()['city'],
         _maritalstatus= doc.data()['maritalstatus'],
-        _state= doc.data()['state'];
+        _state= doc.data()['state'],
+        _photoURL= doc.data()['photoURL'];
   //constructor Firebase -> subir doc user determinado a coleccion users
   Map<String, dynamic> toFirestore() =>
       {
@@ -43,6 +44,7 @@ class Usuario
         'age': _age,
         'phone': _phone,
         'lastaccess': _lastaccess,
+        'photoURL': _photoURL,
       };
 
 

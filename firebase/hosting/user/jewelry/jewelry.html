@@ -15,7 +15,51 @@
     <title>Welcome to your Blue Jewelry!</title>
     <link rel="shortcut icon" href="favicon.png" type="image/x-icon">
 </head>
-<body>
+<body data-spy="scroll" data-target=".navbar" data-offset="50">
+<nav class="navbar navbar-expand-md bg-dark navbar-dark fixed-top">
+    <a class="navbar-brand" href="#"><img src="../favicon.png" alt="logo" style="width:40px;"></a>
+
+    <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navegador">
+        <span class="navbar-toggler-icon"></span>
+    </button>
+    <!-- Navbar links -->
+    <div class="collapse navbar-collapse justify-content-center" id="navegador">
+        <ul class="navbar-nav">
+            <li class="nav-item dropdown mr-5">
+                <a class="nav-link dropdown-toggle" href="#Inicio" id="iniciodrop" data-toggle="dropdown">
+                    Inicio
+                </a>
+                <div class="dropdown-menu">
+                    <a class="dropdown-item" href="#inicio1">¿Por qué Netic?</a>
+                    <div class="dropdown-divider"></div>
+                    <a class="dropdown-item" href="#inicio2">¿Cómo funciona?</a>
+                </div>
+            </li>
+            <li class="nav-item mr-5">
+                <a class="nav-link" href="#gentecerca">Gente cerca de mí</a>
+            </li>
+            <li class="nav-item mr-5">
+                <a class="nav-link" href="#testimonios">Testimonios</a>
+            </li>
+            <li class="nav-item dropdown mr-5">
+                <a class="nav-link dropdown-toggle" href="#sobrenosotros" id="contactodrop" data-toggle="dropdown">
+                    Sobre nosotros
+                </a>
+                <div class="dropdown-menu">
+                    <a class="dropdown-item" href="#contacto1">Ayuda</a>
+                    <div class="dropdown-divider"></div>
+                    <a class="dropdown-item" href="#contacto2">Privacidad</a>
+                    <div class="dropdown-divider"></div>
+                    <a class="dropdown-item" href="#contacto3">Contacto</a>
+
+                </div>
+            </li>
+        </ul>
+    </div>
+    <ul class="nav navbar-nav navbar-right">
+        <li><a href="registro.jsp" class="btn btn-warning mr-2" role="button">Regístrate</a></li>
+        <li><button type="button" class="btn btn-warning" data-toggle="modal" data-target="#modalregistro">Conéctate</button> </li> </ul>
+</nav>
 <h1>prueba joyeria</h1>
 <img src="../images/logo_store.png" alt="logo">
 <img src="../images/logo_completo_store.png" alt="logo">

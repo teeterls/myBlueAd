@@ -2,17 +2,10 @@ import 'dart:io';
 
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/painting.dart';
-import 'package:gradient_widgets/gradient_widgets.dart';
-import 'package:myBlueAd/model/theme_model.dart';
 import 'package:myBlueAd/model/user.dart';
-import 'package:myBlueAd/services/user_state_auth.dart';
-import 'package:myBlueAd/view/widgets/custom_snackbar.dart';
 import 'package:myBlueAd/view/widgets/user_forms_widget.dart';
-import 'package:provider/provider.dart';
-import 'package:provider/provider.dart';
 
-//TODO IMAGEPICKER
+
 class ShowUpdateProfile extends StatefulWidget {
   Usuario _usuario;
   ShowUpdateProfile(this._usuario);
@@ -21,6 +14,7 @@ class ShowUpdateProfile extends StatefulWidget {
 }
 
 class _ShowUpdateProfileState extends State<ShowUpdateProfile> {
+
   //keys
   final GlobalKey<FormState> _formKey = new GlobalKey<FormState>();
   final GlobalKey<ScaffoldState> _scaffoldKey = new GlobalKey<ScaffoldState>();
@@ -35,6 +29,7 @@ class _ShowUpdateProfileState extends State<ShowUpdateProfile> {
   TextEditingController _city;
   TextEditingController _country;
   TextEditingController _state;
+  String _url;
 
   @override
   void initState() {
@@ -51,6 +46,7 @@ class _ShowUpdateProfileState extends State<ShowUpdateProfile> {
     _country= TextEditingController(text: widget._usuario.country==null ? "" : widget._usuario.country);
     _state= TextEditingController(text: widget._usuario.state==null ? "" : widget._usuario.state);
      _phone= TextEditingController(text: widget._usuario.phone==null? "" : (widget._usuario.phone).toString());
+ _url= widget._usuario.photoURL;
   }
 
   @override
@@ -62,7 +58,7 @@ class _ShowUpdateProfileState extends State<ShowUpdateProfile> {
           child: Card(
               elevation: 0,
               color: Colors.transparent,
-              child:  UserProfileForm(formKey: _formKey,  usuario: widget._usuario, email: _email, username: _username, name: _name, surname: _surname, phone: _phone, address: _address, age: _age, state: _state, city: _city, country: _country,)
+              child:  UserProfileForm(formKey: _formKey,  usuario: widget._usuario, email: _email, username: _username, name: _name, surname: _surname, phone: _phone, address: _address, age: _age, state: _state, city: _city, country: _country,url: _url)
               ),
           ),
         ),

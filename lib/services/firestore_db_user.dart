@@ -38,6 +38,19 @@ Future<String> registerUser (String userId, Usuario usuario) async {
   }
 }
 
+Future <String> setPhotoURL (String uid,String url) async {
+  try  {
+    db.doc(FirestorePath.user(uid)).update({"photoURL": url});
+
+  } catch (e)
+  {
+    return e.toString();
+  }
+}
+
+Future<void> deletePhotoURL(String uid) async {
+  db.doc(FirestorePath.user(uid)).update({"photoURL": null});
+}
 
 Future <String> updateUser (String userId, Usuario usuario) async {
   try {

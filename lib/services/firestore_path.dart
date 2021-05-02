@@ -1,3 +1,4 @@
+//db paths
 class FirestorePath {
   /*static String restaurantUserRating(String restaurantId, String uid) =>
       'restaurants/$restaurantId/ratings/$uid';*/
@@ -13,4 +14,10 @@ class FirestorePath {
 
 //TODO one retail store
 
+}
+
+//storage paths
+class StoragePath {
+  //profileimg
+static String profileimg(String userid) => 'users/profile_img/$userid';
 }
