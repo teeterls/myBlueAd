@@ -422,13 +422,12 @@ class _UserProfileFormState extends State<UserProfileForm> with WidgetsBindingOb
                             await storage.uploadUserImage(File(_image.path),uid);
                          await db.setPhotoURL(uid, await storage.downloadUserImage(uid));
                         }
-                      else if (_image==null)
+                      else if (_image==null && _picked==true)
                         {
                           //todo metodos delete en firestore y storage
                           String uid= Provider.of<UserState>(context, listen:false).user.uid;
                           await storage.deleteUserImage(uid);
                           await db.deletePhotoURL(uid);
-
                           ScaffoldMessenger.of(context).showSnackBar(
                               CustomSnackBar(
                                   "Delete profile photo succesfully", context));
