@@ -1,90 +1,157 @@
-<!--pagina principal del store-->
+<!--pagina principal del store, WELCOME-->
 <!DOCTYPE html>
 <html>
   <head>
     <meta charset="utf-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1">
-    <title>Welcome to Firebase Hosting</title>
-
-    <!-- update the version number as needed -->
-    <script defer src="/__/firebase/8.4.3/firebase-app.js"></script>
-    <!-- include only the Firebase features as you need -->
-    <script defer src="/__/firebase/8.4.3/firebase-auth.js"></script>
-    <script defer src="/__/firebase/8.4.3/firebase-database.js"></script>
-    <script defer src="/__/firebase/8.4.3/firebase-firestore.js"></script>
-    <script defer src="/__/firebase/8.4.3/firebase-functions.js"></script>
-    <script defer src="/__/firebase/8.4.3/firebase-messaging.js"></script>
-    <script defer src="/__/firebase/8.4.3/firebase-storage.js"></script>
-    <script defer src="/__/firebase/8.4.3/firebase-analytics.js"></script>
-    <script defer src="/__/firebase/8.4.3/firebase-remote-config.js"></script>
-    <script defer src="/__/firebase/8.4.3/firebase-performance.js"></script>
-    <!-- 
-      initialize the SDK after all desired features are loaded, set useEmulator to false
-      to avoid connecting the SDK to running emulators.
-    -->
-    <script defer src="/__/firebase/init.js?useEmulator=true"></script>
-
-    <style media="screen">
-      body { background: #ECEFF1; color: rgba(0,0,0,0.87); font-family: Roboto, Helvetica, Arial, sans-serif; margin: 0; padding: 0; }
-      #message { background: white; max-width: 360px; margin: 100px auto 16px; padding: 32px 24px; border-radius: 3px; }
-      #message h2 { color: #ffa100; font-weight: bold; font-size: 16px; margin: 0 0 8px; }
-      #message h1 { font-size: 22px; font-weight: 300; color: rgba(0,0,0,0.6); margin: 0 0 16px;}
-      #message p { line-height: 140%; margin: 16px 0 24px; font-size: 14px; }
-      #message a { display: block; text-align: center; background: #039be5; text-transform: uppercase; text-decoration: none; color: white; padding: 16px; border-radius: 4px; }
-      #message, #message a { box-shadow: 0 1px 3px rgba(0,0,0,0.12), 0 1px 2px rgba(0,0,0,0.24); }
-      #load { color: rgba(0,0,0,0.4); text-align: center; font-size: 13px; }
-      @media (max-width: 600px) {
-        body, #message { margin-top: 0; background: white; box-shadow: none; }
-        body { border-top: 16px solid #ffa100; }
-      }
-    </style>
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <!-- Latest compiled and minified CSS -->
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css">
+    <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.7.0/css/all.css" integrity="sha384-lZN37f5QGtY3VHgisS14W3ExzMWZxybE1SJSEsQp9S+oqd12jhcu+A56Ebc1zFSJ" crossorigin="anonymous">
+    <!-- jQuery library -->
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+    <!-- Popper JS -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.16.0/umd/popper.min.js"></script>
+    <!-- Latest compiled JavaScript -->
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.4.1/js/bootstrap.min.js"></script>
+    <title>Welcome to myBlueStore!!</title>
+    <link rel="shortcut icon" href="favicon.png" type="image/x-icon">
   </head>
   <body>
-    <div id="message">
-      <h2>Welcome</h2>
-      <h1>Firebase FUNCIONAAAAA Hosting Setup Complete</h1>
-      <p>You're seeing this because you've successfully setup Firebase Hosting. Now it's time to go build something extraordinary!</p>
-      <a target="_blank" href="https://firebase.google.com/docs/hosting/">Open Hosting Documentation</a>
+  <div class="pt-4 bg-warning">I only have a top padding (1.5rem = 24px)</div>
+  <div class="p-5 bg-success">I have a padding on all sides (3rem = 48px)</div>
+  <div class="m-5 pb-5 bg-info">I have a margin on all sides (3rem = 48px) and a bottom padding (3rem = 48px)</div>
+  <div class="container">
+    <div class="embed-responsive embed-responsive-16by9">
+      <iframe class="embed-responsive-item" src="https://www.youtube.com/embed/tgbNymZ7vqY"></iframe>
     </div>
-    <p id="load">Firebase SDK Loading&hellip;</p>
+  </div>
+  <div class="d-flex bg-secondary">
+    <div class="p-2 mr-auto bg-info">Flex item 1</div>
+    <div class="p-2 bg-warning">Flex item 2</div>
+    <div class="p-2 bg-primary">Flex item 3</div>
+  </div>
 
+  <div class="d-flex bg-secondary">
+    <div class="p-2 bg-info">Flex item 1</div>
+    <div class="p-2 bg-warning">Flex item 2</div>
+    <div class="p-2 ml-auto bg-primary">Flex item 3</div>
+  </div>
+  <div class="d-flex">
+    <div class="p-2 bg-info flex-fill">Flex item 1</div>
+    <div class="p-2 bg-warning flex-fill">Flex item 2</div>
+    <div class="p-2 bg-primary flex-fill">Flex item 3</div>
+  </div>
+  <div class="d-flex">
+    <div class="p-2 bg-info">Flex item 1</div>
+    <div class="p-2 bg-warning">Flex item 2</div>
+    <div class="p-2 bg-primary flex-grow-1">Flex item 3</div>
+  </div>
+  <div class="container mt-3">
+    <div class="media border p-3">
+      <img src="images/pareja1.jpg" alt="John Doe" class="mr-3 mt-3 rounded-circle" style="width:60px;">
+      <div class="media-body">
+        <h4>John Doe <small><i>Posted on February 19, 2016</i></small></h4>
+        <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.</p>
+        <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.</p>
+        <div class="media p-3">
+          <img src="images/pareja4.jpg" alt="Jane Doe" class="mr-3 mt-3 rounded-circle" style="width:45px;">
+          <div class="media-body">
+            <h4>Jane Doe <small><i>Posted on February 20 2016</i></small></h4>
+            <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.</p>
+            <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.</p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <!--FILTER everything-->
+  <div class="container mt-3">
+    <h2>Filter Anything</h2>
+    <p>Type something in the input field to search for a specific text inside the div element with id="myDIV":</p>
+    <input class="form-control" id="myInput" type="text" placeholder="Search..">
+    <div id="myDIV" class="mt-3">
+      <p>I am a paragraph.</p>
+      <div>I am a div element inside div.</div>
+      <button class="btn">I am a button</button>
+      <button class="btn btn-info">Another button</button>
+      <p>Another paragraph.</p>
+    </div>
+  </div>
+  <div class="container mt-3">
+    <h2>Filterable List</h2>
+    <p>Type something in the input field to search the list for specific items:</p>
+    <input class="form-control" id="list" type="text" placeholder="Search..">
+    <br>
+    <ul class="list-group" id="myList">
+      <li class="list-group-item">First item</li>
+      <li class="list-group-item">Second item</li>
+      <li class="list-group-item">Third item</li>
+      <li class="list-group-item">Fourth</li>
+    </ul>
+  </div>
+  <div class="container mt-3">
+    <h2>Filterable Table</h2>
+    <p>Type something in the input field to search the table for first names, last names or emails:</p>
+    <input class="form-control" id="table" type="text" placeholder="Search..">
+    <br>
+    <table class="table table-bordered">
+      <thead>
+      <tr>
+        <th>Firstname</th>
+        <th>Lastname</th>
+        <th>Email</th>
+      </tr>
+      </thead>
+      <tbody id="myTable">
+      <tr>
+        <td>John</td>
+        <td>Doe</td>
+        <td>john@example.com</td>
+      </tr>
+      <tr>
+        <td>Mary</td>
+        <td>Moe</td>
+        <td>mary@mail.com</td>
+      </tr>
+      <tr>
+        <td>July</td>
+        <td>Dooley</td>
+        <td>july@greatstuff.com</td>
+      </tr>
+      <tr>
+        <td>Anja</td>
+        <td>Ravendale</td>
+        <td>a_r@test.com</td>
+      </tr>
+      </tbody>
+    </table>
+  </div>
     <script>
-      document.addEventListener('DOMContentLoaded', function() {
-        const loadEl = document.querySelector('#load');
-        // // 🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥
-        // // The Firebase SDK is initialized and available here!
-        //
-        // firebase.auth().onAuthStateChanged(user => { });
-        // firebase.database().ref('/path/to/ref').on('value', snapshot => { });
-        // firebase.firestore().doc('/foo/bar').get().then(() => { });
-        // firebase.functions().httpsCallable('yourFunction')().then(() => { });
-        // firebase.messaging().requestPermission().then(() => { });
-        // firebase.storage().ref('/path/to/ref').getDownloadURL().then(() => { });
-        // firebase.analytics(); // call to activate
-        // firebase.analytics().logEvent('tutorial_completed');
-        // firebase.performance(); // call to activate
-        //
-        // // 🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥
-
-        try {
-          let app = firebase.app();
-          let features = [
-            'auth', 
-            'database', 
-            'firestore',
-            'functions',
-            'messaging', 
-            'storage', 
-            'analytics', 
-            'remoteConfig',
-            'performance',
-          ].filter(feature => typeof app[feature] === 'function');
-          loadEl.textContent = `Firebase SDK loaded with ${features.join(', ')}`;
-        } catch (e) {
-          console.error(e);
-          loadEl.textContent = 'Error loading the Firebase SDK, check the console.';
-        }
+      $(document).ready(function(){
+        $("#myInput").on("keyup", function() {
+          var value = $(this).val();
+          $("#myDIV *").filter(function() {
+            $(this).toggle($(this).text().toLowerCase().indexOf(value) > -1)
+          });
+        });
+      });
+      $(document).ready(function(){
+        $("#list").on("keyup", function() {
+          var value = $(this).val();
+          $("#myList *").filter(function() {
+            $(this).toggle($(this).text().toLowerCase().indexOf(value) > -1)
+          });
+        });
+      });
+      $(document).ready(function(){
+        $("#table").on("keyup", function() {
+          var value = $(this).val();
+          $("#myTable tr").filter(function() {
+            $(this).toggle($(this).text().toLowerCase().indexOf(value) > -1)
+          });
+        });
       });
     </script>
+
   </body>
 </html>

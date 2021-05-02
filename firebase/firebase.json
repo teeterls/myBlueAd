@@ -13,7 +13,13 @@
       "rewrites": [
         {
           "source": "/",
-          "destination": "/myblueadstore.html"
+          "destination": "/myblueadstore.html",
+          "dynamicLinks": true
+        },
+        {
+          "source": "/welcome",
+          "destination": "/myblueadstore.html",
+          "dynamicLinks": true
         },
         {
           "regex": "/jewelry(/.*)?",
@@ -21,14 +27,26 @@
           "dynamicLinks": true
         },
         {
-          "regex": "/perfumes(/.*)?",
-        "destination": "/404.html",
+          "regex": "/perfumary(/.*)?",
+        "destination": "/perfumary/perfumary.html",
         "dynamicLinks": true
       },
-         {
-          "source": "!/@(js|css)/**",
-          "destination": "/myblueadstore.html"
+        {
+          "regex": "/shoes(/.*)?",
+          "destination": "/shoes/shoes.html",
+          "dynamicLinks": true
+        },
+        {
+          "regex": "/sports(/.*)?",
+          "destination": "/sports/sports.html",
+          "dynamicLinks": true
+        },
+        {
+          "regex": "/perfumary(/.*)?",
+          "destination": "/perfumary/perfumary.html",
+          "dynamicLinks": true
         }
+
       ]
   },
     {
