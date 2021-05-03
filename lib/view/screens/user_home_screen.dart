@@ -1,6 +1,5 @@
 import 'package:curved_navigation_bar/curved_navigation_bar.dart';
 import 'package:flutter/material.dart';
-import 'prin_blue_nouser.dart';
 import 'prin_blue.dart';
 import '../../model/theme_model.dart';
 import '../../services/user_state_auth.dart';
@@ -70,7 +69,7 @@ class _UserHomeScreenState extends State<UserHomeScreen> {
             appBar: CustomAppBar(_scaffoldKey, context),
             drawer: CustomDrawer(),
             body: SingleChildScrollView(
-              child: PrincipalBlueNoUser(),
+              child: PrincipalBlue(),
             ),
             floatingActionButton: AddAccountButton(),
             //custombottonnavigation bar: email o no?

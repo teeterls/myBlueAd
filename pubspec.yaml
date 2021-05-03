@@ -59,6 +59,9 @@ dependencies:
   delayed_display: ^2.0.0
   flutter_animated_button: ^2.0.0
   animations: ^2.0.0
+  flutter_blue: ^0.8.0
+  geolocator: ^7.0.3
+  location: ^4.1.1
 
 dev_dependencies:
   flutter_test:
