@@ -1,3 +1,4 @@
+import 'package:curved_navigation_bar/curved_navigation_bar.dart';
 import 'package:flutter/material.dart';
 import 'prin_blue_nouser.dart';
 import 'prin_blue.dart';
@@ -18,50 +19,46 @@ class UserHomeScreen extends StatefulWidget {
 class _UserHomeScreenState extends State<UserHomeScreen> {
 
   final GlobalKey<ScaffoldState> _scaffoldKey = new GlobalKey<ScaffoldState>();
+
   //empieza en el de en medio
-  int _currentIndex=1;
+  int _currentIndex = 1;
 
   @override
   Widget build(BuildContext context) {
-    final userstate = Provider.of<UserState>(context, listen:false);
+    final userstate = Provider.of<UserState>(context, listen: false);
     //lista de distintos widgets a mostrar por orden!! acorde al bottombar
     //depende de si hay o no email, lo dejamos asi porque va por auth
-    List<Widget> _screens=
+    List<Widget> _screens =
     [
-          UserProfile(),
-          PrincipalBlue(),
-          FavoriteAds(),
-        ];
+      UserProfile(),
+      PrincipalBlue(),
+      FavoriteAds(),
+    ];
 
-    if (userstate.user.email!=null)
-    return WillPopScope(
-      //no deja ir para atras
-      onWillPop: () async => false,
-      child: SafeArea(
+    if (userstate.user.email != null)
+      return WillPopScope(
+        //no deja ir para atras
+        onWillPop: () async => false,
+        child: SafeArea(
           child: Scaffold(
             key: _scaffoldKey,
             appBar: CustomAppBar(_scaffoldKey, context),
             drawer: CustomDrawer(),
-           body: SingleChildScrollView(
-             child: _screens[_currentIndex],
-      ),
+            body: SingleChildScrollView(
+              child: _screens[_currentIndex],
+            ),
             floatingActionButton: mySignOutButton(),
-           //custombottonnavigation bar: email o no?
+            //custombottonnavigation bar: email o no?
 
-           bottomNavigationBar: BottomNavigationBar(
-             elevation: 2.0,
-              selectedItemColor: Provider
-                  .of<ThemeModel>(context, listen: false)
-                  .mode == ThemeMode.dark ? Colors.tealAccent : Theme
-                  .of(context)
-                  .primaryColor,
-              type: BottomNavigationBarType.fixed,
-             onTap: _onTabTapped,
-             currentIndex: _currentIndex,
-             items: _getBottomItems(userstate.user.email),
+            bottomNavigationBar: CurvedNavigationBar(
+              color: Provider.of<ThemeModel>(context, listen: false).mode==ThemeMode.dark ? Colors.white54: Colors.white,
+              backgroundColor: Provider.of<ThemeModel>(context, listen: false).mode==ThemeMode.dark ? Colors.blueAccent: Theme.of(context).primaryColor,
+              onTap: _onTabTapped,
+              index: _currentIndex,
+              items: _getBottomItems(userstate.user.email),
             ),
           ),),
-    );
+      );
 
     //phone o anonym
     else
@@ -79,7 +76,6 @@ class _UserHomeScreenState extends State<UserHomeScreen> {
             //custombottonnavigation bar: email o no?
           ),),
       );
-
   }
 
   //cambiamos la pagina que se ve
@@ -90,36 +86,12 @@ class _UserHomeScreenState extends State<UserHomeScreen> {
   }
 
   //segun si hay email o no
-  List <BottomNavigationBarItem> _getBottomItems(String email)
-  {
-    if (email!=null)
-      return  [
-        BottomNavigationBarItem(
-            icon: Icon(Icons.account_circle),
-            label:"My profile"
-        ),
-        BottomNavigationBarItem(
-            icon: new Icon(Icons.bluetooth),
-            label: "Blue nearby"
-        ),
-        BottomNavigationBarItem(
-            icon: new Icon(Icons.favorite),
-            label: "My blue ads"
-        ),
-      ];
-    else
-      return [
-        BottomNavigationBarItem(
-            icon: Icon(Icons.person_add),
-            label:"Create profile"
-        ),
-        BottomNavigationBarItem(
-            icon: new Icon(Icons.bluetooth),
-            label: "Blue nearby"
-        ),
-      ];
-
-
+  List <Widget> _getBottomItems(String email) {
+    return [
+      Icon(Icons.account_circle, semanticLabel: "Mi profile"),
+      Icon(Icons.bluetooth, semanticLabel: "Blue nearby"),
+      Icon(Icons.favorite, semanticLabel: "My blue ads"),
+    ];
   }
 }
 

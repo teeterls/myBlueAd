@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:myBlueAd/view/screens/show_update_profile.dart';
 import 'package:myBlueAd/view/widgets/user_profile_widget.dart';
-import 'package:myBlueAd/view/widgets/zona.dart';
+import 'package:myBlueAd/view/widgets/zona_beacon.dart';
 import '../view/screens/user_signin_action_screen.dart';
 import '../view/screens/home_screen.dart';
 import '../view/screens/sign_log_in_screen.dart';

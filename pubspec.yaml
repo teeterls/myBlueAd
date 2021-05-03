@@ -51,6 +51,14 @@ dependencies:
   firebase_analytics: ^7.1.1
   firebase_storage: ^8.0.5
   path_provider: ^2.0.1
+  animated_text_kit: ^4.2.1
+  animate_my_text: ^0.0.2
+  animated_text: ^1.0.2
+  curved_navigation_bar: ^0.3.7
+  badges: ^1.2.0
+  delayed_display: ^2.0.0
+  flutter_animated_button: ^2.0.0
+  animations: ^2.0.0
 
 dev_dependencies:
   flutter_test:
@@ -76,6 +84,8 @@ flutter:
   assets:
    - assets/logo.png
    - assets/logo-completo.png
+   - assets/logo_completo_store.png
+   - assets/logo_store.png
   #   - images/a_dot_ham.jpeg
 
   # An image asset can refer to one or more resolution-specific "variants", see
