@@ -15,6 +15,7 @@ Stream <List<Baliza>> getBeacons() {
   return db.collection(FirestorePath.beaconscollection()).orderBy('fecha_registro').snapshots().map(toBeaconList);
 }*/
 
+//TODO CAMBIAR, NO SE COGERÁ AL FINAL POR ZONA
 Stream<List<Baliza>> getBeacon(String zona)
 {
  return db.collection(FirestorePath.beaconscollection()).where('zona', isEqualTo: zona)

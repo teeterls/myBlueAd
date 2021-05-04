@@ -6,6 +6,7 @@ import 'package:provider/provider.dart';
 
 
 class myBlueAdApp extends StatelessWidget {
+
   final String _title = "myBlueAd";
   bool isswitch= false;
   @override

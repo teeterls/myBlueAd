@@ -52,6 +52,18 @@ Future<void> deletePhotoURL(String uid) async {
   db.doc(FirestorePath.user(uid)).update({"photoURL": null});
 }
 
+//se añaden de uno en uno, cada vez que le da al botón de fav, pero se une una lista
+Future <String> setFavAd (String uid, List<String> adurl) async {
+  db.doc(FirestorePath.user(uid)).update({"favads": FieldValue.arrayUnion(adurl)});
+}
+
+Future <void> removeFavAd(String uid, List<String> adurl) async {
+  db.doc(FirestorePath.user(uid)).update({"favads": FieldValue.arrayRemove(adurl)});
+}
+Future <void> deleteFavAds(String uid) async {
+  db.doc(FirestorePath.user(uid)).update({"favads": FieldValue.delete()});
+}
+
 Future <String> updateUser (String userId, Usuario usuario) async {
   try {
     //comprobar todos los campos que se han podido crear/modificar en el form DEL PERFIL. email cambios no, sign in

@@ -8,7 +8,9 @@ import '../../services/user_state_auth.dart';
 import 'package:provider/provider.dart';
 import 'package:delayed_display/delayed_display.dart';
 import 'package:flutter_blue/flutter_blue.dart';
+import 'package:animated_button/animated_button.dart';
 
+import 'package:myBlueAd/services/firestore_db_user.dart' as db;
 class PrincipalBlue extends StatefulWidget {
   @override
   _PrincipalBlueState createState() => _PrincipalBlueState();
@@ -86,7 +88,7 @@ class _PrincipalBlueState extends State<PrincipalBlue> {
                           ),
                         ),
                       ),
-                    if (userstate.user.phoneNumber!=null)
+                    if (userstate.user.email==null && userstate.user.phoneNumber!=null)
                       DelayedDisplay(
                         delay: Duration(seconds:initialDelay.inSeconds + 1),
                         child: Text(
@@ -142,25 +144,35 @@ class _PrincipalBlueState extends State<PrincipalBlue> {
                     DelayedDisplay(
                       delay: Duration(seconds: initialDelay.inSeconds + 3),
                       child:  Center(
-                        child: OutlinedButton(
-                            child: Text("Beacon", style: TextStyle(color: Colors.white),),
-                            style: ButtonStyle(
-                                backgroundColor: MaterialStateProperty.all(Colors.blueAccent),
-                                shape: MaterialStateProperty.all(RoundedRectangleBorder(borderRadius: BorderRadius.circular(30.0)))
-                            ),
-                            onPressed: () {
-                              setState(() {
-                                _pressed = !_pressed;
-                              });
-                              _zonas.shuffle();
-                              //print(_lista[0]);
-                              //Baliza b = Baliza(url: "https://www.google.com", zona: "prueba");
-                              // _lista.add("prueba");
-                              //db.registerBeacon(b);
-                              Navigator.of(context).pushNamed('/ads', arguments: _zonas[0]);
-                            }
+                        child:  AnimatedButton(
+                          width:80,
+                      height:50,
+                      child: Text(
+                      'Beacon',
+                       style: TextStyle(
+                       fontSize: 16,
+                        color: Colors.white,
+                       fontWeight: FontWeight.w500,
+                       ),
+                      ),
+                     onPressed: () {
+                     setState(() {
+                     _pressed = !_pressed;
+                       });
+                     _zonas.shuffle();
+            //print(_lista[0]);
+            //Baliza b = Baliza(url: "https://www.google.com", zona: "prueba");
+            // _lista.add("prueba");
+            //db.registerBeacon(b);
+            List <String>_adurl = [
+            "https://www.googlee.com"
+            ];
+            db.deleteFavAds(userstate.user.uid);
+            Navigator.of(context).pushNamed('/ads', arguments: _zonas[0]);
+            },
+            ),
                         ),
-                      ),),
+                      ),
                   ],),
               );
             }
