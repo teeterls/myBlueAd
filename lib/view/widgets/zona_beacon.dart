@@ -3,13 +3,14 @@ import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:gradient_widgets/gradient_widgets.dart';
 import 'package:myBlueAd/model/beacon.dart';
+import 'package:myBlueAd/model/theme_model.dart';
 import 'package:myBlueAd/view/widgets/custom_appbar.dart';
 import 'package:myBlueAd/view/widgets/custom_drawer.dart';
+import 'package:provider/provider.dart';
 import 'package:rounded_loading_button/rounded_loading_button.dart';
 import 'package:webview_flutter/webview_flutter.dart';
 import 'custom_backbutton.dart';
 import 'error.dart';
-import 'package:flutter_web_plugins/flutter_web_plugins.dart';
 import 'package:animated_button/animated_button.dart';
 //bbdd
 import '../../services/firestore_db_beacons.dart' as db;
@@ -25,6 +26,21 @@ class Ad extends StatefulWidget {
 }
 
 class _AdState extends State<Ad> {
+  final RoundedLoadingButtonController _btnControllerAd = RoundedLoadingButtonController();
+  final RoundedLoadingButtonController _btnControllerDelete = RoundedLoadingButtonController();
+
+  //TODO CAMBIAR A METODOS DONDE SE GUARDEM LOS FAVADS REALMENTE
+  //TODO FUTURE CONTROL VIEWER en controller paa los botones
+  void _addFavAd() async {
+    Timer(Duration(seconds: 3), () {
+      _btnControllerAd.success();
+    });
+  }
+  void _deleteAd() async {
+    Timer(Duration(seconds: 3), () {
+      _btnControllerDelete.error();
+    });
+  }
   final GlobalKey<ScaffoldState> _scaffoldKey = new GlobalKey<ScaffoldState>();
   @override
   Widget build(BuildContext context) {
@@ -52,7 +68,7 @@ class _AdState extends State<Ad> {
             return Center(child: Loading());
           }
           //hay datos del perfil del usuario identificado con el uid al sign in/register
-          //todo cambiar
+          //todo cambiar con botonbar
           return WillPopScope(
             //no deja ir para atras
               onWillPop: () async => false,
@@ -64,6 +80,35 @@ class _AdState extends State<Ad> {
                       body:   SingleChildScrollView(child: ShowBeacon(snapshot.data)),
               floatingActionButton: CustomBackButton(),
                     floatingActionButtonLocation: FloatingActionButtonLocation.centerFloat,
+                    bottomNavigationBar: Container(
+                      height:60,
+                      child: ButtonBar(
+                        alignment: MainAxisAlignment.spaceAround,
+                        children: <Widget>[
+                          Padding(
+                            padding: const EdgeInsets.only(bottom:5.0),
+                            child: RoundedLoadingButton(
+                              color: Provider.of<ThemeModel>(context, listen: false).mode==ThemeMode.dark ? Colors.lightBlue: Theme.of(context).primaryColor,
+                             successColor: Provider.of<ThemeModel>(context, listen: false).mode==ThemeMode.dark ? Colors.lightBlue:Theme.of(context).primaryColor,
+                              width:80,
+                              child: Icon(Icons.favorite, color: Colors.white,),
+                              controller: _btnControllerAd,
+                              onPressed: _addFavAd,
+                            ),
+                          ),
+                          Padding(
+                            padding: const EdgeInsets.only(bottom:5.0),
+                            child: RoundedLoadingButton(
+                              color: Provider.of<ThemeModel>(context, listen: false).mode==ThemeMode.dark ? Colors.lightBlue: Theme.of(context).primaryColor,
+                              width:80,
+                              child: Icon(Icons.delete, color: Colors.white,),
+                              controller: _btnControllerDelete,
+                              onPressed: _deleteAd,
+                            ),
+                          ),
+                        ],
+                      ),
+                    )
                     )));
         }
     );
@@ -80,10 +125,11 @@ class ShowBeacon extends StatefulWidget {
 
 
 class _ShowBeaconState extends State<ShowBeacon> {
-  final RoundedLoadingButtonController _btnControllerAd = RoundedLoadingButtonController();
-  final RoundedLoadingButtonController _btnControllerDelete = RoundedLoadingButtonController();
+  final Completer<WebViewController> _controller =
+  Completer<WebViewController>();
   @override
   Widget build(BuildContext context) {
+    print(widget._be.first.url);
    // var isPortrait = MediaQuery.of(context).orientation == Orientation.portrait;
     return  Column(
           children: <Widget>[
@@ -93,8 +139,10 @@ class _ShowBeaconState extends State<ShowBeacon> {
               WebView(
                 javascriptMode: JavascriptMode.unrestricted,
                 initialUrl: widget._be.first.url,
-            )
-            ), Container(
+                //gestureNavigationEnabled: true,
+                //avisar al controller
+            ),
+            ), /*Container(
               child: ButtonBar(
                 alignment: MainAxisAlignment.spaceAround,
                 children: <Widget>[
@@ -109,9 +157,9 @@ class _ShowBeaconState extends State<ShowBeacon> {
                     child: Text('Tap me!', style: TextStyle(color: Colors.white)),
                     controller: _btnControllerDelete,
                     onPressed: _deleteAd,
-                  ),
+                  )
                 ],
-              ), /*Row(
+              ), *//*Row(
                 mainAxisSize: MainAxisSize.min,
                 mainAxisAlignment: MainAxisAlignment.end,
                 children: <Widget>[
@@ -139,23 +187,12 @@ class _ShowBeaconState extends State<ShowBeacon> {
                   ),
                 ],
               ),*/
-            ) //Text(widget._be.first.zona)],
+            //Text(widget._be.first.zona)],
         ],
     );
   }
 
 
-  //TODO CAMBIAR
-  void _addFavAd() async {
-    Timer(Duration(seconds: 3), () {
-      _btnControllerAd.success();
-    });
-  }
-  void _deleteAd() async {
-    Timer(Duration(seconds: 3), () {
-      _btnControllerDelete.error();
-    });
-  }
 
 }
 

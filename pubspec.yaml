@@ -90,7 +90,6 @@ flutter:
   assets:
    - assets/logo.png
    - assets/logo-completo.png
-   - assets/logo_completo_store.png
    - assets/logo_store.png
   #   - images/a_dot_ham.jpeg
 
