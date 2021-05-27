@@ -1,3 +1,4 @@
+import 'dart:async';
 import 'dart:io';
 
 import 'package:flutter/material.dart';
@@ -27,13 +28,26 @@ class Ad extends StatefulWidget {
 }
 
 class _AdState extends State<Ad> {
+
+
   final RoundedLoadingButtonController _btnControllerAd = RoundedLoadingButtonController();
   final RoundedLoadingButtonController _btnControllerDelete = RoundedLoadingButtonController();
 
   //le pasan urly url
   _addFavAd(String uid, String zona, String adurl) async {
+    //ya es favad
+    if (await dbuser.isFavAd(Provider
+        .of<UserState>(context, listen: false)
+        .user
+        .uid, widget._option))
+      {
+          _btnControllerAd.success();
+          ScaffoldMessenger.of(context).showSnackBar(
+              CustomSnackBar("Already a fav!", context));
+
+      }
     //forzar lista para firestore, lo añade modo array.
-    if (await dbuser.setFavAd(uid, zona, adurl))
+    else if (await dbuser.setFavAd(uid, zona, adurl))
     {
 
       _btnControllerAd.success();
@@ -46,17 +60,12 @@ class _AdState extends State<Ad> {
           CustomSnackBar("An error ocurred. Try again", context));
     }
   }
-  //no es el boton de borrar de la lista de usuarios. eso lo hacemos en la pagina de favs. es un boton que te cierra el webview y te da marcha atras.
 
-  _deleteAd()  {
-    Navigator.of(context).pop(widget._option);
-    ScaffoldMessenger.of(context).showSnackBar(
-        CustomSnackBar("Your preferences have been saved!", context));
-  }
   final GlobalKey<ScaffoldState> _scaffoldKey = new GlobalKey<ScaffoldState>();
   bool _visible=true;
   @override
   Widget build(BuildContext context) {
+
     return StreamBuilder<List<Baliza>>(
         stream: db.getBeacon(widget._option),
         builder: (context, AsyncSnapshot<List<Baliza>> snapshot) {
@@ -91,10 +100,11 @@ class _AdState extends State<Ad> {
                             child: RoundedLoadingButton(
                               color: Provider.of<ThemeModel>(context, listen: false).mode==ThemeMode.dark ? Colors.lightBlue: Theme.of(context).primaryColor,
                              successColor: Colors.green,
+                              disabledColor: Colors.blue,
                               width:80,
                               child: Icon(Icons.thumb_up_alt, color: Colors.white,),
                               controller: _btnControllerAd,
-                              onPressed: () {
+                              onPressed: () async {
                                 _addFavAd(Provider
                                     .of<UserState>(context, listen: false)
                                     .user
@@ -109,7 +119,12 @@ class _AdState extends State<Ad> {
           width:80,
           child: Icon(Icons.thumb_down_alt,color: Colors.white,),
           controller: _btnControllerDelete,
-          onPressed: () => _deleteAd(),
+          onPressed: ()
+            {
+              Navigator.of(context).pop(widget._option);
+              ScaffoldMessenger.of(context).showSnackBar(
+                  CustomSnackBar("Your preferences have been saved!", context));
+            },
           ),
           ),
           ],

@@ -73,6 +73,19 @@ Future <void> deleteFavAds(String uid) async {
   //db.doc(FirestorePath.user(uid)).update({"favads": FieldValue.delete()});
 }
 
+//metodo is favad
+Future <bool> isFavAd (String uid, String zona) async {
+  bool _result;
+ await db.doc('users/$uid').get().then((doc)
+  {
+    print (doc.data()["favads"]["${zona}"]);
+    if ((doc.data()["favads"]["${zona}"])!=null)
+    _result=true;
+    else if ((doc.data()["favads"]["${zona}"])==null)
+      _result=false;
+  });
+ return _result;
+}
 Future <String> updateUser (String userId, Usuario usuario) async {
   try {
     //comprobar todos los campos que se han podido crear/modificar en el form DEL PERFIL. email cambios no, sign in
