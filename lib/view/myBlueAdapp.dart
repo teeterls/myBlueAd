@@ -26,14 +26,6 @@ class myBlueAdApp extends StatelessWidget {
             initialRoute: '/',
             //generador de rutas
             onGenerateRoute: Routers.generateRoute,
-          //named routes concentradas
-          /*routes: {
-            '/': (_) => HomeScreen(),
-            '/login': (_) => LogInScreen(),
-            '/signup' :(_) => SignUpScreen(),
-            '/homeoptions': (_) => HomeOptionsWidget(),
-            '/about': (_) => AboutUsScreen(),
-          }*/
 
       ),
         ),

@@ -5,10 +5,10 @@ class Usuario
   String _email, _photoURL, _username, _name, _surname, _gender, _country, _city, _state, _maritalstatus, _address, _uid;
   int _age, _phone;
   DateTime _lastaccess;
-  List <String> _favads;
+  Map <dynamic, dynamic> _favads;
 
   //constructor -> obligatorios uid, first access, email y username una vez validados.
-  Usuario(this._uid, {List <String> favads, String email, String username, String photo, String name, String surname, String gender, String country, String address, String uid, int age,int phone, String city, String status}) :
+  Usuario(this._uid, {Map <dynamic, dynamic> favads, String email, String username, String photo, String name, String surname, String gender, String country, String address, String uid, int age,int phone, String city, String status}) :
        _favads=favads,_email= email, _username=username, _photoURL = photo, _name = name, _surname= surname, _gender=gender, _country=country, _address=address, _age=age, _phone=phone, _city=city, _maritalstatus=status, _lastaccess = DateTime.now();
 
   //constructor Firebase -> obtener doc user determinado de coleccion users
@@ -66,7 +66,7 @@ class Usuario
   DateTime get lastaccess => _lastaccess;
   get maritalstatus => _maritalstatus;
   get state => _state;
-  List<String> get favads => _favads;
+  Map<dynamic, dynamic> get favads => _favads;
 
   //setters
   void set email(String email) => _email=email;
@@ -84,7 +84,7 @@ class Usuario
   void set city (String city ) => _city=city;
   void set maritalstatus (String m) => _maritalstatus=m;
   void set state (String st) => _state=st;
-  void set favads(List<String> fav)=>_favads = fav;
+  void set favads(Map<dynamic, dynamic> fav)=>_favads = fav;
 
 }
 

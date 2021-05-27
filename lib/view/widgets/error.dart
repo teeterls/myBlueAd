@@ -10,22 +10,21 @@ class Error extends StatelessWidget {
  final GlobalKey<ScaffoldState> _scaffoldKey = new GlobalKey<ScaffoldState>();
   @override
   Widget build(BuildContext context) {
-    return SafeArea(
+    return /*SafeArea(
       child: Scaffold(
         key: _scaffoldKey,
         drawer: CustomDrawer(),
         appBar: CustomAppBar(_scaffoldKey, context),
         floatingActionButton: CustomBackButton(),
         //TODO
-        body: Container(
+        body: */Container(
           color: Colors.red,
           child: Center (
             child: Text(_error,
               style: TextStyle(color: Colors.white),
             ),
           ),
-        ),
-      ),
+
     );
   }
 }

@@ -1,19 +1,20 @@
-import 'dart:async';
+import 'dart:io';
 
 import 'package:flutter/material.dart';
-import 'package:gradient_widgets/gradient_widgets.dart';
 import 'package:myBlueAd/model/beacon.dart';
 import 'package:myBlueAd/model/theme_model.dart';
+import 'package:myBlueAd/services/user_state_auth.dart';
 import 'package:myBlueAd/view/widgets/custom_appbar.dart';
 import 'package:myBlueAd/view/widgets/custom_drawer.dart';
+import 'package:myBlueAd/view/widgets/custom_snackbar.dart';
 import 'package:provider/provider.dart';
 import 'package:rounded_loading_button/rounded_loading_button.dart';
 import 'package:webview_flutter/webview_flutter.dart';
 import 'custom_backbutton.dart';
 import 'error.dart';
-import 'package:animated_button/animated_button.dart';
 //bbdd
 import '../../services/firestore_db_beacons.dart' as db;
+import '../../services/firestore_db_user.dart' as dbuser;
 import 'loading.dart';
 
 class Ad extends StatefulWidget {
@@ -29,34 +30,33 @@ class _AdState extends State<Ad> {
   final RoundedLoadingButtonController _btnControllerAd = RoundedLoadingButtonController();
   final RoundedLoadingButtonController _btnControllerDelete = RoundedLoadingButtonController();
 
-  //TODO CAMBIAR A METODOS DONDE SE GUARDEM LOS FAVADS REALMENTE
-  //TODO FUTURE CONTROL VIEWER en controller paa los botones
-  void _addFavAd() async {
-    Timer(Duration(seconds: 3), () {
+  //le pasan urly url
+  _addFavAd(String uid, String zona, String adurl) async {
+    //forzar lista para firestore, lo añade modo array.
+    if (await dbuser.setFavAd(uid, zona, adurl))
+    {
+
       _btnControllerAd.success();
-    });
+      ScaffoldMessenger.of(context).showSnackBar(
+        CustomSnackBar("Added to your favs!", context));
   }
-  void _deleteAd() async {
-    Timer(Duration(seconds: 3), () {
-      _btnControllerDelete.error();
-    });
+      else {
+      _btnControllerAd.error();
+      ScaffoldMessenger.of(context).showSnackBar(
+          CustomSnackBar("An error ocurred. Try again", context));
+    }
+  }
+  //no es el boton de borrar de la lista de usuarios. eso lo hacemos en la pagina de favs. es un boton que te cierra el webview y te da marcha atras.
+
+  _deleteAd()  {
+    Navigator.of(context).pop(widget._option);
+    ScaffoldMessenger.of(context).showSnackBar(
+        CustomSnackBar("Your preferences have been saved!", context));
   }
   final GlobalKey<ScaffoldState> _scaffoldKey = new GlobalKey<ScaffoldState>();
+  bool _visible=true;
   @override
   Widget build(BuildContext context) {
-    /*return StreamBuilder(
-        stream: FirebaseFirestore.instance.collection(FirestorePath.beaconscollection()).snapshots(),
-        builder: (BuildContext context, snapshot) {
-          if (!snapshot.hasData) return new Text("no");
-          return Scaffold(body:ListView(children: getBeacons(snapshot)));
-        });
-  }
-
-  getBeacons(AsyncSnapshot<QuerySnapshot> snapshot) {
-    return snapshot.data.docs
-        .map((doc) => new ListTile(title: new Text(doc.data()["zona"])))
-        .toList();
-        }*/
     return StreamBuilder<List<Baliza>>(
         stream: db.getBeacon(widget._option),
         builder: (context, AsyncSnapshot<List<Baliza>> snapshot) {
@@ -68,7 +68,6 @@ class _AdState extends State<Ad> {
             return Center(child: Loading());
           }
           //hay datos del perfil del usuario identificado con el uid al sign in/register
-          //todo cambiar con botonbar
           return WillPopScope(
             //no deja ir para atras
               onWillPop: () async => false,
@@ -77,8 +76,10 @@ class _AdState extends State<Ad> {
                       key: _scaffoldKey,
                       appBar: CustomAppBar(_scaffoldKey, context),
                       drawer: CustomDrawer(),
-                      body:   SingleChildScrollView(child: ShowBeacon(snapshot.data)),
-              floatingActionButton: CustomBackButton(),
+                      body:   SingleChildScrollView(/*child: Visibility(
+                              visible: _visible,
+                              */child: ShowBeacon(snapshot.data)),
+                    floatingActionButton: CustomBackButton(),
                     floatingActionButtonLocation: FloatingActionButtonLocation.centerFloat,
                     bottomNavigationBar: Container(
                       height:60,
@@ -89,28 +90,33 @@ class _AdState extends State<Ad> {
                             padding: const EdgeInsets.only(bottom:5.0),
                             child: RoundedLoadingButton(
                               color: Provider.of<ThemeModel>(context, listen: false).mode==ThemeMode.dark ? Colors.lightBlue: Theme.of(context).primaryColor,
-                             successColor: Provider.of<ThemeModel>(context, listen: false).mode==ThemeMode.dark ? Colors.lightBlue:Theme.of(context).primaryColor,
+                             successColor: Colors.green,
                               width:80,
-                              child: Icon(Icons.favorite, color: Colors.white,),
+                              child: Icon(Icons.thumb_up_alt, color: Colors.white,),
                               controller: _btnControllerAd,
-                              onPressed: _addFavAd,
-                            ),
-                          ),
-                          Padding(
-                            padding: const EdgeInsets.only(bottom:5.0),
-                            child: RoundedLoadingButton(
-                              color: Provider.of<ThemeModel>(context, listen: false).mode==ThemeMode.dark ? Colors.lightBlue: Theme.of(context).primaryColor,
-                              width:80,
-                              child: Icon(Icons.delete, color: Colors.white,),
-                              controller: _btnControllerDelete,
-                              onPressed: _deleteAd,
-                            ),
-                          ),
-                        ],
-                      ),
-                    )
-                    )));
-        }
+                              onPressed: () {
+                                _addFavAd(Provider
+                                    .of<UserState>(context, listen: false)
+                                    .user
+                                    .uid, snapshot.data.first.zona,snapshot.data.first.url);
+                              },//
+          ),
+          ),
+          Padding(
+          padding: const EdgeInsets.only(bottom:5.0),
+          child: RoundedLoadingButton(
+          color: Provider.of<ThemeModel>(context, listen: false).mode==ThemeMode.dark ? Colors.lightBlue: Theme.of(context).primaryColor,
+          width:80,
+          child: Icon(Icons.thumb_down_alt,color: Colors.white,),
+          controller: _btnControllerDelete,
+          onPressed: () => _deleteAd(),
+          ),
+          ),
+          ],
+          ),
+          )
+          )));
+          }
     );
   }
 }
@@ -125,69 +131,34 @@ class ShowBeacon extends StatefulWidget {
 
 
 class _ShowBeaconState extends State<ShowBeacon> {
-  final Completer<WebViewController> _controller =
-  Completer<WebViewController>();
+  WebViewController _controller;
+  @override
+  void initState() {
+    // TODO: implement initState
+    super.initState();
+    if (Platform.isAndroid) WebView.platform = SurfaceAndroidWebView();
+  }
   @override
   Widget build(BuildContext context) {
-    print(widget._be.first.url);
-   // var isPortrait = MediaQuery.of(context).orientation == Orientation.portrait;
+    //print(widget._be.first.url);
     return  Column(
           children: <Widget>[
             Container(
               height: 500,
               child:
-              WebView(
-                javascriptMode: JavascriptMode.unrestricted,
-                initialUrl: widget._be.first.url,
-                //gestureNavigationEnabled: true,
-                //avisar al controller
+                  //TODO WEBVIEW MAS COMPLETO.
+             WebView(
+                  javascriptMode: JavascriptMode.unrestricted,
+                  initialUrl: widget._be.first.url,
+                  gestureNavigationEnabled: true,
+                  debuggingEnabled: true,
+                  onWebViewCreated: (WebViewController webViewController) {
+                    _controller = webViewController;
+                  },
+                  //avisar al controller
             ),
-            ), /*Container(
-              child: ButtonBar(
-                alignment: MainAxisAlignment.spaceAround,
-                children: <Widget>[
-                  RoundedLoadingButton(
-                    width:80,
-                    child: Text('Tap me!', style: TextStyle(color: Colors.white)),
-                    controller: _btnControllerAd,
-                    onPressed: _addFavAd,
-                  ),
-                  RoundedLoadingButton(
-                    width:80,
-                    child: Text('Tap me!', style: TextStyle(color: Colors.white)),
-                    controller: _btnControllerDelete,
-                    onPressed: _deleteAd,
-                  )
-                ],
-              ), *//*Row(
-                mainAxisSize: MainAxisSize.min,
-                mainAxisAlignment: MainAxisAlignment.end,
-                children: <Widget>[
-                  GradientButton(
-                    //registrarse
-                    child: Icon(Icons.favorite),
-                    callback: () {
-                      Navigator.of(context).pushNamed('/signlogin', arguments: "Log in");
-                    },
-                    gradient: Gradients.jShine,
-                    shadowColor: Gradients.jShine.colors.last.withOpacity(
-                        0.25),
+              ),
 
-                  ),
-                  SizedBox(width: 10,),
-                  GradientButton(
-                    //entrar
-                    child: Text('Sign in'),
-                    callback: () {
-                      Navigator.of(context).pushNamed('/signlogin', arguments: "Sign in");
-                    },
-                    gradient: Gradients.hotLinear,
-                    shadowColor: Gradients.hotLinear.colors.last
-                        .withOpacity(0.25),
-                  ),
-                ],
-              ),*/
-            //Text(widget._be.first.zona)],
         ],
     );
   }

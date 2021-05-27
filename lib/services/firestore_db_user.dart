@@ -53,15 +53,24 @@ Future<void> deletePhotoURL(String uid) async {
 }
 
 //se añaden de uno en uno, cada vez que le da al botón de fav, pero se une una lista
-Future <String> setFavAd (String uid, List<String> adurl) async {
-  db.doc(FirestorePath.user(uid)).update({"favads": FieldValue.arrayUnion(adurl)});
+Future <bool> setFavAd (String uid, String zona, String adurl) async {
+ try {
+
+   db.doc(FirestorePath.user(uid)).update({"favads.${zona}": adurl});
+   //db.doc(FirestorePath.user(uid)).update({"x.dos": FieldValue.delete()});
+   /*db.doc(FirestorePath.user(uid)).update(
+       {"favads": FieldValue.arrayUnion(adurl)});*/
+   return true;
+ } on FirebaseException catch (e) {
+   return false;
+ }
 }
 
-Future <void> removeFavAd(String uid, List<String> adurl) async {
-  db.doc(FirestorePath.user(uid)).update({"favads": FieldValue.arrayRemove(adurl)});
+Future <void> removeFavAd(String uid, String zona) async {
+  db.doc(FirestorePath.user(uid)).update({"favads.${zona}": FieldValue.delete()});
 }
 Future <void> deleteFavAds(String uid) async {
-  db.doc(FirestorePath.user(uid)).update({"favads": FieldValue.delete()});
+  //db.doc(FirestorePath.user(uid)).update({"favads": FieldValue.delete()});
 }
 
 Future <String> updateUser (String userId, Usuario usuario) async {

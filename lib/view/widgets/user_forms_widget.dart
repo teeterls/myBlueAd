@@ -407,8 +407,7 @@ class _UserProfileFormState extends State<UserProfileForm> with WidgetsBindingOb
                 padding: const EdgeInsets.symmetric(
                     horizontal: 16.0, vertical: 5.0),
                 child: GradientButton(
-                  child: Icon(
-                      Icons.person_add_alt_1_rounded),
+                  child: Text("Update", style: TextStyle(color:Colors.white, fontWeight: FontWeight.bold )),
                   callback: () async {
                     //validar formulario todos los campos
                     if (widget._formKey.currentState.validate()) {
@@ -448,7 +447,7 @@ class _UserProfileFormState extends State<UserProfileForm> with WidgetsBindingOb
 
                     }
                   },
-                  gradient: Gradients.jShine,
+                  gradient: Provider.of<ThemeModel>(context, listen: false).mode==ThemeMode.dark ? Gradients.coldLinear : Gradients.blush,
                   shadowColor: Gradients.jShine.colors.last.withOpacity(
                       0.25),
                 ),
