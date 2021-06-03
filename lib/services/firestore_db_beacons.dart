@@ -1,39 +1,47 @@
 import 'dart:async';
+import 'package:firebase_core/firebase_core.dart';
 import 'package:myBlueAd/model/user.dart';
 
 import '../model/beacon.dart';
-import 'firestore_path.dart';
+import 'firebase_path.dart';
 
 import 'package:cloud_firestore/cloud_firestore.dart';
 
 //instancia firestore
 var db= FirebaseFirestore.instance;
-/*
+
 //metodo map -> pasar una funcion que convierte los QuerySnapshots a List (o lo que sea)
-Stream <List<Baliza>> getBeacons() {
+/*Stream <List<Baliza>> getBeacons() {
   //togrouplist recibe un querysnapshot. mapeamos el stream de querysnapshots y se genera un stream de listgroups
   return db.collection(FirestorePath.beaconscollection()).orderBy('fecha_registro').snapshots().map(toBeaconList);
 }*/
 
 //TODO CAMBIAR, NO SE COGERÁ AL FINAL POR ZONA
 //DEVUELVE UNA LISTA DE BEACONS con la zona, en el futuro podria haber varios beacons por zona.
+//tambien coge la imagen
 Stream<Baliza> getBeacon(String zona)
 {
  return db.collection(FirestorePath.beaconscollection()).where('zona', isEqualTo: zona)
       .snapshots().map((doc) => toBeaconList(doc).first);
 }
 
-//TODO GETIMAGEBEACON de storage RETAIL STORE adsimage si recibe la url. recibe la url
 
 //TODO SETIMAGEBEACON DEL RETAILSTORE cuando se añade la zona
 
-//TODO GETFAVBEACONS RECIBE el map de favads. lista de beacons. filtrar por zona porque igual hay mas beacons por zona.
+//TODO GETFAVBEACONS RECIBE el map de favads. lista de beacons. filtrar por zona unica
 Stream <List<Baliza>> getFavBeacons(List <String> zonas)
 {
- zonas.forEach((zona) {
-  return db.collection(FirestorePath.beaconscollection()).where('zona', isEqualTo: zona)
-      .snapshots().map((doc) => toBeaconList(doc));
+return db.collection(FirestorePath.beaconscollection()).where('zona', whereIn: zonas).snapshots().map((doc) => toBeaconList(doc));
+}
+
+
+
+  /*query.docs.forEach((doc) {
+   doc.map(toBeaconList);
+   //print(element.data().values.toString());});
  });
+ // return null;
+
  /*List<Baliza> _lista;
  zonas.forEach((zona) {
   db.collection(FirestorePath.beaconscollection()).where('zona', isEqualTo: zona)
@@ -45,9 +53,29 @@ Stream <List<Baliza>> getFavBeacons(List <String> zonas)
   });
  print(_lista);
  return _lista;*/
+ });
+     }*/
+
+
+
+
+/*//TODO FILTRAMOS POR ZONA PERO EN EL FUTURO FILTRAREMOS POR UID
+Future <String> getBeaconRef (String zona)
+{
+ try {
+  return db.collection(FirestorePath.beaconscollection()).where('zona', isEqualTo: zona)
+      .snapshots().map((event) =>
+  event.docs.first.reference.path).first;
+  /*await db.collection(FirestorePath.beaconscollection()).where('zona', isEqualTo: zona).
+  get().then((query) {
+   print(query.docs.toString());
+   print(query.docs.first.reference.path);
+   return query.docs.first.reference.path;*/
+  } on FirebaseException catch (e)
+ {
+  return null;
  }
-
-
+}*/
 
 
 //se registra el beacon en firestore

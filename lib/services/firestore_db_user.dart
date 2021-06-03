@@ -2,7 +2,7 @@ import 'dart:async';
 import 'package:myBlueAd/model/beacon.dart';
 
 import '../model/user.dart';
-import 'firestore_path.dart';
+import 'firebase_path.dart';
 
 import 'package:cloud_firestore/cloud_firestore.dart';
 
@@ -52,10 +52,25 @@ Future<void> deletePhotoURL(String uid) async {
   db.doc(FirestorePath.user(uid)).update({"photoURL": null});
 }
 
+/*Future <bool> favPrueba (String uid, String beacon, String zona) async
+{
+  //List <String> _ref = [beacon];
+  try {
+    db.doc(FirestorePath.user(uid)).update({"favprueba2.${zona}": beacon});
+    /*db.doc(FirestorePath.user(uid)).update({"favprueba": FieldValue.arrayUnion(_ref)});
+    //db.doc(FirestorePath.user(uid)).update({"x.dos": FieldValue.delete()});
+    /*db.doc(FirestorePath.user(uid)).update(
+       {"favads": FieldValue.arrayUnion(adurl)});*/*/
+    return true;
+  } on FirebaseException catch (e) {
+    return false;
+  }
+}*/
+
+
 //se añaden de uno en uno, cada vez que le da al botón de fav, pero se une una lista
 Future <bool> setFavAd (String uid, String zona, String adurl) async {
  try {
-
    db.doc(FirestorePath.user(uid)).update({"favads.${zona}": adurl});
    //db.doc(FirestorePath.user(uid)).update({"x.dos": FieldValue.delete()});
    /*db.doc(FirestorePath.user(uid)).update(
@@ -70,7 +85,7 @@ Future <void> removeFavAd(String uid, String zona) async {
   db.doc(FirestorePath.user(uid)).update({"favads.${zona}": FieldValue.delete()});
 }
 Future <void> deleteFavAds(String uid) async {
-  //db.doc(FirestorePath.user(uid)).update({"favads": FieldValue.delete()});
+  db.doc(FirestorePath.user(uid)).update({"favads" : FieldValue.delete()});
 }
 
 //metodo is favad
@@ -78,7 +93,7 @@ Future <bool> isFavAd (String uid, String zona) async {
   bool _result;
  await db.doc('users/$uid').get().then((doc)
   {
-    print (doc.data()["favads"]["${zona}"]);
+    //print (doc.data()["favads"]["${zona}"]);
     if ((doc.data()["favads"]["${zona}"])!=null)
       _result=true;
     else if ((doc.data()["favads"]["${zona}"])==null)

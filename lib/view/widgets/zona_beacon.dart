@@ -1,6 +1,7 @@
 import 'dart:async';
 import 'dart:io';
 
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:myBlueAd/model/beacon.dart';
 import 'package:myBlueAd/model/theme_model.dart';
@@ -16,6 +17,7 @@ import 'error.dart';
 //bbdd
 import '../../services/firestore_db_beacons.dart' as db;
 import '../../services/firestore_db_user.dart' as dbuser;
+import '../../services/firebase_storage.dart' as storage;
 import 'loading.dart';
 
 class Ad extends StatefulWidget {
@@ -49,6 +51,11 @@ class _AdState extends State<Ad> {
     //forzar lista para firestore, lo añade modo array.
     else if (await dbuser.setFavAd(uid, zona, adurl))
     {
+      //id del beacon
+      String id= (await db.getBeacon(zona).first).uid;
+      //TODO PASAR DE ASSET A FILE
+      //TODO PRIMERO AÑADE LA FOTO AL STORAGE
+          //DESPUES AÑADE LA FOTO A LA BBDD
 
       _btnControllerAd.success();
       ScaffoldMessenger.of(context).showSnackBar(

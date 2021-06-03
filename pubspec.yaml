@@ -94,8 +94,10 @@ flutter:
    - assets/logo_store.png
    - assets/2727-qimtronics.json
    - assets/12435-turn-on-bluetooth.json
-   - assets/perfume.jpg
-   - assets/jewel.jpg
+   - assets/perfumary.jpg
+   - assets/jewelry.jpg
+   - assets/shoes.jpg
+   - assets/sports.jpg
   #   - images/a_dot_ham.jpeg
 
   # An image asset can refer to one or more resolution-specific "variants", see

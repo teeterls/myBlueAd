@@ -54,24 +54,67 @@ class ShowFavBeacon extends StatefulWidget {
 }
 
 class _ShowFavBeaconState extends State<ShowFavBeacon> {
+  //todo streambuilder de favicons
   @override
   Widget build(BuildContext context) {
-    //return Text(widget._favbeacons.toString());
-    return StreamBuilder<List<Baliza>>(
+    return StreamBuilder <List<Baliza>>(
         stream: db.getFavBeacons(widget._favbeacons),
-    builder: (context, AsyncSnapshot<List<Baliza>> snapshot) {
-    //si tengo un error se muestra en el widget aparte
-    if (snapshot.hasError) {
-    return Error(snapshot.error.toString());
-    }
-    if (!snapshot.hasData) {
-    return Center(child: Loading());
-    }
-    //hay datos del perfil del usuario identificado con el uid al sign in/register
-    return  Text(snapshot.data.toString());
+        builder: (context, AsyncSnapshot<List<Baliza>> snapshot) {
+          //si tengo un error se muestra en el widget aparte
+          if (snapshot.hasError) {
+            return Error(snapshot.error.toString());
+          }
+          //waiting
+          if (!snapshot.hasData) {
+            return Center(child: Loading());
+          }
+          //hay datos del perfil del usuario identificado con el uid al sign in/register
+          //snapshot.data.favads.key zona -> lookup image db nuevo STREAMBUILDER
+          //snapshot.data.favads.values url -> esto se utiliza asi
+          //TODO STREAMBUILDER BEACON Y METODO OBTENER IMAGENES de la retail store con storage
+          return  FavBeaconList(snapshot.data);
+        });
   }
+}
+
+class FavBeaconList extends StatelessWidget {
+  final List<Baliza> _favs;
+  FavBeaconList(this._favs);
+  @override
+  Widget build(BuildContext context) {
+    //builder favs
+    return  Container(
+            height: 650,
+            child: ListView.builder(
+                shrinkWrap: true,
+                physics: const ClampingScrollPhysics(),
+              //scrollDirection: Axis.vertical,
+                itemCount: _favs.length,
+                itemBuilder: (context, index)
+                {
+                  Baliza beacon = _favs[index];
+                  //cada index es una baliza
+                  return Padding(
+                    padding: const EdgeInsets.fromLTRB(15,20,15,0),
+                    child: ClipRRect(
+                      borderRadius: BorderRadius.circular(30),
+                      child: Card(
+                        child: Container(
+                          //width: double.infinity,
+                          height: 100,
+                          child: Text(beacon.fecharegistro.toString()),
+                        ),
+                      ),
+                    ),
+                  );
+                }),
+
+
     );
+
+  }
 }
-}
+
+
 
 
