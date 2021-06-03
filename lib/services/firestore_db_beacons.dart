@@ -16,11 +16,36 @@ Stream <List<Baliza>> getBeacons() {
 }*/
 
 //TODO CAMBIAR, NO SE COGERÁ AL FINAL POR ZONA
+//DEVUELVE UNA LISTA DE BEACONS con la zona, en el futuro podria haber varios beacons por zona.
 Stream<List<Baliza>> getBeacon(String zona)
 {
  return db.collection(FirestorePath.beaconscollection()).where('zona', isEqualTo: zona)
       .snapshots().map((doc) => toBeaconList(doc));
 }
+
+//TODO GETIMAGEBEACON de storage RETAIL STORE adsimage si recibe la url. recibe la url
+
+//TODO SETIMAGEBEACON DEL RETAILSTORE cuando se añade la zona
+
+//TODO GETFAVBEACONS RECIBE el map de favads. lista de beacons. filtrar por zona porque igual hay mas beacons por zona.
+List<Baliza> getFavBeacons(List zonas)
+{
+ List<Baliza> _lista;
+ zonas.forEach((zona) {
+  db.collection(FirestorePath.beaconscollection()).where('zona', isEqualTo: zona)
+      .snapshots().map((doc)
+      {
+        toBeaconList(doc).forEach((element) { _lista.add(element);
+       });
+      });
+  });
+ print(_lista);
+ return _lista;
+ }
+
+ //return db.collection(FirestorePath.beaconscollection()).where('zona', isEqualTo: zona)
+    // .snapshots().map((doc) => toBeaconList(doc));
+
 
 //se registra el beacon en firestore
 Future<String> registerBeacon (Baliza beacon) async {

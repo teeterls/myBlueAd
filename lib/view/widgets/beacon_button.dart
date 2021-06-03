@@ -19,12 +19,12 @@ class myBeaconButton extends StatelessWidget {
   Widget build(BuildContext context) {
     final userstate = Provider.of<UserState>(context, listen:false);
     return FloatingActionButton(
-      child: Icon(Icons.bluetooth, color: Provider.of<ThemeModel>(context, listen: false).mode==ThemeMode.dark ? Colors.teal: Theme.of(context).primaryColor,),
+      child: Icon(Icons.bluetooth, color: Provider.of<ThemeModel>(context, listen: false).mode==ThemeMode.dark ? Colors.teal: _enabled==true ? Colors.white : Theme.of(context).primaryColor,),
       splashColor: Colors.blue,
       hoverColor: Colors.blue,
       disabledElevation: 0.1,
-      backgroundColor: Provider.of<ThemeModel>(context, listen: false).mode==ThemeMode.dark ? Colors.white: Colors.white54,
-      tooltip: "Beacon",
+      backgroundColor: Provider.of<ThemeModel>(context, listen: false).mode==ThemeMode.dark && _enabled==true ? Colors.white: Provider.of<ThemeModel>(context, listen: false).mode==ThemeMode.dark && _enabled==false ? Colors.white54 : _enabled==true ? Colors.blueAccent : Colors.white54,
+      tooltip: _enabled==true ? "Beacon enabled" : "Beacon disabled",
       onPressed: _enabled==true ? () {
         _zonas.shuffle();
         //print(_lista[0]);

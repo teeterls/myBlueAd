@@ -80,7 +80,7 @@ Future <bool> isFavAd (String uid, String zona) async {
   {
     print (doc.data()["favads"]["${zona}"]);
     if ((doc.data()["favads"]["${zona}"])!=null)
-    _result=true;
+      _result=true;
     else if ((doc.data()["favads"]["${zona}"])==null)
       _result=false;
   });
