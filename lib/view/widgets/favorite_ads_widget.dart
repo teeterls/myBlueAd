@@ -22,12 +22,12 @@ class _FavoriteAdsState extends State<FavoriteAds> {
   Widget build(BuildContext context) {
     //db.getFavBeacons(["jewelry", "welcome", "shoes"]);
     //userstate Auth Provider
-    //final userstate = Provider.of<UserState>(context, listen: false);
+    final userstate = Provider.of<UserState>(context, listen: false);
     //print(userstate.user.uid);
     //print(db.getUserProfile(userstate.user.uid));
-    //f (userstate!=null)
+    if (userstate!=null)
       return StreamBuilder<Usuario>(
-          stream: dbuser.getUserProfile(Provider.of<UserState>(context, listen: false).user.uid),
+          stream: dbuser.getUserProfile(userstate.user.uid),
           builder: (context, AsyncSnapshot<Usuario> snapshot) {
             //si tengo un error se muestra en el widget aparte
             if (snapshot.hasError) {
@@ -41,13 +41,13 @@ class _FavoriteAdsState extends State<FavoriteAds> {
             //snapshot.data.favads.key zona -> lookup image db nuevo STREAMBUILDER
             //snapshot.data.favads.values url -> esto se utiliza asi
             //TODO STREAMBUILDER BEACON Y METODO OBTENER IMAGENES de la retail store con storage
-            return  Text("hola");//ShowFavBeacon(snapshot.data.favads.keys.toList());
+            return  ShowFavBeacon(List<String>.from(snapshot.data.favads.keys.toList()));
           });
   }
 }
-/*class ShowFavBeacon extends StatefulWidget {
+class ShowFavBeacon extends StatefulWidget {
   //recibe las url y las zonas en mapa
-  List  _favbeacons;
+  List  <String> _favbeacons;
   ShowFavBeacon(this._favbeacons);
   @override
   _ShowFavBeaconState createState() => _ShowFavBeaconState();
@@ -56,6 +56,7 @@ class _FavoriteAdsState extends State<FavoriteAds> {
 class _ShowFavBeaconState extends State<ShowFavBeacon> {
   @override
   Widget build(BuildContext context) {
+    //return Text(widget._favbeacons.toString());
     return StreamBuilder<List<Baliza>>(
         stream: db.getFavBeacons(widget._favbeacons),
     builder: (context, AsyncSnapshot<List<Baliza>> snapshot) {
@@ -71,6 +72,6 @@ class _ShowFavBeaconState extends State<ShowFavBeacon> {
   }
     );
 }
-}*/
+}
 
 

@@ -66,9 +66,9 @@ class _AdState extends State<Ad> {
   @override
   Widget build(BuildContext context) {
 
-    return StreamBuilder<List<Baliza>>(
+    return StreamBuilder<Baliza>(
         stream: db.getBeacon(widget._option),
-        builder: (context, AsyncSnapshot<List<Baliza>> snapshot) {
+        builder: (context, AsyncSnapshot<Baliza> snapshot) {
           //si tengo un error se muestra en el widget aparte
           if (snapshot.hasError) {
             return Error(snapshot.error.toString());
@@ -108,7 +108,7 @@ class _AdState extends State<Ad> {
                                 _addFavAd(Provider
                                     .of<UserState>(context, listen: false)
                                     .user
-                                    .uid, snapshot.data.first.zona,snapshot.data.first.url);
+                                    .uid, snapshot.data.zona,snapshot.data.url);
                               },//
           ),
           ),
@@ -138,8 +138,8 @@ class _AdState extends State<Ad> {
 
 class ShowBeacon extends StatefulWidget {
 
-  List<Baliza> _be;
-  ShowBeacon(this._be);
+  Baliza _beacon;
+  ShowBeacon(this._beacon);
   @override
   _ShowBeaconState createState() => _ShowBeaconState();
 }
@@ -164,7 +164,7 @@ class _ShowBeaconState extends State<ShowBeacon> {
                   //TODO WEBVIEW MAS COMPLETO.
              WebView(
                   javascriptMode: JavascriptMode.unrestricted,
-                  initialUrl: widget._be.first.url,
+                  initialUrl: widget._beacon.url,
                   gestureNavigationEnabled: true,
                   debuggingEnabled: true,
                   onWebViewCreated: (WebViewController webViewController) {
