@@ -49,7 +49,7 @@ Future <String> setPhotoURL (String uid,String url) async {
 }
 
 Future<void> deletePhotoURL(String uid) async {
-  db.doc(FirestorePath.user(uid)).update({"photoURL": null});
+  db.doc(FirestorePath.user(uid)).update({"photoURL": FieldValue.delete()});
 }
 
 /*Future <bool> favPrueba (String uid, String beacon, String zona) async
@@ -89,15 +89,20 @@ Future <void> deleteFavAds(String uid) async {
 }
 
 //metodo is favad
+//primero hay que ver si tiene alguno
 Future <bool> isFavAd (String uid, String zona) async {
   bool _result;
  await db.doc('users/$uid').get().then((doc)
   {
+    if (doc.data()["favads"]!=null)
+    {
     //print (doc.data()["favads"]["${zona}"]);
-    if ((doc.data()["favads"]["${zona}"])!=null)
-      _result=true;
+     if ( (doc.data () ["favads"]["${zona}"])!=null)
+    _result=true;
     else if ((doc.data()["favads"]["${zona}"])==null)
-      _result=false;
+    _result = false;
+  } else
+    _result=false;
   });
  return _result;
 }

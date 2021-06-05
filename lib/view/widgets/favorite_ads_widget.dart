@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:myBlueAd/model/beacon.dart';
+import 'package:myBlueAd/model/theme_model.dart';
 import 'package:myBlueAd/model/user.dart';
 import 'package:myBlueAd/services/firestore_db_user.dart' as dbuser;
 import 'package:myBlueAd/services/firestore_db_beacons.dart' as db;
@@ -41,7 +42,13 @@ class _FavoriteAdsState extends State<FavoriteAds> {
             //snapshot.data.favads.key zona -> lookup image db nuevo STREAMBUILDER
             //snapshot.data.favads.values url -> esto se utiliza asi
             //TODO STREAMBUILDER BEACON Y METODO OBTENER IMAGENES de la retail store con storage
-            return  ShowFavBeacon(List<String>.from(snapshot.data.favads.keys.toList()));
+            if (snapshot.data.favads.isNotEmpty)  {
+              print(snapshot.data.favads.toString());
+              return ShowFavBeacon(
+                  List<String>.from(snapshot.data.favads.keys.toList()));
+            }
+          else
+            return NoAdsYet();
           });
   }
 }
@@ -109,11 +116,48 @@ class FavBeaconList extends StatelessWidget {
                   );
                 }),
 
-
     );
 
   }
 }
+
+//clase que todavia no tiene anuncios.
+class NoAdsYet extends StatelessWidget {
+
+  @override
+  Widget build(BuildContext context) {
+    return Padding(
+        padding: const EdgeInsets.only(top:150, bottom: 200),
+    child: Column(
+    crossAxisAlignment: CrossAxisAlignment.center,
+    mainAxisSize: MainAxisSize.min,
+    children: <Widget>
+    [
+      Padding(
+        padding: const EdgeInsets.only(left: 10.0, top: 5.0),
+        child: Icon(Icons.favorite_outline_outlined, size: 50, color: Provider.of<ThemeModel>(context, listen: false).mode==ThemeMode.dark ? Colors.grey[600] : Colors.grey[700]),
+      ),
+      SizedBox(height:20),
+      Row(
+          mainAxisAlignment: MainAxisAlignment.center,
+          crossAxisAlignment: CrossAxisAlignment.center,
+
+          children: [
+            Padding(
+              padding: const EdgeInsets.only(left: 10.0, top: 5.0),
+              child: Text("You have no fav ads yet", style: TextStyle(
+                fontSize: 24,
+                fontWeight: FontWeight.bold,
+                color: Provider.of<ThemeModel>(context, listen: false).mode==ThemeMode.dark ? Colors.grey[600] : Colors.grey[700],
+              ),),
+            ),
+          ]),
+     ],
+    ));
+
+  }
+}
+
 
 
 

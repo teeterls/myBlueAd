@@ -20,6 +20,9 @@ import '../../services/firestore_db_user.dart' as dbuser;
 import '../../services/firebase_storage.dart' as storage;
 import 'loading.dart';
 
+import 'package:flutter/services.dart' show rootBundle;
+import 'package:path_provider/path_provider.dart';
+
 class Ad extends StatefulWidget {
 
   final String _option;
@@ -35,8 +38,15 @@ class _AdState extends State<Ad> {
   final RoundedLoadingButtonController _btnControllerAd = RoundedLoadingButtonController();
   final RoundedLoadingButtonController _btnControllerDelete = RoundedLoadingButtonController();
 
-  //le pasan urly url
-  _addFavAd(String uid, String zona, String adurl) async {
+  //metodo de asset a file
+  Future<File> getImageFileFromAssets(String path) async {
+    final byteData = await rootBundle.load('assets/$path');
+      File file =  File('${(await getTemporaryDirectory()).path}/$path');
+      await file.writeAsBytes(byteData.buffer.asUint8List(byteData.offsetInBytes, byteData.lengthInBytes));
+      return file;
+  }
+  //le pasan zona y  url
+  _addFavAd(String uid, String zona, String adurl, String idbeacon) async {
     //ya es favad
     if (await dbuser.isFavAd(Provider
         .of<UserState>(context, listen: false)
@@ -51,15 +61,20 @@ class _AdState extends State<Ad> {
     //forzar lista para firestore, lo añade modo array.
     else if (await dbuser.setFavAd(uid, zona, adurl))
     {
-      //id del beacon
-      String id= (await db.getBeacon(zona).first).uid;
-      //TODO PASAR DE ASSET A FILE
-      //TODO PRIMERO AÑADE LA FOTO AL STORAGE
-          //DESPUES AÑADE LA FOTO A LA BBDD
 
-      _btnControllerAd.success();
-      ScaffoldMessenger.of(context).showSnackBar(
+      //TODO PASAR DE ASSET A FILE
+      File image = await getImageFileFromAssets('${zona}.jpg');
+      //print(image.path);
+      //TODO PRIMERO AÑADE LA FOTO AL STORAGE
+    await storage.uploadBeaconImage(image, zona);
+      String url = await storage.downloadBeaconImage(zona);
+      print(url);
+          //DESPUES AÑADE LA FOTO A LA BBDD
+       await db.setBeaconURL(idbeacon, url);
+        _btnControllerAd.success();
+        ScaffoldMessenger.of(context).showSnackBar(
         CustomSnackBar("Added to your favs!", context));
+
   }
       else {
       _btnControllerAd.error();
@@ -115,7 +130,7 @@ class _AdState extends State<Ad> {
                                 _addFavAd(Provider
                                     .of<UserState>(context, listen: false)
                                     .user
-                                    .uid, snapshot.data.zona,snapshot.data.url);
+                                    .uid, snapshot.data.zona,snapshot.data.url, snapshot.data.uid);
                               },//
           ),
           ),

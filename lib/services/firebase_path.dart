@@ -20,5 +20,6 @@ class FirestorePath {
 class StoragePath {
   //profileimg
 static String profileimg(String userid) => 'users/profile_img/$userid';
-static String beaconimg(String beaconid) => 'retail_stores/ads_img/$beaconid';
+static String beaconimg(String zona) => 'retail_stores/ads_img/$zona';
+
 }

@@ -41,10 +41,10 @@ Future <void> deleteUserImage(String uid) async {
   await storage.ref(StoragePath.profileimg(uid)).delete();
 }
 
-Future <String> uploadBeaconImage (File image, String uid) async
+Future <String> uploadBeaconImage (File image, String zona) async
 {
   try {
-    await storage.ref(StoragePath.beaconimg(uid)).putFile(image);
+    await storage.ref(StoragePath.beaconimg(zona)).putFile(image);
     /* UploadTask uploadTask = userstorage.putFile(file);
     String url;
     uploadTask.whenComplete(() async {
@@ -60,8 +60,8 @@ Future <String> uploadBeaconImage (File image, String uid) async
 
 //metodo download de cloudstorage img para el perfil
 
-Future<String> downloadBeaconImage(String uid) async {
-  String downloadURL = await storage.ref(StoragePath.beaconimg(uid))
+Future<String> downloadBeaconImage(String zona) async {
+  String downloadURL = await storage.ref(StoragePath.beaconimg(zona))
       .getDownloadURL();
   return downloadURL;
 

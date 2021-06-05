@@ -21,18 +21,37 @@ var db= FirebaseFirestore.instance;
 //tambien coge la imagen
 Stream<Baliza> getBeacon(String zona)
 {
+ /*return db.collection(FirestorePath.beaconscollection()).where('zona', isEqualTo: zona)
+      .snapshots().map((doc) => toBeaconList(doc).first);*/
  return db.collection(FirestorePath.beaconscollection()).where('zona', isEqualTo: zona)
-      .snapshots().map((doc) => toBeaconList(doc).first);
+     .snapshots().map((doc) {
+     Baliza beacon= toBeaconList(doc).first;
+      beacon.uid= doc.docs.first.id;
+      return beacon;
+ });
 }
 
 
 //TODO SETIMAGEBEACON DEL RETAILSTORE cuando se añade la zona
+Future <String> setBeaconURL (String uid,String url) async {
+ try  {
+  db.doc(FirestorePath.beacon(uid)).update({"image": url});
 
+ } catch (e)
+ {
+  return e.toString();
+ }
+}
+
+Future<void> deleteBeaconURL(String uid) async {
+ db.doc(FirestorePath.beacon(uid)).update({"image": FieldValue.delete()});
+}
 //TODO GETFAVBEACONS RECIBE el map de favads. lista de beacons. filtrar por zona unica
 Stream <List<Baliza>> getFavBeacons(List <String> zonas)
 {
 return db.collection(FirestorePath.beaconscollection()).where('zona', whereIn: zonas).snapshots().map((doc) => toBeaconList(doc));
 }
+
 
 
 
