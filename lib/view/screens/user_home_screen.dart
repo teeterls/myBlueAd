@@ -277,7 +277,7 @@ class _UserHomeScreenState extends State<UserHomeScreen> {
   //segun si hay email o no
   List <Widget> _getBottomItems(String email) {
     return [
-      Icon(Icons.account_circle, semanticLabel: "Mi profile"),
+      Icon(Icons.account_circle, semanticLabel: "My profile"),
       Icon(Icons.bluetooth, semanticLabel: "Blue nearby"),
       Icon(Icons.favorite, semanticLabel: "My blue ads"),
     ];

@@ -95,11 +95,11 @@ flutter:
    - assets/2727-qimtronics.json
    - assets/12435-turn-on-bluetooth.json
    - assets/13968-heart-click-button-action-animation.json
-   - assets/perfumary.jpg
    - assets/jewelry.jpg
    - assets/shoes.jpg
    - assets/sports.jpg
    - assets/welcome.jpg
+   - assets/perfumary.jpg
   #   - images/a_dot_ham.jpeg
 
   # An image asset can refer to one or more resolution-specific "variants", see

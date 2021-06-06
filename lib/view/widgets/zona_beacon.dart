@@ -1,7 +1,6 @@
 import 'dart:async';
 import 'dart:io';
 
-import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:myBlueAd/model/beacon.dart';
 import 'package:myBlueAd/model/theme_model.dart';
@@ -20,6 +19,7 @@ import '../../services/firestore_db_user.dart' as dbuser;
 import '../../services/firebase_storage.dart' as storage;
 import 'loading.dart';
 
+import 'package:badges/badges.dart';
 import 'package:flutter/services.dart' show rootBundle;
 import 'package:path_provider/path_provider.dart';
 
@@ -141,12 +141,34 @@ class _AdState extends State<Ad> {
           width:80,
           child: Icon(Icons.thumb_down_alt,color: Colors.white,),
           controller: _btnControllerDelete,
-          onPressed: ()
-            {
-              Navigator.of(context).pop(widget._option);
+          onPressed: () async
+          {
+              if (await dbuser.isFavAd(Provider
+                  .of<UserState>(context, listen: false)
+              .user
+                .uid, widget._option))
+              {
+              dbuser.removeFavAd(Provider
+                  .of<UserState>(context, listen: false)
+                  .user
+                  .uid, widget._option);
               ScaffoldMessenger.of(context).showSnackBar(
-                  CustomSnackBar("Your preferences have been saved!", context));
-            },
+              CustomSnackBar("The ${widget._option} ad has been removed from your favs!", context));
+
+              }
+              else if (! (await dbuser.isFavAd(Provider
+                  .of<UserState>(context, listen: false)
+                  .user
+                  .uid, widget._option)))
+          {
+          Navigator.of(context).pop();
+          ScaffoldMessenger.of(context).showSnackBar(
+          CustomSnackBar("Your preferences about ${widget._option} section have been saved! ", context));
+
+          }
+              //se pone el boton a clear
+            _btnControllerDelete.error();
+              },
           ),
           ),
           ],
