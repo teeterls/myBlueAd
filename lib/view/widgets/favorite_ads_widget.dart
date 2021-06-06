@@ -13,6 +13,7 @@ import 'package:myBlueAd/view/widgets/error.dart';
 import 'package:http/http.dart';
 import 'custom_snackbar.dart';
 import 'loading.dart';
+import 'package:badges/badges.dart';
 //tiene o no lista de favoritos? -> bbdd
 //card con foto de fondo nombre y el corazon
 //CARDS
@@ -110,18 +111,26 @@ class FavBeaconList extends StatelessWidget {
                       color: Provider.of<ThemeModel>(context, listen: false).mode==ThemeMode.dark ? Colors.tealAccent : Theme.of(context).primaryColor,
                     ),),
                ),
-                IconButton(
-                  tooltip: "Delete all favs",
-                    icon: Icon(Icons.delete_forever, size:26, color:Provider.of<ThemeModel>(context, listen: false).mode==ThemeMode.dark ? Colors.tealAccent : Theme.of(context).primaryColor),
-                    onPressed: ()
-                    {
-                        _showRemoveFavsDialog(context);
-                    },
-                  ),
+                Badge(
+                  badgeColor: Provider.of<ThemeModel>(context, listen: false).mode==ThemeMode.dark ? Colors.tealAccent : Theme.of(context).primaryColor,
+                  badgeContent: Text(_favs.length.toString(), style: TextStyle(color: Provider.of<ThemeModel>(context, listen: false).mode==ThemeMode.dark ? Colors.black : Colors.white, fontWeight: FontWeight.bold),),
+                  showBadge: true,
+                  shape: BadgeShape.circle,
+                  animationType: BadgeAnimationType.scale,
+                  animationDuration: Duration(milliseconds:500),
+                  child: IconButton(
+                    tooltip: "Delete all favs",
+                      icon: Icon(Icons.delete_forever, size:26, color:Provider.of<ThemeModel>(context, listen: false).mode==ThemeMode.dark ? Colors.tealAccent : Theme.of(context).primaryColor),
+                      onPressed: ()
+                      {
+                          _showRemoveFavsDialog(context);
+                      },
+                    ),
+                ),
               ]),
         ),
         Container(
-                height: _favs.length*250.toDouble(),
+                height: _favs.length*260.toDouble(),
                 child: OrientationBuilder(
                   builder: (context, orientation) {
                   return ListView.builder(
@@ -133,48 +142,104 @@ class FavBeaconList extends StatelessWidget {
                       {
                         Baliza beacon = _favs[index];
                         //cada index es una baliza
-                        return Padding(
+                        return Container(
+                            width: double.infinity,
+                            height: 250,
+                          padding: const EdgeInsets.fromLTRB(15,20,15,0),
+                          child:Center(
+                            child: Column(
+                              children: [
+                            Badge(
+                              padding: EdgeInsets.fromLTRB(15,20,15,5),
+                            badgeColor: Provider.of<ThemeModel>(context, listen: false).mode==ThemeMode.dark ? Colors.tealAccent : Theme.of(context).primaryColor,
+                              badgeContent: Padding(
+                                padding: const EdgeInsets.only(bottom:12.0),
+                                child: Text("only 2 days left", style: TextStyle(color: Provider.of<ThemeModel>(context, listen: false).mode==ThemeMode.dark ? Colors.black : Colors.white, fontWeight: FontWeight.bold),),
+                              ),
+                              showBadge: true,
+                              shape: BadgeShape.square,
+                              borderRadius: BorderRadius.circular(30),
+                              animationType: BadgeAnimationType.scale,
+                              animationDuration: Duration(milliseconds:500),
+                              child: ClipRRect(
+                      borderRadius: BorderRadius.circular(30),
+                      child: Card(
+                      child: Container(
+                      width: orientation == Orientation.portrait ? double.infinity : 450,
+                      height: 220,
+                      decoration: BoxDecoration(
+                      image: DecorationImage(
+                      image: NetworkImage(beacon.image),
+                      fit: BoxFit.fill,
+                      ),
+                      ),
+                      alignment: Alignment.bottomLeft,
+                        child: Container(
+                        color: Colors.black.withOpacity(0.35),
+                        child: ListTile(
+                        title: Text(
+                        beacon.zona[0].toUpperCase()+beacon.zona.substring(1),
+                        style: TextStyle(
+                        fontWeight: FontWeight.bold,
+                        color: Colors.white,
+                        fontSize:16
+                        ),
+                        ),
+                        trailing: IconButton(
+                        tooltip: "Delete fav",
+                        icon: Icon(Icons.favorite, size: 32,color: Provider.of<ThemeModel>(context, listen: false).mode==ThemeMode.dark ? Colors.tealAccent : Theme.of(context).primaryColor),
+                      onPressed: ()
+                        {
+                        dbuser.removeFavAd(Provider.of<UserState>(context, listen: false).user.uid, beacon.zona);
+                        ScaffoldMessenger.of(context).showSnackBar(CustomSnackBar("Fav ad deleted succesfully!", context));
+                        },
+                      ),
+                      ),),),),)),
+                              ]
+                            )
+                          )
+                        );/*Padding(
                           padding: const EdgeInsets.fromLTRB(15,20,15,0),
                           child: ClipRRect(
-                            borderRadius: BorderRadius.circular(30),
-                            child: Card(
-                              child: Container(
-                                width: orientation == Orientation.portrait ? double.infinity : 150,
-                                height: 220,
-                                decoration: BoxDecoration(
-                                  image: DecorationImage(
-                                    image: NetworkImage(beacon.image),
-                                    fit: BoxFit.fill,
+                              borderRadius: BorderRadius.circular(30),
+                              child: Card(
+                                child: Container(
+                                  width: orientation == Orientation.portrait ? double.infinity : 150,
+                                  height: 220,
+                                  decoration: BoxDecoration(
+                                    image: DecorationImage(
+                                      image: NetworkImage(beacon.image),
+                                      fit: BoxFit.fill,
+                                    ),
+                                  ),
+                                  alignment: Alignment.bottomLeft,
+                                  child: Container(
+                                    color: Colors.black.withOpacity(0.35),
+                                    child: ListTile(
+                                      title: Text(
+                                        beacon.zona[0].toUpperCase()+beacon.zona.substring(1),
+                                          style: TextStyle(
+                                            fontWeight: FontWeight.bold,
+                                            color: Colors.white,
+                                            fontSize:16
+                                          ),
+                                      ),
+                                      trailing: IconButton(
+                                        tooltip: "Delete fav",
+                                        icon: Icon(Icons.favorite, size: 32,color: Provider.of<ThemeModel>(context, listen: false).mode==ThemeMode.dark ? Colors.tealAccent : Theme.of(context).primaryColor),
+                                        onPressed: ()
+                                        {
+                                          dbuser.removeFavAd(Provider.of<UserState>(context, listen: false).user.uid, beacon.zona);
+                                          ScaffoldMessenger.of(context).showSnackBar(CustomSnackBar("Fav ad deleted succesfully!", context));
+                                        },
+                                      ),
+
+                                    )
                                   ),
                                 ),
-                                alignment: Alignment.bottomLeft,
-                                child: Container(
-                                  color: Colors.black.withOpacity(0.35),
-                                  child: ListTile(
-                                    title: Text(
-                                      beacon.zona[0].toUpperCase()+beacon.zona.substring(1),
-                                        style: TextStyle(
-                                          fontWeight: FontWeight.bold,
-                                          color: Colors.white,
-                                          fontSize:16
-                                        ),
-                                    ),
-                                    trailing: IconButton(
-                                      tooltip: "Delete fav",
-                                      icon: Icon(Icons.favorite, size: 32,color: Provider.of<ThemeModel>(context, listen: false).mode==ThemeMode.dark ? Colors.tealAccent : Theme.of(context).primaryColor),
-                                      onPressed: ()
-                                      {
-                                        dbuser.removeFavAd(Provider.of<UserState>(context, listen: false).user.uid, beacon.zona);
-                                        ScaffoldMessenger.of(context).showSnackBar(CustomSnackBar("Fav ad deleted succesfully!", context));
-                                      },
-                                    ),
-
-                                  )
-                                ),
                               ),
-                            ),
                           ),
-                        );
+                        );*/
                       }); }
                 ),
 
