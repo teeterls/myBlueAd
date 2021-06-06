@@ -85,7 +85,7 @@ Future <void> removeFavAd(String uid, String zona) async {
   db.doc(FirestorePath.user(uid)).update({"favads.${zona}": FieldValue.delete()});
 }
 Future <void> deleteFavAds(String uid) async {
-  db.doc(FirestorePath.user(uid)).update({"favads" : FieldValue.delete()});
+  db.doc(FirestorePath.user(uid)).update({"favads" : {}});
 }
 
 //metodo is favad

@@ -49,7 +49,7 @@ dependencies:
   csc_picker: ^0.2.0
   flutter_speed_dial: ^3.0.5
   firebase_analytics: ^7.1.1
-  firebase_storage: ^8.0.5
+  firebase_storage: ^8.1.1
   path_provider: ^2.0.1
   animated_text_kit: ^4.2.1
   animate_my_text: ^0.0.2
@@ -61,7 +61,6 @@ dependencies:
   animations: ^2.0.0
   flutter_blue: ^0.8.0
   geolocator: ^7.0.3
-  location: ^4.1.1
   animated_button: ^0.2.0
   rounded_loading_button: ^2.0.3
   lottie: ^1.0.1
