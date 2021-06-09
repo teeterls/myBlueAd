@@ -140,8 +140,13 @@ class FavBeaconList extends StatelessWidget {
                       itemCount: _favs.length,
                       itemBuilder: (context, index)
                       {
+                        //tenemos toda la info
                         Baliza beacon = _favs[index];
-                        //cada index es una baliza
+                        //print(beacon.expiration);
+                        //cada index es una baliza.
+                        //TODO CALCULAR TIMELEFT
+                        //print(_timeleft(beacon.expiration));
+                        if (_timeleft(beacon.expiration)!=null)
                         return Container(
                             width: double.infinity,
                             height: 250,
@@ -150,11 +155,11 @@ class FavBeaconList extends StatelessWidget {
                             child: Column(
                               children: [
                             Badge(
-                              padding: EdgeInsets.fromLTRB(15,20,15,5),
+                              padding: EdgeInsets.fromLTRB(15,12,15,0),
                             badgeColor: Provider.of<ThemeModel>(context, listen: false).mode==ThemeMode.dark ? Colors.tealAccent : Theme.of(context).primaryColor,
                               badgeContent: Padding(
                                 padding: const EdgeInsets.only(bottom:12.0),
-                                child: Text("only 2 days left", style: TextStyle(color: Provider.of<ThemeModel>(context, listen: false).mode==ThemeMode.dark ? Colors.black : Colors.white, fontWeight: FontWeight.bold),),
+                                child: Text(_timeleft(beacon.expiration) != "min" ? "Only ${_timeleft(beacon.expiration)} left!" : "Less than 1 hour left!", style: TextStyle(color: Provider.of<ThemeModel>(context, listen: false).mode==ThemeMode.dark ? Colors.black : Colors.white, fontWeight: FontWeight.bold),),
                               ),
                               showBadge: true,
                               shape: BadgeShape.square,
@@ -163,42 +168,72 @@ class FavBeaconList extends StatelessWidget {
                               animationDuration: Duration(milliseconds:500),
                               child: ClipRRect(
                       borderRadius: BorderRadius.circular(30),
-                      child: Card(
-                      child: Container(
-                      width: orientation == Orientation.portrait ? double.infinity : 450,
-                      height: 220,
-                      decoration: BoxDecoration(
-                      image: DecorationImage(
-                      image: NetworkImage(beacon.image),
-                      fit: BoxFit.fill,
-                      ),
-                      ),
-                      alignment: Alignment.bottomLeft,
-                        child: Container(
-                        color: Colors.black.withOpacity(0.35),
-                        child: ListTile(
-                        title: Text(
-                        beacon.zona[0].toUpperCase()+beacon.zona.substring(1),
-                        style: TextStyle(
-                        fontWeight: FontWeight.bold,
-                        color: Colors.white,
-                        fontSize:16
-                        ),
-                        ),
-                        trailing: IconButton(
-                        tooltip: "Delete fav",
-                        icon: Icon(Icons.favorite, size: 32,color: Provider.of<ThemeModel>(context, listen: false).mode==ThemeMode.dark ? Colors.tealAccent : Theme.of(context).primaryColor),
-                      onPressed: ()
+                      child: GestureDetector(
+                        //movimientos mas comunes de un usuario. tenemos que hacer una nueva pantalla.
+                        onTap: ()
                         {
-                        dbuser.removeFavAd(Provider.of<UserState>(context, listen: false).user.uid, beacon.zona);
-                        ScaffoldMessenger.of(context).showSnackBar(CustomSnackBar("Fav ad deleted succesfully!", context));
+                          Navigator.of(context).pushNamed('/showbeacon', arguments: beacon);
                         },
-                      ),
-                      ),),),),)),
+                        onDoubleTap: ()
+                        {
+                          Navigator.of(context).pushNamed('/showbeacon', arguments: beacon);
+                        },
+                        onLongPress: ()
+                        {
+                          Navigator.of(context).pushNamed('/showbeacon', arguments: beacon);
+                        },
+                        child: Card(
+                        child: Container(
+                        width: orientation == Orientation.portrait ? double.infinity : 450,
+                        height: 220,
+                        decoration: BoxDecoration(
+                        image: DecorationImage(
+                        image: NetworkImage(beacon.image),
+                        fit: BoxFit.fill,
+                        ),
+                        ),
+                        alignment: Alignment.bottomLeft,
+                          child: Container(
+                          color: Colors.black.withOpacity(0.35),
+                          child: ListTile(
+                          title: Text(
+                          beacon.zona[0].toUpperCase()+beacon.zona.substring(1),
+                          style: TextStyle(
+                          fontWeight: FontWeight.bold,
+                          color: Colors.white,
+                          fontSize:16
+                          ),
+                          ),
+                          subtitle: Text("Tap to display it again!", style: TextStyle(
+                              color: Colors.white,
+                              fontSize:14
+                          )),
+                          trailing: IconButton(
+                          tooltip: "Delete fav",
+                          icon: Icon(Icons.favorite, size: 32,color: Provider.of<ThemeModel>(context, listen: false).mode==ThemeMode.dark ? Colors.tealAccent : Theme.of(context).primaryColor),
+                        onPressed: ()
+                          {
+                          dbuser.removeFavAd(Provider.of<UserState>(context, listen: false).user.uid, beacon.zona);
+                          ScaffoldMessenger.of(context).showSnackBar(CustomSnackBar("Fav ad deleted succesfully!", context));
+                          },
+                        ),
+                        ),),),),
+                      ),)),
                               ]
                             )
                           )
-                        );/*Padding(
+                        );
+                        else
+                          //no devuelve nada
+                          {
+                            //borra el favad porque ya ha expirado el tiempo
+                          dbuser.removeFavAd(Provider.of<UserState>(context, listen: false).user.uid, beacon.zona);
+                           /* return Container(
+                              width:0,
+                              height:0,
+                            );*/
+                          }
+                          return Text("hola");/*Padding(
                           padding: const EdgeInsets.fromLTRB(15,20,15,0),
                           child: ClipRRect(
                               borderRadius: BorderRadius.circular(30),
@@ -247,6 +282,23 @@ class FavBeaconList extends StatelessWidget {
       ],
     );
   }
+  //comparamos datetime now con
+  String _timeleft(DateTime beacontime){
+    var now= DateTime.now();
+    var difference = beacontime.difference(now);
+    //queda + de 1 dia
+    if (difference.inDays>0)
+      return difference.inDays.toString()+" "+"days";
+    //queda - de 1 dia
+    else if (difference.inHours>0)
+      return difference.inHours.toString()+" "+"hours";
+    //queda - de 1 h
+    else if (difference.inMicroseconds>0)
+  return "min";
+    else
+      return null;
+
+}
   Future _showRemoveFavsDialog(BuildContext context) async {
     if (Platform.isAndroid)
     {

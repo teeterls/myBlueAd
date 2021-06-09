@@ -1,3 +1,6 @@
+import 'dart:io';
+
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:myBlueAd/model/theme_model.dart';
 import 'package:myBlueAd/services/user_state_auth.dart';
@@ -41,8 +44,7 @@ class myBeaconButton extends StatelessWidget {
         Navigator.of(context).pushNamed('/ads', arguments: _zonas[0]).then((value) {
           _zonas.remove(value);
         });
-      } : null,
+      } : null
     );
   }
-
 }

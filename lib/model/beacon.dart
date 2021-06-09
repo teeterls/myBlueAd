@@ -26,9 +26,8 @@ class Baliza {
         _fecharegistro=(doc.data()['fecharegistro'] as Timestamp).toDate(),
         _zona=doc.data()['zona'],
         _url=doc.data()['url'],
-        _image=doc.data()['image'];
-  //convertir a fecha
-       // _expiration= (doc.data()['expiration'] as Timestamp).toDate();
+        _image=doc.data()['image'],
+        _expiration= (doc.data()['expiration'] as Timestamp).toDate();
         Map <String, dynamic> toFirestore() =>
       {
         'fecharegistro': _fecharegistro,
@@ -37,11 +36,6 @@ class Baliza {
         'expiration': _expiration,
         'image' : _image
       };
-
-
-
-
-
 
   DateTime get fecharegistro => _fecharegistro;
   String get uid => _uid;

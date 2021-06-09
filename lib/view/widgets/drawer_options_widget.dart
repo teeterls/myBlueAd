@@ -57,6 +57,45 @@ Widget _drawerOptionWidget (String option)
       return Error("Something happened, return to homepage.");
 
   }
-
 }
+
+//ambos
+class AboutSection extends StatelessWidget {
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+
+    );
+  }
+}
+
+//not user
+class SecuritySection extends StatelessWidget {
+  @override
+  Widget build(BuildContext context) {
+    return Container();
+  }
+}
+
+//not user
+class FaqSection extends StatelessWidget {
+  @override
+  Widget build(BuildContext context) {
+    return Container();
+  }
+}
+
+//user
+class HelpSection extends StatelessWidget {
+  @override
+  Widget build(BuildContext context) {
+    return Container();
+  }
+}
+
+
+
+
+
+
 

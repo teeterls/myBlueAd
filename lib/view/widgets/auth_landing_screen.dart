@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:myBlueAd/view/screens/prin_blue_anonym.dart';
 import '../../services/user_state_auth.dart';
 import '../screens/home_screen.dart';
 import '../screens/user_home_screen.dart';
@@ -26,8 +27,10 @@ class MainScreen extends StatelessWidget {
             case Status.Authenticating:
               return Loading();
             case Status.Authenticated:
-              //ok entra directamente en su perfil. esto es si hay alguna sesion abierta
-              return UserHomeScreen();
+              {
+                //ok entra directamente en su perfil. esto es si hay alguna sesion abierta
+                return UserHomeScreen();
+              }
           }
         },
       ),

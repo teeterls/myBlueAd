@@ -1,7 +1,12 @@
+import 'dart:io';
+
 import 'package:curved_navigation_bar/curved_navigation_bar.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_blue/flutter_blue.dart';
 import 'package:flutter_speed_dial/flutter_speed_dial.dart';
+import 'package:myBlueAd/view/screens/prin_blue_anonym.dart';
+import 'package:myBlueAd/view/screens/sign_log_in_screen.dart';
 import 'package:myBlueAd/view/widgets/beacon_button.dart';
 import 'package:myBlueAd/view/widgets/custom_backbutton.dart';
 import 'prin_blue.dart';
@@ -32,10 +37,12 @@ class _UserHomeScreenState extends State<UserHomeScreen> {
   void initState() {
     Future.delayed(Duration(seconds:0)).then((value)
     async  {
-      if (!await flutterBlue.isOn)
-      _enabled=false;
-      else
-        _enabled=true;
+      if (!await flutterBlue.isOn) {
+        _enabled = false;
+      }
+      else {
+        _enabled = true;
+      }
     });
   }
 
@@ -45,14 +52,20 @@ class _UserHomeScreenState extends State<UserHomeScreen> {
     final userstate = Provider.of<UserState>(context, listen: false);
     //lista de distintos widgets a mostrar por orden!! acorde al bottombar
     //depende de si hay o no email, lo dejamos asi porque va por auth
-    List<Widget> _screens =
+    List<Widget> _screensuser =
     [
       UserProfile(),
       PrincipalBlue(),
       FavoriteAds(),
     ];
 
-    if (userstate.user.email != null)
+    List<Widget> _screensanonym =
+    [
+      //pagina login anonimo
+      RegisterAnonym(),
+      PrinBlueAnonym(),
+    ];
+
       return WillPopScope(
         //no deja ir para atras
         onWillPop: () async => false,
@@ -62,71 +75,73 @@ class _UserHomeScreenState extends State<UserHomeScreen> {
             appBar: CustomAppBar(_scaffoldKey, context),
             drawer: CustomDrawer(),
             body: SingleChildScrollView(
-              child: _screens[_currentIndex],
+              child: userstate.user.email!=null ? _screensuser[_currentIndex] : _screensanonym[_currentIndex],
             ),
             bottomNavigationBar: CurvedNavigationBar(
-              color: Provider.of<ThemeModel>(context, listen: false).mode==ThemeMode.dark ? Colors.white54: Colors.white,
-              backgroundColor: Provider.of<ThemeModel>(context, listen: false).mode==ThemeMode.dark ? Colors.blueAccent: Theme.of(context).primaryColor,
+              color: Provider
+                  .of<ThemeModel>(context, listen: false)
+                  .mode == ThemeMode.dark ? Colors.white54 : Colors.white,
+              backgroundColor: Provider
+                  .of<ThemeModel>(context, listen: false)
+                  .mode == ThemeMode.dark ? Colors.blueAccent : Theme
+                  .of(context)
+                  .primaryColor,
               onTap: _onTabTapped,
               index: _currentIndex,
-              items: _getBottomItems(userstate.user.email),
+              items: userstate.user.email!=null ?_getBottomItems(true) : _getBottomItems(false) ,
             ),
-            floatingActionButton:  StreamBuilder<BluetoothState>(
-            stream: FlutterBlue.instance.state,
-    initialData: BluetoothState.unknown,
-    builder: (c, snapshot) {
-    final state = snapshot.data;
-    if (state == BluetoothState.on) {
-      if (_currentIndex==1)
-        {
-          return myBeaconButton(true);
-        }
-      else
-        return Container(
-          width:0,
-          height:0,
-        );
+            floatingActionButton: StreamBuilder<BluetoothState>(
+                stream: FlutterBlue.instance.state,
+                initialData: BluetoothState.unknown,
+                builder: (c, snapshot) {
+                  final state = snapshot.data;
+                  if (state == BluetoothState.on) {
+                    if (_currentIndex == 1) {
+                      return myBeaconButton(true);
+                    }
+                    else
+                      return Container(
+                        width: 0,
+                        height: 0,
+                      );
+                  } else {
+                    if (_currentIndex == 1) {
+                      return myBeaconButton(false);
+                    }
+                    else
+                      return Container(
+                        width: 0,
+                        height: 0,
+                      );
+                  }
+                }
 
-    } else
-      {
-        if (_currentIndex==1)
-          {
-            return myBeaconButton(false);
-          }
-        else
-          return Container(
-            width:0,
-            height:0,
-          );
-      }
-
-    }
-
-    ),
-        ),
+            ),
           ),
+        ),
       );
 
+
     //phone o anonym ->
-    else
-      return WillPopScope(
-        onWillPop: () async => false,
-        child: SafeArea(
-          child: Scaffold(
-          key: _scaffoldKey,
-          appBar: CustomAppBar(_scaffoldKey, context),
-          drawer: CustomDrawer(),
-          body: SingleChildScrollView(
-            child: PrincipalBlue(),
-          ),
-
-
-          floatingActionButton: StreamBuilder<BluetoothState>(
+    /*else
+      {
+        return WillPopScope(
+          onWillPop: () async => false,
+          child: SafeArea(
+            child: Scaffold(
+                key: _scaffoldKey,
+                appBar: CustomAppBar(_scaffoldKey, context),
+                drawer: CustomDrawer(),
+                body: SingleChildScrollView(
+                  child: PrinBlueAnonym(),
+                ),
+                floatingActionButton: StreamBuilder<BluetoothState>(
               stream: FlutterBlue.instance.state,
               initialData: BluetoothState.unknown,
               builder: (c, snapshot) {
                 final state = snapshot.data;
                 if (state == BluetoothState.on) {
+                  print("on");
                   return SpeedDial( //AddAccountButton()
                     marginEnd: 18,
                     marginBottom: 20,
@@ -200,6 +215,7 @@ class _UserHomeScreenState extends State<UserHomeScreen> {
                   );
                 }
                 else
+                  {
                   return SpeedDial( //AddAccountButton()
                     marginEnd: 18,
                     marginBottom: 20,
@@ -257,15 +273,12 @@ class _UserHomeScreenState extends State<UserHomeScreen> {
                       // ignore: unrelated_type_equality_checks
                     ],
                   );
-              }
-
-          ),
-          //custombottonnavigation bar: email o no?
-        ),),);
+              }}
+          )
+              //custombottonnavigation bar: email o no?
+            ),),);
+      }*/
   }
-
-
-
 
   //cambiamos la pagina que se ve
   void _onTabTapped(int index) {
@@ -275,12 +288,18 @@ class _UserHomeScreenState extends State<UserHomeScreen> {
   }
 
   //segun si hay email o no
-  List <Widget> _getBottomItems(String email) {
+  List <Widget> _getBottomItems(bool user) {
+    if (user)
     return [
       Icon(Icons.account_circle, semanticLabel: "My profile"),
       Icon(Icons.bluetooth, semanticLabel: "Blue nearby"),
       Icon(Icons.favorite, semanticLabel: "My blue ads"),
     ];
+    else
+      return [
+        Icon(Icons.person_add_alt_1_sharp, semanticLabel: "Add profile"),
+        Icon(Icons.bluetooth, semanticLabel: "Blue nearby"),
+      ];
   }
 }
 

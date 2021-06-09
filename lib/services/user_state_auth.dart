@@ -46,7 +46,7 @@ class UserState with ChangeNotifier {
          {
            User us= currentUser.user;
            //username
-           await us.updateProfile(displayName: username);
+           await us.updateDisplayName(username);
            Usuario _usuario = Usuario(us.uid,email: us.email,username: username);
            String e= await db.registerUser(us.uid, _usuario);
            if (e!=null)return e;
@@ -129,6 +129,32 @@ class UserState with ChangeNotifier {
       return e.code;
     }
   }
+
+  Future <String> signinAnonymtoUser(String email, String password, String username) async {
+    //authenticating
+    _status = Status.Authenticating;
+    notifyListeners();
+    try {
+      //el actual
+      await _auth.signOut();
+        await _auth.createUserWithEmailAndPassword(
+            email: email, password: password).then((currentUser) async
+        {
+          User us= currentUser.user;
+          //username
+          await us.updateDisplayName(username);
+          Usuario _usuario = Usuario(us.uid,email: us.email,username: username);
+          String e= await db.registerUser(us.uid, _usuario);
+          if (e!=null)return e;
+        });
+       await _auth.signInWithEmailAndPassword(email: email, password: password);
+    } on FirebaseAuthException catch (e) {
+      _status = Status.Unauthenticated;
+      notifyListeners();
+      return e.code;
+    }
+  }
+
 
   Future <String> signInWithLink(String email) async {
     //authenticating

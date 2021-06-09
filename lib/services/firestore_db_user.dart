@@ -31,6 +31,9 @@ Future<String> registerUser (String userId, Usuario usuario) async {
    //add devuelve Future<DocumentReference>, podriamos escuchar cuando se graba
    //directorio completo
    await db.doc(FirestorePath.user(userId)).set(usuario.toFirestore());
+     db.doc(FirestorePath.user(userId)).update(
+         {"favads": {}
+         });
    return null;
  }catch (e)
   {
@@ -158,6 +161,14 @@ Future <String> signUser (String userId, Usuario usuario) async {
         if (usuario.email != null)
           db.doc(FirestorePath.user(userId)).update(
               {"email": usuario.email});
+        if (usuario.favads!=null)
+        db.doc(FirestorePath.user(userId)).update(
+            {"favads": usuario.favads});
+        if (usuario.favads==null)
+          db.doc(FirestorePath.user(userId)).update(
+              {"favads": {}
+          });
+
       }
     });
     return null;

@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:myBlueAd/model/beacon.dart';
 import 'package:myBlueAd/view/screens/show_update_profile.dart';
 import 'package:myBlueAd/view/widgets/user_profile_widget.dart';
 import 'package:myBlueAd/view/widgets/zona_beacon.dart';
@@ -43,6 +44,9 @@ class Routers {
       case '/ads':
         var zona= settings.arguments as String;
         return MaterialPageRoute(builder: (_) => Ad(zona));
+      case '/showbeacon':
+        var beacon= settings.arguments as Baliza;
+        return MaterialPageRoute(builder: (_) => ShowFavBeacon(beacon));
         //error default
       default:
         return MaterialPageRoute(builder: (_) {

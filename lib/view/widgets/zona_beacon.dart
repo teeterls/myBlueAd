@@ -63,12 +63,12 @@ class _AdState extends State<Ad> {
     {
 
       //TODO PASAR DE ASSET A FILE
-      File image = await getImageFileFromAssets('${zona}.jpg');
+     // File image = await getImageFileFromAssets('${zona}.jpg');
       //print(image.path);
       //TODO PRIMERO AÑADE LA FOTO AL STORAGE
-    await storage.uploadBeaconImage(image, zona);
+   // await storage.uploadBeaconImage(image, zona);
       String url = await storage.downloadBeaconImage(zona);
-      print(url);
+      //print(url);
           //DESPUES AÑADE LA FOTO A LA BBDD
        await db.setBeaconURL(idbeacon, url);
         _btnControllerAd.success();
@@ -84,7 +84,6 @@ class _AdState extends State<Ad> {
   }
 
   final GlobalKey<ScaffoldState> _scaffoldKey = new GlobalKey<ScaffoldState>();
-  bool _visible=true;
   @override
   Widget build(BuildContext context) {
 
@@ -99,6 +98,7 @@ class _AdState extends State<Ad> {
             return Center(child: Loading());
           }
           //hay datos del perfil del usuario identificado con el uid al sign in/register
+          if (Provider.of<UserState>(context, listen: false).user.email!=null)
           return WillPopScope(
             //no deja ir para atras
               onWillPop: () async => false,
@@ -175,11 +175,24 @@ class _AdState extends State<Ad> {
           ),
           )
           )));
+          //usuario anonimo o phone. no hay perfil creado.
+          else
+             return WillPopScope(
+              //no deja ir para atras
+              onWillPop: () async => false,
+          child: SafeArea(
+          child: Scaffold(
+          key: _scaffoldKey,
+          appBar: CustomAppBar(_scaffoldKey, context),
+          drawer: CustomDrawer(),
+          body:   SingleChildScrollView(
+                child: ShowBeacon(snapshot.data)),
+          floatingActionButton: CustomBackButton())));
           }
     );
   }
 }
-
+//show beacon, despues de activar bluetooth y cuando es favorito. recibe baliza
 class ShowBeacon extends StatefulWidget {
 
   Baliza _beacon;
@@ -221,8 +234,69 @@ class _ShowBeaconState extends State<ShowBeacon> {
         ],
     );
   }
-
-
-
 }
+
+//pagina showfavbeacon. childshowbeacon. recibe baliza
+class ShowFavBeacon extends StatefulWidget {
+  ShowFavBeacon(this._beacon);
+  Baliza _beacon;
+  @override
+  _ShowFavBeaconState createState() => _ShowFavBeaconState();
+}
+
+class _ShowFavBeaconState extends State<ShowFavBeacon>
+{
+  final GlobalKey<ScaffoldState> _scaffoldKey = new GlobalKey<ScaffoldState>();
+  final RoundedLoadingButtonController _btnControllerDelete = RoundedLoadingButtonController();
+  @override
+  Widget build(BuildContext context) {
+    return  OrientationBuilder(
+        builder: (context, orientation) {
+      return WillPopScope(
+        //no deja ir para atras
+        onWillPop: () async => false,
+    child: SafeArea(
+    child: Scaffold(
+    key: _scaffoldKey,
+    appBar: CustomAppBar(_scaffoldKey, context),
+    drawer: CustomDrawer(),
+    body:   SingleChildScrollView(
+      child: ShowBeacon(widget._beacon)),
+    floatingActionButton: CustomBackButton(),
+      bottomNavigationBar:  ButtonBar(
+          mainAxisSize: MainAxisSize.min,
+            alignment: MainAxisAlignment.center,
+            children: <Widget>[
+              Padding(
+                padding: orientation == Orientation.portrait ?  const EdgeInsets.only(bottom: 24.0) : const EdgeInsets.only(bottom:1.0),
+                child: Container(
+                  width:50,
+                  child: RoundedLoadingButton(
+                  color: Provider.of<ThemeModel>(context, listen: false).mode==ThemeMode.dark ? Colors.lightBlue: Theme.of(context).primaryColor,
+                  width:80,
+                  child: Icon(Icons.thumb_down_alt,color: Colors.white,),
+                  controller: _btnControllerDelete,
+                  onPressed: () async
+                  {
+
+                      dbuser.removeFavAd(Provider
+                          .of<UserState>(context, listen: false)
+                          .user
+                          .uid, widget._beacon.zona);
+                      ScaffoldMessenger.of(context).showSnackBar(
+                          CustomSnackBar("The ${widget._beacon.zona} ad has been removed from your favs!", context));
+                    //se pone el boton a clear
+                    _btnControllerDelete.error();
+                    Navigator.of(context).pop();
+                  },
+                ),),
+              ),
+              ],
+        ),)
+      ),);
+  }
+    );
+  }
+}
+
 
