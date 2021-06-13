@@ -2,6 +2,7 @@ import 'dart:async';
 import 'dart:io';
 
 import 'package:flutter/material.dart';
+import 'package:flutter_blue/flutter_blue.dart';
 import 'package:myBlueAd/model/beacon.dart';
 import 'package:myBlueAd/model/theme_model.dart';
 import 'package:myBlueAd/services/user_state_auth.dart';
@@ -86,110 +87,110 @@ class _AdState extends State<Ad> {
   final GlobalKey<ScaffoldState> _scaffoldKey = new GlobalKey<ScaffoldState>();
   @override
   Widget build(BuildContext context) {
-
-    return StreamBuilder<Baliza>(
-        stream: db.getBeacon(widget._option),
-        builder: (context, AsyncSnapshot<Baliza> snapshot) {
-          //si tengo un error se muestra en el widget aparte
-          if (snapshot.hasError) {
-            return Error(snapshot.error.toString());
-          }
-          if (!snapshot.hasData) {
-            return Center(child: Loading());
-          }
-          //hay datos del perfil del usuario identificado con el uid al sign in/register
-          if (Provider.of<UserState>(context, listen: false).user.email!=null)
-          return WillPopScope(
-            //no deja ir para atras
-              onWillPop: () async => false,
-              child: SafeArea(
-                  child: Scaffold(
-                      key: _scaffoldKey,
-                      appBar: CustomAppBar(_scaffoldKey, context),
-                      drawer: CustomDrawer(),
-                      body:   SingleChildScrollView(/*child: Visibility(
+    return  StreamBuilder<Baliza>(
+            stream: db.getBeacon(widget._option),
+            builder: (context, AsyncSnapshot<Baliza> snapshot) {
+              //si tengo un error se muestra en el widget aparte
+              if (snapshot.hasError) {
+                return Error(snapshot.error.toString());
+              }
+              if (!snapshot.hasData) {
+                return Center(child: Loading());
+              }
+              //hay datos del perfil del usuario identificado con el uid al sign in/register
+              if (Provider.of<UserState>(context, listen: false).user.email!=null)
+                return WillPopScope(
+                  //no deja ir para atras
+                    onWillPop: () async => false,
+                    child: SafeArea(
+                        child: Scaffold(
+                            key: _scaffoldKey,
+                            appBar: CustomAppBar(_scaffoldKey, context),
+                            drawer: CustomDrawer(),
+                            body:   SingleChildScrollView(/*child: Visibility(
                               visible: _visible,
                               */child: ShowBeacon(snapshot.data)),
-                    floatingActionButton: CustomBackButton(),
-                    floatingActionButtonLocation: FloatingActionButtonLocation.centerFloat,
-                    bottomNavigationBar: Container(
-                      height:60,
-                      child: ButtonBar(
-                        alignment: MainAxisAlignment.spaceAround,
-                        children: <Widget>[
-                          Padding(
-                            padding: const EdgeInsets.only(bottom:5.0),
-                            child: RoundedLoadingButton(
-                              color: Provider.of<ThemeModel>(context, listen: false).mode==ThemeMode.dark ? Colors.lightBlue: Theme.of(context).primaryColor,
-                             successColor: Colors.green,
-                              disabledColor: Colors.blue,
-                              width:80,
-                              child: Icon(Icons.thumb_up_alt, color: Colors.white,),
-                              controller: _btnControllerAd,
-                              onPressed: () async {
-                                _addFavAd(Provider
-                                    .of<UserState>(context, listen: false)
-                                    .user
-                                    .uid, snapshot.data.zona,snapshot.data.url, snapshot.data.uid);
-                              },//
-          ),
-          ),
-          Padding(
-          padding: const EdgeInsets.only(bottom:5.0),
-          child: RoundedLoadingButton(
-          color: Provider.of<ThemeModel>(context, listen: false).mode==ThemeMode.dark ? Colors.lightBlue: Theme.of(context).primaryColor,
-          width:80,
-          child: Icon(Icons.thumb_down_alt,color: Colors.white,),
-          controller: _btnControllerDelete,
-          onPressed: () async
-          {
-              if (await dbuser.isFavAd(Provider
-                  .of<UserState>(context, listen: false)
-              .user
-                .uid, widget._option))
-              {
-              dbuser.removeFavAd(Provider
-                  .of<UserState>(context, listen: false)
-                  .user
-                  .uid, widget._option);
-              ScaffoldMessenger.of(context).showSnackBar(
-              CustomSnackBar("The ${widget._option} ad has been removed from your favs!", context));
+                            floatingActionButton: CustomBackButton(),
+                            floatingActionButtonLocation: FloatingActionButtonLocation.centerFloat,
+                            bottomNavigationBar: Container(
+                              height:60,
+                              child: ButtonBar(
+                                alignment: MainAxisAlignment.spaceAround,
+                                children: <Widget>[
+                                  Padding(
+                                    padding: const EdgeInsets.only(bottom:5.0),
+                                    child: RoundedLoadingButton(
+                                      color: Provider.of<ThemeModel>(context, listen: false).mode==ThemeMode.dark ? Colors.lightBlue: Theme.of(context).primaryColor,
+                                      successColor: Colors.green,
+                                      disabledColor: Colors.blue,
+                                      width:80,
+                                      child: Icon(Icons.thumb_up_alt, color: Colors.white,),
+                                      controller: _btnControllerAd,
+                                      onPressed: () async {
+                                        _addFavAd(Provider
+                                            .of<UserState>(context, listen: false)
+                                            .user
+                                            .uid, snapshot.data.zona,snapshot.data.url, snapshot.data.uid);
+                                      },//
+                                    ),
+                                  ),
+                                  Padding(
+                                    padding: const EdgeInsets.only(bottom:5.0),
+                                    child: RoundedLoadingButton(
+                                      color: Provider.of<ThemeModel>(context, listen: false).mode==ThemeMode.dark ? Colors.lightBlue: Theme.of(context).primaryColor,
+                                      width:80,
+                                      child: Icon(Icons.thumb_down_alt,color: Colors.white,),
+                                      controller: _btnControllerDelete,
+                                      onPressed: () async
+                                      {
+                                        if (await dbuser.isFavAd(Provider
+                                            .of<UserState>(context, listen: false)
+                                            .user
+                                            .uid, widget._option))
+                                        {
+                                          dbuser.removeFavAd(Provider
+                                              .of<UserState>(context, listen: false)
+                                              .user
+                                              .uid, widget._option);
+                                          ScaffoldMessenger.of(context).showSnackBar(
+                                              CustomSnackBar("The ${widget._option} ad has been removed from your favs!", context));
 
-              }
-              else if (! (await dbuser.isFavAd(Provider
-                  .of<UserState>(context, listen: false)
-                  .user
-                  .uid, widget._option)))
-          {
-          Navigator.of(context).pop();
-          ScaffoldMessenger.of(context).showSnackBar(
-          CustomSnackBar("Your preferences about ${widget._option} section have been saved! ", context));
+                                        }
+                                        else if (! (await dbuser.isFavAd(Provider
+                                            .of<UserState>(context, listen: false)
+                                            .user
+                                            .uid, widget._option)))
+                                        {
+                                          Navigator.of(context).pop();
+                                          ScaffoldMessenger.of(context).showSnackBar(
+                                              CustomSnackBar("Your preferences about ${widget._option} section have been saved! ", context));
 
-          }
-              //se pone el boton a clear
-            _btnControllerDelete.error();
-              },
-          ),
-          ),
-          ],
-          ),
-          )
-          )));
-          //usuario anonimo o phone. no hay perfil creado.
-          else
-             return WillPopScope(
-              //no deja ir para atras
-              onWillPop: () async => false,
-          child: SafeArea(
-          child: Scaffold(
-          key: _scaffoldKey,
-          appBar: CustomAppBar(_scaffoldKey, context),
-          drawer: CustomDrawer(),
-          body:   SingleChildScrollView(
-                child: ShowBeacon(snapshot.data)),
-          floatingActionButton: CustomBackButton())));
-          }
-    );
+                                        }
+                                        //se pone el boton a clear
+                                        _btnControllerDelete.error();
+                                      },
+                                    ),
+                                  ),
+                                ],
+                              ),
+                            )
+                        )));
+              //usuario anonimo o phone. no hay perfil creado.
+              else
+                return WillPopScope(
+                  //no deja ir para atras
+                    onWillPop: () async => false,
+                    child: SafeArea(
+                        child: Scaffold(
+                            key: _scaffoldKey,
+                            appBar: CustomAppBar(_scaffoldKey, context),
+                            drawer: CustomDrawer(),
+                            body:   SingleChildScrollView(
+                                child: ShowBeacon(snapshot.data)),
+                            floatingActionButton: CustomBackButton())));
+            }
+        );
+
   }
 }
 //show beacon, despues de activar bluetooth y cuando es favorito. recibe baliza

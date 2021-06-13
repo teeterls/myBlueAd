@@ -15,7 +15,7 @@ class myBeaconButton extends StatelessWidget {
     "welcome",
     "shoes",
     "jewelry",
-    "perfumary",
+    "perfumery",
     "sports"
   ];
   @override

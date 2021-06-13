@@ -27,8 +27,8 @@
           "dynamicLinks": true
         },
         {
-          "regex": "/perfumary(/.*)?",
-        "destination": "/perfumary/perfumary.html",
+          "regex": "/perfumery(/.*)?",
+        "destination": "/perfumery/perfumery.html",
         "dynamicLinks": true
       },
         {

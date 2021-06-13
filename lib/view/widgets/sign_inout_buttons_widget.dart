@@ -48,6 +48,7 @@ class SigninButtons extends StatelessWidget {
           onPressed: () async {
             //metodo signin fb
             List e= await Provider.of<UserState>(context, listen:false).signInWithFacebook();
+            print("aqui");
             print (e);
             if (e[0]!=null) {
               RegExp regex = new RegExp(pattern);

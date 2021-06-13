@@ -9,7 +9,7 @@ import 'package:provider/provider.dart';
 import '/model/theme_model.dart';
 
 import '/services/user_state_auth.dart';
-
+  // @dart=2.9
 void main() {
   //widgets de flutter inicializado
   WidgetsFlutterBinding.ensureInitialized();

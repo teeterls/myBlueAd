@@ -305,6 +305,7 @@ class UserState with ChangeNotifier {
   }
 
   Future <List <dynamic>>  signInWithFacebook() async {
+    print("aqui");
     //authenticating
     _status = Status.Authenticating;
     notifyListeners();
@@ -317,7 +318,7 @@ class UserState with ChangeNotifier {
             FacebookPermission.publicProfile,
           ]
       );
-
+        print (res.status);
       //res status switch case -> ok or not? pueden ocurrir errores aqui
       switch(res.status)
       {
