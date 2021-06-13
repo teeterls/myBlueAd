@@ -221,6 +221,7 @@ class _ShowBeaconState extends State<ShowBeacon> {
               child:
                   //TODO WEBVIEW MAS COMPLETO.
              WebView(
+               allowsInlineMediaPlayback: true,
                   javascriptMode: JavascriptMode.unrestricted,
                   initialUrl: widget._beacon.url,
                   gestureNavigationEnabled: true,
