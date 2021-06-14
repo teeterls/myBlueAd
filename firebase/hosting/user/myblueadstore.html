@@ -16,158 +16,29 @@
     <title>Welcome to myBlueStore!!</title>
     <link rel="shortcut icon" href="../assets/favicon.png" type="image/x-icon">
   </head>
-  <body>
-  	<script src="https://unpkg.com/@lottiefiles/lottie-player@latest/dist/lottie-player.js"></script>
-<lottie-player src="https://assets4.lottiefiles.com/private_files/lf30_trawmi6s.json"  background="transparent"  speed="1"  style="width: 20px; height: 20px;" hover loop  autoplay></lottie-player>
-<script src="https://unpkg.com/@lottiefiles/lottie-player@latest/dist/lottie-player.js"></script>
-<lottie-player src="https://assets4.lottiefiles.com/packages/lf20_mhkrcuxr.json"  background="transparent"  speed="1"  style="width: 20px; height: 20px;" hover loop  autoplay></lottie-player>
-
-
-<div class="container">
+  <body style=" text-align: center;
+    background-image: url(assets/welcome1.jpg);
+    opacity:0.8;
+    background-size: cover;
+    background-repeat: no-repeat;
+    position: relative;">
+  <div class="container-sm">
+    <h1 class="mt-5"style="font-family: 'Helvetica'; color: darkblue">Welcome to myBlueStore</h1>
+    <h2 style="font-family: 'Helvetica'; color: white">Enjoy special offers in different categories as a blue user!</h2>
     <div class="embed-responsive embed-responsive-16by9">
-        <video class= "embed-responsive-item" style= "margin-left: auto;margin-right: auto; display: block "width="30%" height="auto" autoplay loop controls tabindex="0"><source src="assets/welcome.mp4" type='video/mp4; codecs="avc1.42E01E, mp4a.40.2"' /></video>
-    </div>
-</div>
-  <div class="pt-4 bg-warning">I only have a top padding (1.5rem = 24px)</div>
-  <div class="p-5 bg-success">I have a padding on all sides (3rem = 48px)</div>
-  <div class="m-5 pb-5 bg-info">I have a margin on all sides (3rem = 48px) and a bottom padding (3rem = 48px)</div>
-  <div class="container">
-    <div class="embed-responsive embed-responsive-16by9">
-      <iframe class="embed-responsive-item" src="https://www.youtube.com/embed/tgbNymZ7vqY"></iframe>
+      <video class= "embed-responsive-item" style= "margin-left: auto;margin-right: auto; display: block "width="30%" height="auto" autoplay loop poster="assets/welcome.jpg" controls tabindex="0"><source src="../assets/welcome.mp4" type='video/mp4; codecs="avc1.42E01E, mp4a.40.2"' /></video>
     </div>
   </div>
-   <div class="container">
-    <div class="embed-responsive embed-responsive-16by9">
-      <video class="embed-responsive-item" src="assets/welcome.mp4"></video>
-    </div>
-  </div>
-  <div class="d-flex bg-secondary">
-    <div class="p-2 mr-auto bg-info">Flex item 1</div>
-    <div class="p-2 bg-warning">Flex item 2</div>
-    <div class="p-2 bg-primary">Flex item 3</div>
-  </div>
+  <footer class="mt-2">
+    <h3 style="font-family: 'Helvetica'; color: white">Start searching for blue ads nearby!</h3>
+  </footer>
+   &nbsp;
 
-  <div class="d-flex bg-secondary">
-    <div class="p-2 bg-info">Flex item 1</div>
-    <div class="p-2 bg-warning">Flex item 2</div>
-    <div class="p-2 ml-auto bg-primary">Flex item 3</div>
+  <div class="text-center">
+    <a href="https://myblueadstore-user.web.app/sports" class="mr-1 btn btn-primary" role="button">Shoes</a>
+    <a href="https://myblueadstore-user.web.app/jewelry" class="btn btn-success mr-1" role="button">Jewelry</a>
+    <a href="https://myblueadstore-user.web.app/perfumery" class="btn btn-danger mr-1" role="button">Perfumery</a>
+    <a href="https://myblueadstore-user.web.app/sports" class="btn btn-info" role="button">Sports</a>
   </div>
-  <div class="d-flex">
-    <div class="p-2 bg-info flex-fill">Flex item 1</div>
-    <div class="p-2 bg-warning flex-fill">Flex item 2</div>
-    <div class="p-2 bg-primary flex-fill">Flex item 3</div>
-  </div>
-  <div class="d-flex">
-    <div class="p-2 bg-info">Flex item 1</div>
-    <div class="p-2 bg-warning">Flex item 2</div>
-    <div class="p-2 bg-primary flex-grow-1">Flex item 3</div>
-  </div>
-  <div class="container mt-3">
-    <div class="media border p-3">
-      <img src="images/pareja1.jpg" alt="John Doe" class="mr-3 mt-3 rounded-circle" style="width:60px;">
-      <div class="media-body">
-        <h4>John Doe <small><i>Posted on February 19, 2016</i></small></h4>
-        <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.</p>
-        <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.</p>
-        <div class="media p-3">
-          <img src="images/pareja4.jpg" alt="Jane Doe" class="mr-3 mt-3 rounded-circle" style="width:45px;">
-          <div class="media-body">
-            <h4>Jane Doe <small><i>Posted on February 20 2016</i></small></h4>
-            <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.</p>
-            <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.</p>
-          </div>
-        </div>
-      </div>
-    </div>
-  </div>
-  <!--FILTER everything-->
-  <div class="container mt-3">
-    <h2>Filter Anything</h2>
-    <p>Type something in the input field to search for a specific text inside the div element with id="myDIV":</p>
-    <input class="form-control" id="myInput" type="text" placeholder="Search..">
-    <div id="myDIV" class="mt-3">
-      <p>I am a paragraph.</p>
-      <div>I am a div element inside div.</div>
-      <button class="btn">I am a button</button>
-      <button class="btn btn-info">Another button</button>
-      <p>Another paragraph.</p>
-    </div>
-  </div>
-  <div class="container mt-3">
-    <h2>Filterable List</h2>
-    <p>Type something in the input field to search the list for specific items:</p>
-    <input class="form-control" id="list" type="text" placeholder="Search..">
-    <br>
-    <ul class="list-group" id="myList">
-      <li class="list-group-item">First item</li>
-      <li class="list-group-item">Second item</li>
-      <li class="list-group-item">Third item</li>
-      <li class="list-group-item">Fourth</li>
-    </ul>
-  </div>
-  <div class="container mt-3">
-    <h2>Filterable Table</h2>
-    <p>Type something in the input field to search the table for first names, last names or emails:</p>
-    <input class="form-control" id="table" type="text" placeholder="Search..">
-    <br>
-    <table class="table table-bordered">
-      <thead>
-      <tr>
-        <th>Firstname</th>
-        <th>Lastname</th>
-        <th>Email</th>
-      </tr>
-      </thead>
-      <tbody id="myTable">
-      <tr>
-        <td>John</td>
-        <td>Doe</td>
-        <td>john@example.com</td>
-      </tr>
-      <tr>
-        <td>Mary</td>
-        <td>Moe</td>
-        <td>mary@mail.com</td>
-      </tr>
-      <tr>
-        <td>July</td>
-        <td>Dooley</td>
-        <td>july@greatstuff.com</td>
-      </tr>
-      <tr>
-        <td>Anja</td>
-        <td>Ravendale</td>
-        <td>a_r@test.com</td>
-      </tr>
-      </tbody>
-    </table>
-  </div>
-    <script>
-      $(document).ready(function(){
-        $("#myInput").on("keyup", function() {
-          var value = $(this).val();
-          $("#myDIV *").filter(function() {
-            $(this).toggle($(this).text().toLowerCase().indexOf(value) > -1)
-          });
-        });
-      });
-      $(document).ready(function(){
-        $("#list").on("keyup", function() {
-          var value = $(this).val();
-          $("#myList *").filter(function() {
-            $(this).toggle($(this).text().toLowerCase().indexOf(value) > -1)
-          });
-        });
-      });
-      $(document).ready(function(){
-        $("#table").on("keyup", function() {
-          var value = $(this).val();
-          $("#myTable tr").filter(function() {
-            $(this).toggle($(this).text().toLowerCase().indexOf(value) > -1)
-          });
-        });
-      });
-    </script>
-
   </body>
 </html>

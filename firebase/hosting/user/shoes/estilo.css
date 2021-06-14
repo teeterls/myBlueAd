@@ -1,0 +1,25 @@
+#fondo{
+    text-align: center;
+    background-image: url(../sports/assets/sports4.jpg);
+    padding: 400px 100px;
+    background-position: center center;
+    background-size: cover;
+    background-repeat: no-repeat;
+    position: relative;
+}
+#fondo:before {
+    height: auto;
+    content:'';
+    position: absolute;
+    top: 0;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    background-color: rgba(0,0,0,0.8);
+}
+#fondo h1 {
+    font-family: "Verdana Pro";
+    font-size: 60px;
+    color: #fff;
+    position: relative
+}

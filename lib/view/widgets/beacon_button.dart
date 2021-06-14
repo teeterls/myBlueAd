@@ -41,9 +41,12 @@ class myBeaconButton extends StatelessWidget {
         //envia la zona a la pagina de ads
         //si se devuelve un valor es porque  no le gusta el anuncio
         //se quitan de las opciones
-        Navigator.of(context).pushNamed('/ads', arguments: _zonas[0]).then((value) {
-          _zonas.remove(value);
-        });
+       // Navigator.of(context).pushNamed('/ads', arguments: _zonas[0]).then((value) {
+         // _zonas.remove(value);
+
+          //TODO NUEVA PAGINA PARA DEMO con streambuilder
+          Navigator.of(context).pushNamed('/adsdemo', arguments: _zonas);
+        //});
       } : null
     );
   }
