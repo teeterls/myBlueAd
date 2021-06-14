@@ -139,11 +139,15 @@ class _AdsDemoState extends State<AdsDemo> {
 }
 
 class WaitingDemo extends StatelessWidget {
+  final GlobalKey<ScaffoldState> _scaffoldKey = new GlobalKey<ScaffoldState>();
   @override
   Widget build(BuildContext context) {
     final userstate = Provider.of<UserState>(context, listen: false);
     return SafeArea(
       child: Scaffold(
+        key: _scaffoldKey,
+        appBar: CustomAppBar(_scaffoldKey, context),
+        drawer: CustomDrawer(),
         body: Center(
           child: Padding(
             padding: const EdgeInsets.all(30),
@@ -185,7 +189,8 @@ class WaitingDemo extends StatelessWidget {
                     child:  CircularProgressIndicator(),
                 ),
 
-              ],),),),)
+              ],),),),
+      floatingActionButton: CustomBackButton(),)
           );
   }
 }

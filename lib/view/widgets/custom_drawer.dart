@@ -100,9 +100,16 @@ class _CustomDrawerState extends State<CustomDrawer> {
       ),
       content:
         Provider.of<UserState>(context, listen: false).user.email!=null?
-      Text("All your info & fav blue ads will be saved! Goodbye! :)"):Text("Goodbye! :)"),
+      Text("All your info & fav blue ads will be saved! Goodbye! :)",textAlign: TextAlign.justify, style: TextStyle(color: Colors.indigo, fontWeight: FontWeight.w400)):Text("Goodbye! :)",textAlign: TextAlign.justify, style: TextStyle(color: Colors.indigo, fontWeight: FontWeight.w400)),
       actions: [
-        TextButton.icon(
+        OutlinedButton(
+          child:Text('Sign out'),
+          style: OutlinedButton.styleFrom(
+            shape: StadiumBorder(),
+            primary: Colors.white,
+            backgroundColor: Colors.lightBlue,
+            elevation: 2,
+          ),
           onPressed: () async {
             ScaffoldMessenger.of(context).showSnackBar(CustomSnackBar(Provider.of<UserState>(context, listen: false)
                 .user
@@ -137,26 +144,21 @@ class _CustomDrawerState extends State<CustomDrawer> {
             //vuelta a pagina inicio
             Navigator.of(context).pushNamed('/');
           },
-          icon: Icon(Icons.logout, color: Provider
-              .of<ThemeModel>(context, listen: false)
-              .mode == ThemeMode.dark ? Colors.tealAccent : Colors.blueAccent),
-          label: Text("Sign out", style: TextStyle(
-            color: Provider
-                .of<ThemeModel>(context, listen: false)
-                .mode == ThemeMode.dark ? Colors.tealAccent : Colors.blueAccent,
-          )),
         ),
-        TextButton.icon(
+        OutlinedButton(
+          child:Text('Not yet'),
+          style: OutlinedButton.styleFrom(
+            shape: StadiumBorder(),
+            primary: Colors.white,
+            backgroundColor: Colors.grey,
+            elevation: 2,
+          ),
           onPressed: () {
             Navigator.of(context).pop();
           },
           onLongPress: () {
             Navigator.of(context).pop();
           },
-          icon:Icon(Icons.cancel_outlined, color: Colors.red),
-          label: Text("Not yet", style: TextStyle(
-              color: Colors.red
-          )),
         ),
       ],
     );
@@ -164,77 +166,79 @@ class _CustomDrawerState extends State<CustomDrawer> {
 
   Widget _buildiOSAlertDialog(BuildContext context) {
     return CupertinoAlertDialog(
-       title: Row(
-        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-        children: <Widget>
-        [
-          Text('Do you want to sign out?', style: TextStyle(color: Provider
-              .of<ThemeModel>(context, listen: false)
-              .mode == ThemeMode.dark ? Colors.tealAccent : Theme
-              .of(context)
-              .primaryColor)),
-        ]
-    ),
-    content:
-    Provider.of<UserState>(context, listen: false).user.email!=null?
-    Text("All your info & fav blue ads will be saved! Goodbye! :)"):Text("Goodbye! :)"),
-    actions: [
-    TextButton.icon(
-    onPressed: () async {
-    ScaffoldMessenger.of(context).showSnackBar(CustomSnackBar(Provider.of<UserState>(context, listen: false)
-        .user
-        .email != null ? '${Provider.of<UserState>(context, listen: false)
-        .user
-        .email} has succesfully signed out' :Provider.of<UserState>(context, listen: false)
-        .user
-        .phoneNumber != null
-    ? '${Provider.of<UserState>(context, listen: false)
-        .user
-        .phoneNumber} has succesfully signed out'
-        : 'Signed out succesfully', context));
-    //todo dialog signout
-    await Provider.of<UserState>(context, listen: false).signOut();
-    //vuelta a pagina inicio
-    Navigator.of(context).pushNamed('/');
-    },
-    onLongPress: () async {
-    ScaffoldMessenger.of(context).showSnackBar(CustomSnackBar(Provider.of<UserState>(context, listen: false)
-        .user
-        .email != null ? '${Provider.of<UserState>(context, listen: false)
-        .user
-        .email} has succesfully signed out' :Provider.of<UserState>(context, listen: false)
-        .user
-        .phoneNumber != null
-    ? '${Provider.of<UserState>(context, listen: false)
-        .user
-        .phoneNumber} has succesfully signed out'
-        : 'Signed out succesfully', context));
-    //todo dialog signout
-    await Provider.of<UserState>(context, listen: false).signOut();
-    //vuelta a pagina inicio
-    Navigator.of(context).pushNamed('/');
-    },
-    icon: Icon(Icons.logout, color: Provider
-        .of<ThemeModel>(context, listen: false)
-        .mode == ThemeMode.dark ? Colors.tealAccent : Colors.blueAccent),
-    label: Text("Sign out", style: TextStyle(
-    color: Provider
-        .of<ThemeModel>(context, listen: false)
-        .mode == ThemeMode.dark ? Colors.tealAccent : Colors.blueAccent,
-    )),
-    ),
-    TextButton.icon(
-    onPressed: () {
-    Navigator.of(context).pop();
-    },
-    onLongPress: () {
-    Navigator.of(context).pop();
-    },
-    icon:Icon(Icons.cancel_outlined, color: Colors.red),
-    label: Text("Not yet", style: TextStyle(
-    color: Colors.red
-    )),
-    ),
+      title: Row(
+          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+          children: <Widget>
+          [
+            Text('Do you want to sign out?', style: TextStyle(color: Provider
+                .of<ThemeModel>(context, listen: false)
+                .mode == ThemeMode.dark ? Colors.tealAccent : Theme
+                .of(context)
+                .primaryColor)),
+          ]
+      ),
+      content:
+      Provider.of<UserState>(context, listen: false).user.email!=null?
+      Text("All your info & fav blue ads will be saved! Goodbye! :)",textAlign: TextAlign.justify, style: TextStyle(color: Colors.indigo, fontWeight: FontWeight.w400)):Text("Goodbye! :)",textAlign: TextAlign.justify, style: TextStyle(color: Colors.indigo, fontWeight: FontWeight.w400)),
+      actions: [
+        OutlinedButton(
+          child:Text('Sign out'),
+          style: OutlinedButton.styleFrom(
+            shape: StadiumBorder(),
+            primary: Colors.white,
+            backgroundColor: Colors.lightBlue,
+            elevation: 2,
+          ),
+          onPressed: () async {
+            ScaffoldMessenger.of(context).showSnackBar(CustomSnackBar(Provider.of<UserState>(context, listen: false)
+                .user
+                .email != null ? '${Provider.of<UserState>(context, listen: false)
+                .user
+                .email} has succesfully signed out' :Provider.of<UserState>(context, listen: false)
+                .user
+                .phoneNumber != null
+                ? '${Provider.of<UserState>(context, listen: false)
+                .user
+                .phoneNumber} has succesfully signed out'
+                : 'Signed out succesfully', context));
+            //todo dialog signout
+            await Provider.of<UserState>(context, listen: false).signOut();
+            //vuelta a pagina inicio
+            Navigator.of(context).pushNamed('/');
+          },
+          onLongPress: () async {
+            ScaffoldMessenger.of(context).showSnackBar(CustomSnackBar(Provider.of<UserState>(context, listen: false)
+                .user
+                .email != null ? '${Provider.of<UserState>(context, listen: false)
+                .user
+                .email} has succesfully signed out' :Provider.of<UserState>(context, listen: false)
+                .user
+                .phoneNumber != null
+                ? '${Provider.of<UserState>(context, listen: false)
+                .user
+                .phoneNumber} has succesfully signed out'
+                : 'Signed out succesfully', context));
+            //todo dialog signout
+            await Provider.of<UserState>(context, listen: false).signOut();
+            //vuelta a pagina inicio
+            Navigator.of(context).pushNamed('/');
+          },
+        ),
+        OutlinedButton(
+          child:Text('Not yet'),
+          style: OutlinedButton.styleFrom(
+            shape: StadiumBorder(),
+            primary: Colors.white,
+            backgroundColor: Colors.grey,
+            elevation: 2,
+          ),
+          onPressed: () {
+            Navigator.of(context).pop();
+          },
+          onLongPress: () {
+            Navigator.of(context).pop();
+          },
+        ),
       ],
     );
   }

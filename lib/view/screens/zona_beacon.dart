@@ -263,7 +263,7 @@ class _ShowFavBeaconState extends State<ShowFavBeacon>
     drawer: CustomDrawer(),
     body:   SingleChildScrollView(
       child: ShowBeacon(widget._beacon)),
-    floatingActionButton: CustomBackButton(),
+    floatingActionButton: CustomFavBackButton(),
       bottomNavigationBar:  ButtonBar(
           mainAxisSize: MainAxisSize.min,
             alignment: MainAxisAlignment.center,
