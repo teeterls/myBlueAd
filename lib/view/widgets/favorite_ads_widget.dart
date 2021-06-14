@@ -144,7 +144,6 @@ class FavBeaconList extends StatelessWidget {
                         Baliza beacon = _favs[index];
                         //print(beacon.expiration);
                         //cada index es una baliza.
-                        //TODO CALCULAR TIMELEFT
                         //print(_timeleft(beacon.expiration));
                         if (_timeleft(beacon.expiration)!=null)
                         return Container(

@@ -96,7 +96,12 @@ flutter:
    - assets/shoes.jpg
    - assets/sports.jpg
    - assets/welcome.jpg
-   - assets/perfumary.jpg
+   - assets/perfumery.jpg
+   - assets/jewelry_demo.jpg
+   - assets/sports_demo.jpg
+   - assets/welcome_demo.jpg
+   - assets/perfumery_demo.jpg
+   - assets/shoes_demo.jpg
   #   - images/a_dot_ham.jpeg
 
   # An image asset can refer to one or more resolution-specific "variants", see

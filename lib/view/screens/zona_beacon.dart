@@ -62,10 +62,10 @@ class _AdState extends State<Ad> {
     {
 
       //TODO PASAR DE ASSET A FILE
-     // File image = await getImageFileFromAssets('${zona}.jpg');
+     File image = await getImageFileFromAssets('${zona}.jpg');
       //print(image.path);
       //TODO PRIMERO AÑADE LA FOTO AL STORAGE
-   // await storage.uploadBeaconImage(image, zona);
+    await storage.uploadBeaconImage(image, zona);
       String url = await storage.downloadBeaconImage(zona);
       //print(url);
           //DESPUES AÑADE LA FOTO A LA BBDD
@@ -150,6 +150,7 @@ class _AdState extends State<Ad> {
                                               .of<UserState>(context, listen: false)
                                               .user
                                               .uid, widget._option);
+                                          Navigator.of(context).pushNamed('/userhome');
                                           ScaffoldMessenger.of(context).showSnackBar(
                                               CustomSnackBar("The ${widget._option} ad has been removed from your favs!", context));
 
@@ -159,7 +160,7 @@ class _AdState extends State<Ad> {
                                             .user
                                             .uid, widget._option)))
                                         {
-                                          Navigator.of(context).pop();
+                                          Navigator.of(context).pushNamed('/userhome');
                                           ScaffoldMessenger.of(context).showSnackBar(
                                               CustomSnackBar("Your preferences about ${widget._option} section have been saved! ", context));
 

@@ -1,10 +1,12 @@
 import 'dart:async';
 import 'dart:io';
 
+import 'package:delayed_display/delayed_display.dart';
 import 'package:flutter/material.dart';
 import 'package:myBlueAd/model/beacon.dart';
 import 'package:myBlueAd/model/theme_model.dart';
 import 'package:myBlueAd/services/user_state_auth.dart';
+import 'package:myBlueAd/view/screens/zona_beacon.dart';
 import 'package:myBlueAd/view/widgets/custom_appbar.dart';
 import 'package:myBlueAd/view/widgets/custom_drawer.dart';
 import 'package:myBlueAd/view/widgets/custom_snackbar.dart';
@@ -32,13 +34,74 @@ final List <String> _zonas;
 
 //TODO METODOS STREAM. return streambuilder. devuelve Ad de forma repetitiva.
 class _AdsDemoState extends State<AdsDemo> {
-  Stream<String> zonademo (List<String> zonas) async*
+  Stream<Widget> zonademo (List<String> zonas) async*
   {
+    zonas.shuffle();
+    //forzar
+    await Future.delayed(Duration(seconds: 3));
     for (int i=0; i<zonas.length; i++)
     {
-      yield zonas[i];
+      yield WillPopScope(
+        //no deja ir para atras
+          onWillPop: () async => false,
+          child:SafeArea(
+             child: GestureDetector(
+               onTap: ()
+              {
+              Navigator.of(context).pushNamed('/ads', arguments: zonas[i]);
+              },
+               onLongPress: ()
+               {
+                 Navigator.of(context).pushNamed('/ads', arguments: zonas[i]);
+               },
+               onDoubleTap: ()
+               {
+                 Navigator.of(context).pushNamed('/ads', arguments: zonas[i]);
+               },
+                     child:Card(
+                          child: Container(
+                            width:double.infinity,
+                            height: 400,
+                            decoration: BoxDecoration(
+                              image: DecorationImage(
+                                image: AssetImage('assets/${zonas[i]}_demo.jpg'),
+                                fit: BoxFit.fill,
+                              ),
+                            ),
+                            alignment: Alignment.bottomLeft,
+                            child: Container(
+                              color: Colors.black.withOpacity(0.35),
+                              child: ListTile(
+                                title: Text(
+                                  'Hey, you are next to a blue offer!',
+                                  style: TextStyle(
+                                      fontWeight: FontWeight.bold,
+                                      color: Colors.white,
+                                      fontSize:16
+                                  ),
+                                ),
+                                subtitle: Text("Tap and take a look :) !", style: TextStyle(
+                                    color: Colors.white,
+                                    fontSize:14
+                                )),
+                                trailing: IconButton(
+                                  tooltip: "Close",
+                                  icon: Icon(Icons.not_interested, size: 32,color: Provider.of<ThemeModel>(context, listen: false).mode==ThemeMode.dark ? Colors.tealAccent : Theme.of(context).primaryColor),
+                                  onPressed: ()
+                                  {
+                                    print(zonas);
+                                    zonas.remove(zonas[i]);
+                                    Navigator.of(context).pushNamed('/adsdemo', arguments:zonas);
+                                    ScaffoldMessenger.of(context).showSnackBar(CustomSnackBar("Okey, we will not show you this ad again!", context));
+                                  },
+                                ),
+                        ),)),
+                ),
+                  ),
+          ),
+      );
       //forzamos delay
-      await Future.delayed(Duration(seconds: 1));
+      await Future.delayed(Duration(seconds: 20));
     }
   }
 
@@ -46,7 +109,7 @@ class _AdsDemoState extends State<AdsDemo> {
   Widget build(BuildContext context) {
     return StreamBuilder(
       stream: zonademo(widget._zonas),
-      builder: (context, AsyncSnapshot<String> snapshot)
+      builder: (context, AsyncSnapshot<Widget> snapshot)
       {
         if (snapshot.hasError)
         {
@@ -58,12 +121,13 @@ class _AdsDemoState extends State<AdsDemo> {
         //stream null
           case ConnectionState.none:
             return Center(child: Error('An error occurred in the demo. Please try again'));
-          //waiting for data
+          //TODO waiting for data
             case ConnectionState.waiting:
-            return Center(child: CircularProgressIndicator());
+            return WaitingDemo();
           case ConnectionState.active:
           //llegan datos
-            return Center(child: Text('${snapshot.data}', style: TextStyle(fontSize: 60),));
+          //TODO.
+            return snapshot.data;
           case ConnectionState.done:
             return EndDemo(widget._zonas);
           //se acaban los datos a enviar. se muestran todas las zonas
@@ -71,6 +135,58 @@ class _AdsDemoState extends State<AdsDemo> {
         return null;
       },
     );
+  }
+}
+
+class WaitingDemo extends StatelessWidget {
+  @override
+  Widget build(BuildContext context) {
+    final userstate = Provider.of<UserState>(context, listen: false);
+    return SafeArea(
+      child: Scaffold(
+        body: Center(
+          child: Padding(
+            padding: const EdgeInsets.all(30),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              mainAxisSize: MainAxisSize.min,
+              children: <Widget>
+              [
+                Row(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                     Image.asset(
+                              "assets/logo_store.png", width: 80),
+
+                      Padding(
+                        padding: const EdgeInsets.only(right: 8.0),
+                        child:  Text(
+                            "myBlueStore",
+                            style: TextStyle(
+                              fontWeight: FontWeight.bold,
+                              fontSize: 30.0,
+                              color: Colors.blue,
+                            ),
+                          ),
+                        ),
+                    ]
+                ),
+                SizedBox(
+                  height: 30.0,
+                ),
+                Center(
+                  child: Text("Blue ads demo loading...",
+                        style: TextStyle(fontSize: 18,
+                            color: Colors.blueAccent,
+                            fontWeight: FontWeight.bold),),
+                ),
+                SizedBox(height: 30),
+                 Center(
+                    child:  CircularProgressIndicator(),
+                ),
+
+              ],),),),)
+          );
   }
 }
 
@@ -140,9 +256,19 @@ class _EndDemoState extends State<EndDemo> {
                       elevation: 2,
                     ),
                     onPressed: () {
-                      widget._zonas.shuffle();
-                      Navigator.of(context).pushNamed('/adsdemo', arguments: widget._zonas);
-                    },
+                      if (widget._zonas.isEmpty)
+                        {
+
+                          Navigator.of(context).pushNamed('/userhome');
+                          ScaffoldMessenger.of(context).showSnackBar(CustomSnackBar("No more blue ads to show", context));
+
+                        }
+                      else {
+                        widget._zonas.shuffle();
+                        Navigator.of(context).pushNamed(
+                            '/adsdemo', arguments: widget._zonas);
+                      }
+                      },
                   ),
                 ],
               ),
