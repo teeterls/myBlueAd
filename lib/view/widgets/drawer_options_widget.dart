@@ -1,5 +1,8 @@
+
 import 'package:flutter/material.dart';
+import 'package:myBlueAd/model/theme_model.dart';
 import 'package:myBlueAd/view/widgets/settings_widget.dart';
+import 'package:provider/provider.dart';
 import 'custom_appbar.dart';
 import 'custom_backbutton.dart';
 import 'error.dart';
@@ -22,30 +25,75 @@ class DrawerOptionsWidget extends StatelessWidget {
             drawer: CustomDrawer(),
             appBar: CustomAppBar(_scaffoldKey, context),
             floatingActionButton: CustomBackButton(),
-            body: Scrollbar(child: SingleChildScrollView(child: _drawerOptionWidget(_option))),
+            body: Scrollbar(child: SingleChildScrollView(child: _drawerOptionWidget(_option, context))),
           ),
     );
   }
 }
 
-Widget _drawerOptionWidget (String option)
+Widget _drawerOptionWidget (String option, BuildContext context)
 {
   switch (option)
   {
     case "About":
-      return Text("about");
+      return Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: <Widget>[
+      Padding(
+      padding: const EdgeInsets.only(left: 20.0, top: 25.0),
+  child: Text("About", style: TextStyle(
+  fontSize: 30,
+  fontWeight: FontWeight.bold,
+  color: Provider.of<ThemeModel>(context, listen: false).mode==ThemeMode.dark ? Colors.blueAccent: Theme.of(context).primaryColor,
+  ),),
+  ), ]
+      );
       break;
 
     case "Security":
-      return Text("security");
+      return Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: <Widget>[
+            Padding(
+              padding: const EdgeInsets.only(left: 20.0, top: 25.0),
+              child: Text("Security", style: TextStyle(
+                fontSize: 30,
+                fontWeight: FontWeight.bold,
+                color: Provider.of<ThemeModel>(context, listen: false).mode==ThemeMode.dark ? Colors.blueAccent: Theme.of(context).primaryColor,
+              ),),
+            ), ]
+      );
       break;
 
     case "Faq":
-      return Text("faq");
+       return Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: <Widget>[
+            Padding(
+              padding: const EdgeInsets.only(left: 20.0, top: 25.0),
+              child: Text("FAQ", style: TextStyle(
+                fontSize: 30,
+                fontWeight: FontWeight.bold,
+                color: Provider.of<ThemeModel>(context, listen: false).mode==ThemeMode.dark ? Colors.blueAccent: Theme.of(context).primaryColor,
+              ),),
+            ), ]
+      );
       break;
 
+      //no anonimo
     case "Help":
-      return Text("help");
+     return Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: <Widget>[
+            Padding(
+              padding: const EdgeInsets.only(left: 20.0, top: 25.0),
+              child: Text("Help", style: TextStyle(
+                fontSize: 30,
+                fontWeight: FontWeight.bold,
+                color: Provider.of<ThemeModel>(context, listen: false).mode==ThemeMode.dark ? Colors.blueAccent: Theme.of(context).primaryColor,
+              ),),
+            ), ]
+      );
       break;
 
       //usuario registrado

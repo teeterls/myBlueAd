@@ -177,7 +177,14 @@ class SettingsButtons extends StatelessWidget {
       ),
       content: Text("All your info will be deleted! Goodbye! :)"),
       actions: [
-        TextButton.icon(
+        OutlinedButton(
+          child: Text('Delete account'),
+          style: OutlinedButton.styleFrom(
+            shape: StadiumBorder(),
+            primary: Colors.white,
+            backgroundColor: Colors.blueAccent,
+            elevation: 2,
+          ),
           onPressed: () async {
             String e= await Provider.of<UserState>(context, listen:false).deleteUser();
             if (e!=null)
@@ -200,26 +207,23 @@ class SettingsButtons extends StatelessWidget {
                   CustomSnackBar("Delete account successfully", context));
             Navigator.of(context).pushNamed('/');
           },
-          icon: Icon(Icons.delete_forever, color: Provider
-              .of<ThemeModel>(context, listen: false)
-              .mode == ThemeMode.dark ? Colors.tealAccent : Colors.blueAccent),
-          label: Text("Delete account", style: TextStyle(
-            color: Provider
-                .of<ThemeModel>(context, listen: false)
-                .mode == ThemeMode.dark ? Colors.tealAccent : Colors.blueAccent,
-          )),
+
         ),
-        TextButton.icon(
+        OutlinedButton(
+          child: Text('Not yet'),
+          style: OutlinedButton.styleFrom(
+            shape: StadiumBorder(),
+            primary: Colors.white,
+            backgroundColor: Colors.grey,
+            elevation: 2,
+          ),
+
           onPressed: () {
             Navigator.of(context).pop();
           },
           onLongPress: () {
             Navigator.of(context).pop();
           },
-          icon:Icon(Icons.cancel_outlined, color: Colors.red),
-          label: Text("Not yet", style: TextStyle(
-              color: Colors.red
-          )),
         ),
       ],
     );
@@ -242,7 +246,14 @@ class SettingsButtons extends StatelessWidget {
       ),
       content: Text("All your info will be deleted! Goodbye! :)"),
       actions: [
-        TextButton.icon(
+            OutlinedButton(
+            child: Text('Delete account'),
+            style: OutlinedButton.styleFrom(
+            shape: StadiumBorder(),
+            primary: Colors.white,
+            backgroundColor: Colors.blueAccent,
+            elevation: 2,
+            ),
           onPressed: () async {
             String e= await Provider.of<UserState>(context, listen:false).deleteUser();
             if (e!=null)
@@ -265,26 +276,23 @@ class SettingsButtons extends StatelessWidget {
                   CustomSnackBar("Delete account successfully", context));
             Navigator.of(context).pushNamed('/');
           },
-          icon: Icon(Icons.delete_forever, color: Provider
-              .of<ThemeModel>(context, listen: false)
-              .mode == ThemeMode.dark ? Colors.tealAccent : Colors.blueAccent),
-          label: Text("Delete account", style: TextStyle(
-            color: Provider
-                .of<ThemeModel>(context, listen: false)
-                .mode == ThemeMode.dark ? Colors.tealAccent : Colors.blueAccent,
-          )),
+
         ),
-        TextButton.icon(
+            OutlinedButton(
+            child: Text('Not yet'),
+            style: OutlinedButton.styleFrom(
+            shape: StadiumBorder(),
+            primary: Colors.white,
+            backgroundColor: Colors.grey,
+            elevation: 2,
+            ),
+
           onPressed: () {
             Navigator.of(context).pop();
           },
           onLongPress: () {
             Navigator.of(context).pop();
           },
-          icon:Icon(Icons.cancel_outlined, color: Colors.red),
-          label: Text("Not yet", style: TextStyle(
-              color: Colors.red
-          )),
         ),
       ],
     );

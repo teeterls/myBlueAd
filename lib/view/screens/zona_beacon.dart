@@ -108,7 +108,7 @@ class _AdState extends State<Ad> {
                             body:   SingleChildScrollView(/*child: Visibility(
                               visible: _visible,
                               */child: ShowBeacon(snapshot.data)),
-                            floatingActionButton: CustomBackButton(),
+                            floatingActionButton: CustomFavBackButton(),
                             floatingActionButtonLocation: FloatingActionButtonLocation.centerFloat,
                             bottomNavigationBar: Container(
                               height:60,
@@ -186,7 +186,7 @@ class _AdState extends State<Ad> {
                             drawer: CustomDrawer(),
                             body:   SingleChildScrollView(
                                 child: ShowBeacon(snapshot.data)),
-                            floatingActionButton: CustomBackButton())));
+                            floatingActionButton: CustomFavBackButton())));
             }
         );
 
