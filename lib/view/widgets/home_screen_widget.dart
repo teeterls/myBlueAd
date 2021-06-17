@@ -49,7 +49,6 @@ class HomeScreenWidget extends StatelessWidget {
                       ],
                     ),
                   )
-                  //TODO PIE CON LO DE ACEPTAR LA POLITICA DE PRIVACIDAD ,
                 ]
             ),
           ),],),

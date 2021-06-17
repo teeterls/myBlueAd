@@ -1,8 +1,8 @@
-name: myBlueAd
-description: myBlueAd cross-platform mobile app
+name: web
+description: A new Flutter project.
 
 # The following line prevents the package from being accidentally published to
-# pub.dev using `pub publish`. This is preferred for private packages.
+# pub.dev using `flutter pub publish`. This is preferred for private packages.
 publish_to: 'none' # Remove this line if you wish to publish to pub.dev
 
 # The following defines the version and build number for your application.
@@ -18,8 +18,14 @@ publish_to: 'none' # Remove this line if you wish to publish to pub.dev
 version: 1.0.0+1
 
 environment:
-  sdk: ">=2.7.0 <3.0.0"
+  sdk: ">=2.12.0 <3.0.0"
 
+# Dependencies specify other packages that your package needs in order to work.
+# To automatically upgrade your package dependencies to the latest versions
+# consider running `flutter pub upgrade --major-versions`. Alternatively,
+# dependencies can be manually updated by changing the version numbers below to
+# the latest version available on pub.dev. To see which dependencies have newer
+# versions available, run `flutter pub outdated`.
 dependencies:
   flutter:
     sdk: flutter
@@ -27,52 +33,18 @@ dependencies:
 
   # The following adds the Cupertino Icons font to your application.
   # Use with the CupertinoIcons class for iOS style icons.
-  cupertino_icons: ^1.0.1
-  webview_flutter: ^2.0.4
-  cloud_firestore: ^1.0.0
-  firebase_core: ^1.0.0
-  firebase_auth: ^1.0.0
-  google_sign_in: ^5.0.0
-  http: ^0.13.0
-  flutter_signin_button: ^1.1.0
-  url_launcher: ^6.0.2
-  sms_autofill: ^1.2.7
-  uni_links: ^0.4.0
-  firebase_dynamic_links: ^0.8.0
-  provider: ^4.3.3
-  gradient_widgets: ^0.5.2
-  flutter_switch: ^0.2.0
-  flutter_login_facebook: ^1.0.1
-  flutter_twitter_login: ^1.1.0
-  cloud_functions: ^1.0.0
-  image_picker: ^0.7.4
-  csc_picker: ^0.2.0
-  flutter_speed_dial: ^3.0.5
-  firebase_analytics: ^7.1.1
-  firebase_storage: ^8.1.1
-  path_provider: ^2.0.1
-  animated_text_kit: ^4.2.1
-  animate_my_text: ^0.0.2
-  animated_text: ^1.0.2
-  curved_navigation_bar: ^0.3.7
-  badges: ^1.2.0
-  delayed_display: ^2.0.0
-  flutter_animated_button: ^2.0.0
-  animations: ^2.0.0
-  flutter_blue: ^0.8.0
-  geolocator: ^7.0.3
-  animated_button: ^0.2.0
-  rounded_loading_button: ^2.0.3
-  lottie: ^1.0.1
-  favorite_button: ^0.0.4
-  flutter_email_sender: ^5.0.0
-
+  cupertino_icons: ^1.0.2
 
 dev_dependencies:
   flutter_test:
     sdk: flutter
-  integration_test:
-    sdk: flutter
+
+  # The "flutter_lints" package below contains a set of recommended lints to
+  # encourage good coding practices. The lint set provided by the package is
+  # activated in the `analysis_options.yaml` file located at the root of your
+  # package. See that file for information about deactivating specific lint
+  # rules and activating additional ones.
+  flutter_lints: ^1.0.0
 
 # For information on the generic Dart part of this file, see the
 # following page: https://dart.dev/tools/pub/pubspec
@@ -86,23 +58,8 @@ flutter:
   uses-material-design: true
 
   # To add assets to your application, add an assets section, like this:
-  assets:
-   - assets/logo.png
-   - assets/logo-completo.png
-   - assets/logo_store.png
-   - assets/2727-qimtronics.json
-   - assets/12435-turn-on-bluetooth.json
-   - assets/13968-heart-click-button-action-animation.json
-   - assets/jewelry.jpg
-   - assets/shoes.jpg
-   - assets/sports.jpg
-   - assets/welcome.jpg
-   - assets/perfumery.jpg
-   - assets/jewelry_demo.jpg
-   - assets/sports_demo.jpg
-   - assets/welcome_demo.jpg
-   - assets/perfumery_demo.jpg
-   - assets/shoes_demo.jpg
+  # assets:
+  #   - images/a_dot_burr.jpeg
   #   - images/a_dot_ham.jpeg
 
   # An image asset can refer to one or more resolution-specific "variants", see

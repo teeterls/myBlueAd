@@ -99,8 +99,12 @@ class _CustomDrawerState extends State<CustomDrawer> {
           ]
       ),
       content:
-        Provider.of<UserState>(context, listen: false).user.email!=null?
-      Text("All your info & fav blue ads will be saved! Goodbye! :)",textAlign: TextAlign.justify, style: TextStyle(color: Colors.indigo, fontWeight: FontWeight.w400)):Text("Goodbye! :)",textAlign: TextAlign.justify, style: TextStyle(color: Colors.indigo, fontWeight: FontWeight.w400)),
+      Provider.of<UserState>(context, listen: false).user.email!=null?
+      Text("All your info & fav blue ads will be saved! Goodbye! :)",textAlign: TextAlign.justify, style: TextStyle(color: Provider
+          .of<ThemeModel>(context, listen: false)
+          .mode == ThemeMode.dark ? Colors.white : Colors.blueAccent)):Text("Goodbye! :)",textAlign: TextAlign.justify, style:TextStyle(color: Provider
+          .of<ThemeModel>(context, listen: false)
+          .mode == ThemeMode.dark ? Colors.white : Colors.blueAccent)),
       actions: [
         OutlinedButton(
           child:Text('Sign out'),
@@ -126,7 +130,7 @@ class _CustomDrawerState extends State<CustomDrawer> {
             await Provider.of<UserState>(context, listen: false).signOut();
             //vuelta a pagina inicio
             Navigator.of(context).pushNamed('/');
-            },
+          },
           onLongPress: () async {
             ScaffoldMessenger.of(context).showSnackBar(CustomSnackBar(Provider.of<UserState>(context, listen: false)
                 .user
@@ -179,7 +183,11 @@ class _CustomDrawerState extends State<CustomDrawer> {
       ),
       content:
       Provider.of<UserState>(context, listen: false).user.email!=null?
-      Text("All your info & fav blue ads will be saved! Goodbye! :)",textAlign: TextAlign.justify, style: TextStyle(color: Colors.indigo, fontWeight: FontWeight.w400)):Text("Goodbye! :)",textAlign: TextAlign.justify, style: TextStyle(color: Colors.indigo, fontWeight: FontWeight.w400)),
+      Text("All your info & fav blue ads will be saved! Goodbye! :)",textAlign: TextAlign.justify, style: TextStyle(color: Provider
+          .of<ThemeModel>(context, listen: false)
+          .mode == ThemeMode.dark ? Colors.white : Colors.blueAccent)):Text("Goodbye! :)",textAlign: TextAlign.justify, style:TextStyle(color: Provider
+          .of<ThemeModel>(context, listen: false)
+          .mode == ThemeMode.dark ? Colors.white : Colors.blueAccent)),
       actions: [
         OutlinedButton(
           child:Text('Sign out'),

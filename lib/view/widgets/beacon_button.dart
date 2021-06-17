@@ -73,11 +73,17 @@ class myBeaconButton extends StatelessWidget {
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: <Widget>
           [
-            Text('Select an option', style: TextStyle(color: Colors.blueAccent)),
+            Text('Select an option', style: TextStyle(color: Provider
+                .of<ThemeModel>(context, listen: false)
+                .mode == ThemeMode.dark ? Colors.tealAccent : Theme
+                .of(context)
+                .primaryColor)),
           ]
       ),
       content:
-      Text("Decide how your blue ads will be shown", textAlign: TextAlign.justify, style: TextStyle(color: Colors.indigo, fontWeight: FontWeight.w400)),
+      Text("Decide how your blue ads will be shown", textAlign: TextAlign.justify, style: TextStyle(color: Provider
+          .of<ThemeModel>(context, listen: false)
+          .mode == ThemeMode.dark ? Colors.white : Colors.blueAccent)),
       actions: [
         OutlinedButton(
           child: Text('Button'),
@@ -88,6 +94,7 @@ class myBeaconButton extends StatelessWidget {
             elevation: 2,
           ),
           onPressed: () {
+            _zonas.shuffle();
             Navigator.of(context).pushNamed('/ads', arguments: _zonas[0]).then((value) {
               _zonas.remove(value);
             });
@@ -102,6 +109,7 @@ class myBeaconButton extends StatelessWidget {
             elevation: 2,
           ),
           onPressed: () {
+            _zonas.shuffle();
             Navigator.of(context).pushNamed('/adsdemo', arguments: _zonas);
           },
         ),
@@ -127,7 +135,7 @@ class myBeaconButton extends StatelessWidget {
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: <Widget>
           [
-            Text('Do you want to sign out?', style: TextStyle(color: Provider
+            Text('Select an option', style: TextStyle(color: Provider
                 .of<ThemeModel>(context, listen: false)
                 .mode == ThemeMode.dark ? Colors.tealAccent : Theme
                 .of(context)
@@ -135,15 +143,44 @@ class myBeaconButton extends StatelessWidget {
           ]
       ),
       content:
-      Provider.of<UserState>(context, listen: false).user.email!=null?
-      Text("All your info & fav blue ads will be saved! Goodbye! :)"):Text("Goodbye! :)"),
+      Text("Decide how your blue ads will be shown", textAlign: TextAlign.justify, style: TextStyle(color: Provider
+          .of<ThemeModel>(context, listen: false)
+          .mode == ThemeMode.dark ? Colors.white : Colors.blueAccent)),
       actions: [
         OutlinedButton(
-          child: Text('Go back'),
+          child: Text('Button'),
+          style: OutlinedButton.styleFrom(
+            shape: StadiumBorder(),
+            primary: Colors.white,
+            backgroundColor: Colors.lightBlue,
+            elevation: 2,
+          ),
+          onPressed: () {
+            _zonas.shuffle();
+            Navigator.of(context).pushNamed('/ads', arguments: _zonas[0]).then((value) {
+              _zonas.remove(value);
+            });
+          },
+        ),
+        OutlinedButton(
+          child: Text('Demo'),
           style: OutlinedButton.styleFrom(
             shape: StadiumBorder(),
             primary: Colors.white,
             backgroundColor: Colors.blueAccent,
+            elevation: 2,
+          ),
+          onPressed: () {
+            _zonas.shuffle();
+            Navigator.of(context).pushNamed('/adsdemo', arguments: _zonas);
+          },
+        ),
+        OutlinedButton(
+          child: Text('Close'),
+          style: OutlinedButton.styleFrom(
+            shape: StadiumBorder(),
+            primary: Colors.white,
+            backgroundColor: Colors.grey,
             elevation: 2,
           ),
           onPressed: () {
