@@ -10,8 +10,10 @@ import 'package:provider/provider.dart';
 class myBeaconButton extends StatelessWidget {
   bool _enabled;
   myBeaconButton(this._enabled);
+  //zonas demo
   List<String> _zonas=
   [
+
     "welcome",
     "shoes",
     "jewelry",
@@ -30,7 +32,7 @@ class myBeaconButton extends StatelessWidget {
       tooltip: _enabled==true ? "Beacon enabled" : "Beacon disabled",
       onPressed: _enabled==true ? () {
         _zonas.shuffle();
-        _showOptionDialog(context);
+        //_showOptionDialog(context);
         //TODO dialogo con dos opciones: o demo o boton
         //print(_lista[0]);
         //Baliza b = Baliza(url: "https://www.google.com", zona: "prueba");
@@ -45,149 +47,11 @@ class myBeaconButton extends StatelessWidget {
         //se quitan de las opciones
        //Navigator.of(context).pushNamed('/ads', arguments: _zonas[0]).then((value) {
          //_zonas.remove(value);
-          //Navigator.of(context).pushNamed('/adsdemo', arguments: _zonas);
+          Navigator.of(context).pushNamed('/adsdemo', arguments: _zonas);
         //});
       } : null
     );
   }
 
-  Future _showOptionDialog(BuildContext context) async {
-    if (Platform.isAndroid)
-    {
-      return showDialog(
-        context: context,
-        builder: (_) => _buildAndroidAlertDialog(context),
-      );
 
-    } else if (Platform.isIOS) {
-      return showCupertinoDialog(
-        context: context,
-        builder: (_) => _buildiOSAlertDialog(context),
-      );
-    }
-  }
-
-  Widget _buildAndroidAlertDialog(BuildContext context) {
-    return AlertDialog(
-      title: Row(
-          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-          children: <Widget>
-          [
-            Text('Select an option', style: TextStyle(color: Provider
-                .of<ThemeModel>(context, listen: false)
-                .mode == ThemeMode.dark ? Colors.tealAccent : Theme
-                .of(context)
-                .primaryColor)),
-          ]
-      ),
-      content:
-      Text("Decide how your blue ads will be shown", textAlign: TextAlign.justify, style: TextStyle(color: Provider
-          .of<ThemeModel>(context, listen: false)
-          .mode == ThemeMode.dark ? Colors.white : Colors.blueAccent)),
-      actions: [
-        OutlinedButton(
-          child: Text('Button'),
-          style: OutlinedButton.styleFrom(
-            shape: StadiumBorder(),
-            primary: Colors.white,
-            backgroundColor: Colors.lightBlue,
-            elevation: 2,
-          ),
-          onPressed: () {
-            _zonas.shuffle();
-            Navigator.of(context).pushNamed('/ads', arguments: _zonas[0]).then((value) {
-              _zonas.remove(value);
-            });
-            },
-        ),
-        OutlinedButton(
-          child: Text('Demo'),
-          style: OutlinedButton.styleFrom(
-            shape: StadiumBorder(),
-            primary: Colors.white,
-            backgroundColor: Colors.blueAccent,
-            elevation: 2,
-          ),
-          onPressed: () {
-            _zonas.shuffle();
-            Navigator.of(context).pushNamed('/adsdemo', arguments: _zonas);
-          },
-        ),
-        OutlinedButton(
-          child: Text('Close'),
-          style: OutlinedButton.styleFrom(
-            shape: StadiumBorder(),
-            primary: Colors.white,
-            backgroundColor: Colors.grey,
-            elevation: 2,
-          ),
-          onPressed: () {
-            Navigator.of(context).pop();
-          },
-        ),
-      ],
-    );
-  }
-
-  Widget _buildiOSAlertDialog(BuildContext context) {
-    return CupertinoAlertDialog(
-      title: Row(
-          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-          children: <Widget>
-          [
-            Text('Select an option', style: TextStyle(color: Provider
-                .of<ThemeModel>(context, listen: false)
-                .mode == ThemeMode.dark ? Colors.tealAccent : Theme
-                .of(context)
-                .primaryColor)),
-          ]
-      ),
-      content:
-      Text("Decide how your blue ads will be shown", textAlign: TextAlign.justify, style: TextStyle(color: Provider
-          .of<ThemeModel>(context, listen: false)
-          .mode == ThemeMode.dark ? Colors.white : Colors.blueAccent)),
-      actions: [
-        OutlinedButton(
-          child: Text('Button'),
-          style: OutlinedButton.styleFrom(
-            shape: StadiumBorder(),
-            primary: Colors.white,
-            backgroundColor: Colors.lightBlue,
-            elevation: 2,
-          ),
-          onPressed: () {
-            _zonas.shuffle();
-            Navigator.of(context).pushNamed('/ads', arguments: _zonas[0]).then((value) {
-              _zonas.remove(value);
-            });
-          },
-        ),
-        OutlinedButton(
-          child: Text('Demo'),
-          style: OutlinedButton.styleFrom(
-            shape: StadiumBorder(),
-            primary: Colors.white,
-            backgroundColor: Colors.blueAccent,
-            elevation: 2,
-          ),
-          onPressed: () {
-            _zonas.shuffle();
-            Navigator.of(context).pushNamed('/adsdemo', arguments: _zonas);
-          },
-        ),
-        OutlinedButton(
-          child: Text('Close'),
-          style: OutlinedButton.styleFrom(
-            shape: StadiumBorder(),
-            primary: Colors.white,
-            backgroundColor: Colors.grey,
-            elevation: 2,
-          ),
-          onPressed: () {
-            Navigator.of(context).pop();
-          },
-        ),
-      ],
-    );
-  }
 }

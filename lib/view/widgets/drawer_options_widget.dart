@@ -14,8 +14,6 @@ import 'custom_snackbar.dart';
 import 'error.dart';
 
 import 'custom_drawer.dart';
-import 'package:flutter_email_sender/flutter_email_sender.dart';
-import 'package:image_picker/image_picker.dart';
 import 'package:url_launcher/url_launcher.dart';
 
 class DrawerOptionsWidget extends StatelessWidget {

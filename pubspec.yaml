@@ -64,8 +64,9 @@ dependencies:
   animated_button: ^0.2.0
   rounded_loading_button: ^2.0.3
   lottie: ^1.0.1
-  favorite_button: ^0.0.4
-  flutter_email_sender: ^5.0.0
+  connectivity_plus: ^1.0.3
+  location: ^4.3.0
+  geoflutterfire: ^3.0.0-nullsafety.2
 
 
 dev_dependencies:
