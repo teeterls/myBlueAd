@@ -7,7 +7,7 @@ import 'package:flutter_blue/flutter_blue.dart';
 import 'package:flutter_speed_dial/flutter_speed_dial.dart';
 import 'package:myBlueAd/view/screens/prin_blue_anonym.dart';
 import 'package:myBlueAd/view/screens/sign_log_in_screen.dart';
-import 'package:myBlueAd/view/widgets/beacon_button.dart';
+import 'package:myBlueAd/view/widgets/bluetooth_modes_buttons.dart';
 import 'package:myBlueAd/view/widgets/custom_backbutton.dart';
 import 'prin_blue.dart';
 import '../../model/theme_model.dart';
@@ -91,32 +91,48 @@ class _UserHomeScreenState extends State<UserHomeScreen> {
               items: userstate.user.email!=null ?_getBottomItems(true) : _getBottomItems(false) ,
             ),
             floatingActionButton: StreamBuilder<BluetoothState>(
-                stream: FlutterBlue.instance.state,
-                initialData: BluetoothState.unknown,
-                builder: (c, snapshot) {
-                  final state = snapshot.data;
-                  if (state == BluetoothState.on) {
-                    if (_currentIndex == 1) {
-                      return myBeaconButton(true);
+                    stream: FlutterBlue.instance.state,
+                    initialData: BluetoothState.unknown,
+                    builder: (c, snapshot) {
+                      final state = snapshot.data;
+                      if (state == BluetoothState.on) {
+                        if (_currentIndex == 1) {
+                          return Stack(
+                            children: [
+                              Padding(
+                                padding: const EdgeInsets.only(left:30.0),
+                                child: Align(alignment: Alignment.bottomLeft,child: DemoButton(true)),
+                              ),
+                               Align(alignment: Alignment.bottomRight, child: ScanButton(true)),
+                            ],
+                          );
+                        }
+                        else
+                          return Container(
+                            width: 0,
+                            height: 0,
+                          );
+                      } else {
+                        if (_currentIndex == 1) {
+                          return Stack(
+                            children: [
+                              Padding(
+                                padding: const EdgeInsets.only(left:30.0),
+                                child: Align(alignment: Alignment.bottomLeft,child: DemoButton(false)),
+                              ),
+                              Align(alignment: Alignment.bottomRight, child: ScanButton(false)),
+                            ],
+                          );
+                        }
+                        else
+                          return Container(
+                            width: 0,
+                            height: 0,
+                          );
+                      }
                     }
-                    else
-                      return Container(
-                        width: 0,
-                        height: 0,
-                      );
-                  } else {
-                    if (_currentIndex == 1) {
-                      return myBeaconButton(false);
-                    }
-                    else
-                      return Container(
-                        width: 0,
-                        height: 0,
-                      );
-                  }
-                }
 
-            ),
+                ),
           ),
         ),
       );
@@ -303,21 +319,6 @@ class _UserHomeScreenState extends State<UserHomeScreen> {
   }
 }
 
-class AddAccountButton extends StatelessWidget {
-  @override
-  Widget build(BuildContext context) {
-    return FloatingActionButton(
-      child: Icon(Icons.add, color: Provider.of<ThemeModel>(context, listen: false).mode==ThemeMode.dark ? Colors.teal: Theme.of(context).primaryColor,),
-      splashColor: Colors.blue,
-      hoverColor: Colors.blue,
-      backgroundColor: Colors.white54,
-      tooltip: "Add acount",
-      onPressed: () async {
-        //pagina register
-        Navigator.of(context).pushNamed('/signlogin', arguments: "Log in");
-      },
-    );
-  }
-}
+
 
 
