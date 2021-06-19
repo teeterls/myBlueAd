@@ -97,15 +97,22 @@ class _UserHomeScreenState extends State<UserHomeScreen> {
                       final state = snapshot.data;
                       if (state == BluetoothState.on) {
                         if (_currentIndex == 1) {
-                          return Stack(
-                            children: [
-                              Padding(
-                                padding: const EdgeInsets.only(left:30.0),
-                                child: Align(alignment: Alignment.bottomLeft,child: DemoButton(true)),
-                              ),
-                               Align(alignment: Alignment.bottomRight, child: ScanButton(true)),
-                            ],
-                          );
+                          //return BeaconButton(true);
+                         if (userstate.user.email!=null) {
+                            return //DemoButton(true);
+                              Stack(
+                                children: [
+                                  Padding(
+                                    padding: const EdgeInsets.only(left: 30.0),
+                                    child: Align(alignment: Alignment
+                                        .bottomLeft, child: DemoButton(true)),
+                                  ),
+                                  Align(alignment: Alignment.bottomRight,
+                                      child: ScanButton(true)),
+                                ],
+                              );
+                          } else
+                            return ScanButton(true);
                         }
                         else
                           return Container(
@@ -114,15 +121,22 @@ class _UserHomeScreenState extends State<UserHomeScreen> {
                           );
                       } else {
                         if (_currentIndex == 1) {
-                          return Stack(
-                            children: [
-                              Padding(
-                                padding: const EdgeInsets.only(left:30.0),
-                                child: Align(alignment: Alignment.bottomLeft,child: DemoButton(false)),
-                              ),
-                              Align(alignment: Alignment.bottomRight, child: ScanButton(false)),
-                            ],
-                          );
+                          if (userstate.user.email!=null) {
+                            return //DemoButton(false);
+                              Stack(
+                                children: [
+                                  Padding(
+                                    padding: const EdgeInsets.only(left: 30.0),
+                                    child: Align(alignment: Alignment
+                                        .bottomLeft, child: DemoButton(false)),
+                                  ),
+                                  Align(alignment: Alignment.bottomRight,
+                                      child: ScanButton(false)),
+                                ],
+                              );
+                          } else
+                            return ScanButton(false);
+                          //return BeaconButton(false);
                         }
                         else
                           return Container(

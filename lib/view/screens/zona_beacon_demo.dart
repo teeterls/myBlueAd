@@ -144,14 +144,13 @@ class _AdsDemoState extends State<AdsDemo> {
               stream: zonademo(widget._zonas),
               builder: (context, AsyncSnapshot<Widget> snapshot) {
                 if (snapshot.hasError) {
-                  return Center(
-                      child: Text('Error: ${snapshot.error.toString()}'));
+                  return  ErrorContainer('Error: ${snapshot.error.toString()}');
                 }
                 //switch-case menu de casos
                 switch (snapshot.connectionState) {
                 //stream null
                   case ConnectionState.none:
-                    return Center(child: Error(
+                    return Center(child: ErrorContainer(
                         'An error occurred in the demo. Please try again'));
                 //TODO waiting for data
                   case ConnectionState.waiting:

@@ -27,7 +27,7 @@ class _UserProfileState extends State<UserProfile> {
         builder: (context, AsyncSnapshot<Usuario> snapshot) {
           //si tengo un error se muestra en el widget aparte
           if (snapshot.hasError) {
-            return Error(snapshot.error.toString());
+            return ErrorContainer(snapshot.error.toString());
           }
           if (!snapshot.hasData) {
             return Center(child: Loading());

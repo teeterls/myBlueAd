@@ -10,10 +10,12 @@ class FirestorePath {
   static String beaconscollection() => 'beacons';
 //one beacon-> uid
   static String beacon(String beaconid) => 'beacons/$beaconid';
-  //TODO all retail stores
-
-//TODO one retail store
-
+  //all retail stores
+  static String retailstores()=> 'retail_stores';
+//one retail store
+  static String blueads(String id)=> 'retail_stores/$id/blueads';
+//one bluead
+static String bluead (String id, String blueid) => 'retail_stores/$id/blueads/$blueid';
 }
 
 //storage paths

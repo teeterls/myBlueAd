@@ -22,7 +22,7 @@ RetailStore({String nombre, LocationData ubicacion}) : _nombre=nombre, _ubicacio
         Map <String, dynamic> toFirestore() =>
       {
         'nombre': _nombre,
-        'ubicacion' : _ubicacion,
+        'ubicacion' : _firePoint.geoPoint,
       };
 
   LocationData get ubicacion=> _ubicacion;

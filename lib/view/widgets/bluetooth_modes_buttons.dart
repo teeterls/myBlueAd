@@ -5,6 +5,7 @@ import 'package:flutter/material.dart';
 import 'package:myBlueAd/model/theme_model.dart';
 import 'package:myBlueAd/services/user_state_auth.dart';
 import 'package:provider/provider.dart';
+import 'package:myBlueAd/services/firebase_db_retailstores.dart' as db;
 
 //boton demo con query zona solo enabled si bluetooth on
 class DemoButton extends StatelessWidget {
@@ -23,6 +24,7 @@ class DemoButton extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return FloatingActionButton.extended(
+        heroTag: "demo",
       label: Text("Demo", style: TextStyle(color: _enabled==true ? Colors.white : Provider.of<ThemeModel>(context, listen: false).mode==ThemeMode.dark? Colors.teal : Theme.of(context).primaryColor,),),
       icon: Icon(Icons.visibility, color: _enabled==true ? Colors.white : Provider.of<ThemeModel>(context, listen: false).mode==ThemeMode.dark? Colors.teal : Theme.of(context).primaryColor,),
       splashColor: Colors.blue,
@@ -60,7 +62,8 @@ class ScanButton extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
       return FloatingActionButton.extended(
-          label: Text("Start/Stop", style: TextStyle(color: _enabled==true ? Colors.white : Provider.of<ThemeModel>(context, listen: false).mode==ThemeMode.dark? Colors.teal : Theme.of(context).primaryColor,)),
+          heroTag: "scan",
+          label: Text("Start", style: TextStyle(color: _enabled==true ? Colors.white : Provider.of<ThemeModel>(context, listen: false).mode==ThemeMode.dark? Colors.teal : Theme.of(context).primaryColor,)),
           icon: Icon(Icons.bluetooth, color: _enabled==true ? Colors.white : Provider.of<ThemeModel>(context, listen: false).mode==ThemeMode.dark? Colors.teal : Theme.of(context).primaryColor,),
           splashColor: Colors.blue,
           hoverColor: Colors.blue,
@@ -68,11 +71,52 @@ class ScanButton extends StatelessWidget {
           backgroundColor: Provider.of<ThemeModel>(context, listen: false).mode==ThemeMode.dark && _enabled==true ? Colors.blueAccent: Provider.of<ThemeModel>(context, listen: false).mode==ThemeMode.dark && _enabled==false ? Colors.white54 : _enabled==true ? Colors.blueAccent : Colors.white54,
           tooltip: _enabled==true ? "Scanning enabled" : "Scanning disabled",
           onPressed: _enabled==true ? () {
-           //TODO SCANNING
+           //TODO SCANNING DB
+            db.resetUID('holaa');
             //});
           } : null
       );
     }
 
   }
+
+  //clase stop button
+  class StopButton extends StatelessWidget {
+
+    @override
+    Widget build(BuildContext context) {
+      return Container();
+    }
+  }
+
+//boton demo primera etapa
+  /*class BeaconButton extends StatelessWidget {
+    List<String> _zonas=
+    [
+
+      "welcome",
+      "shoes",
+      "jewelry",
+      "perfumery",
+      "sports"
+    ];
+    bool _enabled;
+    BeaconButton(this._enabled);
+    @override
+    Widget build(BuildContext context) {
+      return FloatingActionButton(
+          child: Icon(Icons.bluetooth, color: _enabled==true ? Colors.white : Provider.of<ThemeModel>(context, listen: false).mode==ThemeMode.dark? Colors.teal : Theme.of(context).primaryColor,),
+          splashColor: Colors.blue,
+          hoverColor: Colors.blue,
+          disabledElevation: 0.1,
+          backgroundColor: Provider.of<ThemeModel>(context, listen: false).mode==ThemeMode.dark && _enabled==true ? Colors.blueAccent: Provider.of<ThemeModel>(context, listen: false).mode==ThemeMode.dark && _enabled==false ? Colors.white54 : _enabled==true ? Colors.blueAccent : Colors.white54,
+          tooltip: _enabled==true ? "Demo enabled" : "Demo disabled",
+          onPressed: _enabled==true ? () {
+            _zonas.shuffle();
+            Navigator.of(context).pushNamed('/adsdemo', arguments: _zonas);
+          } : null
+      );
+    }
+  }*/
+
 

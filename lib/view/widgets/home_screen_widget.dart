@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:gradient_widgets/gradient_widgets.dart';
 import 'package:connectivity_plus/connectivity_plus.dart';
+import 'package:myBlueAd/view/widgets/custom_snackbar.dart';
 //TODO CONNECTIVITY. tiene que estar online.
 //logo y botones registro e iniciar sesion
 class HomeScreenWidget extends StatelessWidget {
@@ -17,6 +18,7 @@ class HomeScreenWidget extends StatelessWidget {
     } else
       return "no";
   }
+
   @override
   Widget build(BuildContext context) {
   return SingleChildScrollView(
@@ -39,11 +41,13 @@ class HomeScreenWidget extends StatelessWidget {
                       children: <Widget>[
                         GradientButton(
                           //registrarse
-                          child: Text('Log in'),
+                          child: Text('Sign in'),
                           callback: () async
                            {
                             if (await _checkConnectivity()==null)
-                            Navigator.of(context).pushNamed('/signlogin', arguments: "Log in");
+                            Navigator.of(context).pushNamed('/signlogin', arguments: "Sign in");
+                            else
+                              ScaffoldMessenger.of(context).showSnackBar(CustomSnackBar("You are not connected to any network. Please, connect to the Internet to sign in.", context));
                             },
                           gradient: Gradients.jShine,
                           shadowColor: Gradients.jShine.colors.last.withOpacity(
@@ -53,9 +57,12 @@ class HomeScreenWidget extends StatelessWidget {
                         SizedBox(width: 10,),
                         GradientButton(
                           //entrar
-                          child: Text('Sign in'),
-                          callback: () {
-                            Navigator.of(context).pushNamed('/signlogin', arguments: "Sign in");
+                          child: Text('Log in'),
+                          callback: () async {
+                            if (await _checkConnectivity()==null)
+                            Navigator.of(context).pushNamed('/signlogin', arguments: "Log in");
+                            else
+                              ScaffoldMessenger.of(context).showSnackBar(CustomSnackBar("You are not connected to any network. Please, connect to the Internet to log in.", context));
                           },
                           gradient: Gradients.hotLinear,
                           shadowColor: Gradients.hotLinear.colors.last

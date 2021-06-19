@@ -16,7 +16,6 @@ var db= FirebaseFirestore.instance;
   return db.collection(FirestorePath.beaconscollection()).orderBy('fecha_registro').snapshots().map(toBeaconList);
 }*/
 
-//TODO CAMBIAR, NO SE COGERÁ AL FINAL POR ZONA
 //DEVUELVE UNA LISTA DE BEACONS con la zona, en el futuro podria haber varios beacons por zona.
 //tambien coge la imagen
 Stream<Baliza> getBeacon(String zona)

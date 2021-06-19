@@ -167,8 +167,8 @@ class _RegisterFormState extends State<RegisterForm> with WidgetsBindingObserver
     }
   }
 }
-class SignInForm extends StatefulWidget {
-  SignInForm({
+class LogInForm extends StatefulWidget {
+  LogInForm({
     @required GlobalKey<FormState> formKey,
     @required TextEditingController email,
     @required TextEditingController password,
@@ -179,10 +179,10 @@ class SignInForm extends StatefulWidget {
   final TextEditingController _password;
 
   @override
-  _SignInFormState createState() => _SignInFormState();
+  _LogInFormState createState() => _LogInFormState();
 }
 
-class _SignInFormState extends State<SignInForm> {
+class _LogInFormState extends State<LogInForm> {
   @override
   Widget build(BuildContext context) {
     return Form(
@@ -196,7 +196,7 @@ class _SignInFormState extends State<SignInForm> {
             children: <Widget>[
               Padding(
                 padding: const EdgeInsets.only(left: 10.0, top: 5.0),
-                child: Text("Sign in", style: TextStyle(
+                child: Text("Log in", style: TextStyle(
                   fontSize: 18,
                   fontWeight: FontWeight.bold,
                   color: Provider.of<ThemeModel>(context, listen: false).mode==ThemeMode.dark ? Colors.blueAccent: Theme.of(context).primaryColor,

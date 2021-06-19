@@ -37,7 +37,7 @@ class _FavoriteAdsState extends State<FavoriteAds> {
           builder: (context, AsyncSnapshot<Usuario> snapshot) {
             //si tengo un error se muestra en el widget aparte
             if (snapshot.hasError) {
-              return Error(snapshot.error.toString());
+              return ErrorContainer(snapshot.error.toString());
             }
             //waiting
             if (!snapshot.hasData) {
@@ -74,7 +74,7 @@ class _ShowFavBeaconState extends State<ShowFavBeacon> {
         builder: (context, AsyncSnapshot<List<Baliza>> snapshot) {
           //si tengo un error se muestra en el widget aparte
           if (snapshot.hasError) {
-            return Error(snapshot.error.toString());
+            return ErrorContainer(snapshot.error.toString());
           }
           //waiting
           if (!snapshot.hasData) {

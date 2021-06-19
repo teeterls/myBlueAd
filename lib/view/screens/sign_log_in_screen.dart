@@ -46,7 +46,7 @@ class _SignLogInScreenState extends State<SignLogInScreen> {
               child: Card(
                 elevation: 0,
                 color: Colors.transparent,
-                child: widget._option=="Sign in" ? SignInForm(formKey: _formKey, email: _email, password: _password) : RegisterForm(formKey: _formKey, email: _email, password: _password, password2: _password2, username: _username),
+                child: widget._option=="Log in" ? LogInForm(formKey: _formKey, email: _email, password: _password) : RegisterForm(formKey: _formKey, email: _email, password: _password, password2: _password2, username: _username),
               ),
                   ),
           ),
