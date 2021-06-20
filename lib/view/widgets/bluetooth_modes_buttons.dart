@@ -2,6 +2,7 @@ import 'dart:io';
 
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_blue/flutter_blue.dart';
 import 'package:myBlueAd/model/theme_model.dart';
 import 'package:myBlueAd/services/user_state_auth.dart';
 import 'package:provider/provider.dart';
@@ -72,7 +73,8 @@ class ScanButton extends StatelessWidget {
           tooltip: _enabled==true ? "Scanning enabled" : "Scanning disabled",
           onPressed: _enabled==true ? () {
            //TODO SCANNING DB
-            db.resetUID('holaa');
+            Navigator.of(context).pushNamed('/scan');
+            //db.resetUID('holaa');
             //});
           } : null
       );
@@ -80,14 +82,56 @@ class ScanButton extends StatelessWidget {
 
   }
 
-  //clase stop button
+  //clase stop button. con enable de si esta o no el bluetooth activado
   class StopButton extends StatelessWidget {
-
+  StopButton(this._flutterblue, this._enabled);
+  final FlutterBlue _flutterblue;
+  bool _enabled;
     @override
     Widget build(BuildContext context) {
-      return Container();
+      return FloatingActionButton.extended(
+          tooltip: _enabled==true ? "Stop enabled" : "Stop disabled",
+        heroTag: "stop",
+          label: Text("Stop", style: TextStyle(color: _enabled==true ? Colors.white : Provider.of<ThemeModel>(context, listen: false).mode==ThemeMode.dark? Colors.teal : Theme.of(context).primaryColor,)),
+          icon: Icon(Icons.stop, color: _enabled==true ? Colors.white : Provider.of<ThemeModel>(context, listen: false).mode==ThemeMode.dark? Colors.teal : Theme.of(context).primaryColor,),
+          splashColor: Colors.blue,
+          hoverColor: Colors.blue,
+          backgroundColor: _enabled==true? Colors.red : Colors.white54,
+          disabledElevation: 0.1,
+          onPressed: _enabled== true ?()
+          {
+            _flutterblue
+              .stopScan();
+          } : null
+      );
     }
   }
+
+  //clase scanagain. con enable de si esta bluetooth activado o no
+  class ScanAgainButton extends StatelessWidget {
+    ScanAgainButton(this._flutterblue, this._enabled);
+    final FlutterBlue _flutterblue;
+    bool _enabled;
+    @override
+    Widget build(BuildContext context) {
+      return FloatingActionButton.extended(
+          heroTag: "scanagain",
+          label: Text("Scan", style: TextStyle(color: _enabled==true ? Colors.white : Provider.of<ThemeModel>(context, listen: false).mode==ThemeMode.dark? Colors.teal : Theme.of(context).primaryColor,)),
+          icon: Icon(Icons.bluetooth, color: _enabled==true ? Colors.white : Provider.of<ThemeModel>(context, listen: false).mode==ThemeMode.dark? Colors.teal : Theme.of(context).primaryColor,),
+          splashColor: Colors.blue,
+          hoverColor: Colors.blue,
+          backgroundColor: Provider.of<ThemeModel>(context, listen: false).mode==ThemeMode.dark && _enabled==true ? Colors.blueAccent: Provider.of<ThemeModel>(context, listen: false).mode==ThemeMode.dark && _enabled==false ? Colors.white54 : _enabled==true ? Colors.blueAccent : Colors.white54,
+          disabledElevation: 0.1,
+          onPressed: _enabled== true ?()
+          {
+            _flutterblue
+                .startScan(timeout: Duration(seconds:4));
+          } : null
+      );
+    }
+    }
+
+
 
 //boton demo primera etapa
   /*class BeaconButton extends StatelessWidget {

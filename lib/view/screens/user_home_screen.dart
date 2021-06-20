@@ -33,7 +33,7 @@ class _UserHomeScreenState extends State<UserHomeScreen> {
   bool _enabled;
 
 
-  @override
+  /*@override
   void initState() {
     Future.delayed(Duration(seconds:0)).then((value)
     async  {
@@ -44,8 +44,7 @@ class _UserHomeScreenState extends State<UserHomeScreen> {
         _enabled = true;
       }
     });
-  }
-
+  }*/
 
   @override
   Widget build(BuildContext context) {

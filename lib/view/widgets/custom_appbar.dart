@@ -1,5 +1,6 @@
-//TODO CUSTOMAPPBAR SHAREPREFERENCE IDIOMA Y THEME
+
 import 'package:flutter/material.dart';
+import 'package:flutter_blue/flutter_blue.dart';
 import '../../model/theme_model.dart';
 import 'package:provider/provider.dart';
 
@@ -38,3 +39,4 @@ class CustomAppBar extends AppBar
     CustomSwitch(Provider.of<ThemeModel>(_context, listen: false))
   ]);
 }
+

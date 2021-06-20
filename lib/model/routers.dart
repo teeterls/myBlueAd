@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:myBlueAd/model/beacon.dart';
+import 'package:myBlueAd/view/screens/scanning_screen.dart';
 import 'package:myBlueAd/view/screens/show_update_profile.dart';
 import 'package:myBlueAd/view/screens/zona_beacon_demo.dart';
 import 'package:myBlueAd/view/widgets/user_profile_widget.dart';
@@ -51,7 +52,9 @@ class Routers {
       case '/adsdemo':
         var zonas=settings.arguments as List<String>;
         return MaterialPageRoute(builder: (_) => AdsDemo(zonas));
-        //error default
+      case '/scan':
+        return MaterialPageRoute(builder: (_) => ScanScreen());
+      // ult
       default:
         return MaterialPageRoute(builder: (_) {
           return Error('No route founded for ${settings.name}');
