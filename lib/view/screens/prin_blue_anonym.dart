@@ -90,13 +90,12 @@ class _PrinBlueAnonymState extends State<PrinBlueAnonym> {
           DelayedDisplay(
             delay: Duration(seconds: initialDelay.inSeconds + 3),
             child: Center(
-              child: Text("Waiting for blue ads...",
+              child: Text("Start scanning blue ads!",
                 style: TextStyle(fontSize: 18,
                     color: Colors.blueAccent,
                     fontWeight: FontWeight.bold),),
             ),
           ),
-          //todo cambiar que este esperando hasta que le llegue uid
           DelayedDisplay(
             delay: Duration(seconds: initialDelay.inSeconds + 3),
             child: Center(

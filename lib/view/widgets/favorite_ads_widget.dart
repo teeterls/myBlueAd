@@ -233,7 +233,7 @@ class FavBeaconList extends StatelessWidget {
                               height:0,
                             );*/
                           }
-                          return Text("hola");/*Padding(
+                          return Loading();/*Padding(
                           padding: const EdgeInsets.fromLTRB(15,20,15,0),
                           child: ClipRRect(
                               borderRadius: BorderRadius.circular(30),

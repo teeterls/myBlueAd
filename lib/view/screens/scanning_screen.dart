@@ -1,5 +1,7 @@
+import 'package:delayed_display/delayed_display.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_blue/flutter_blue.dart';
+import 'package:lottie/lottie.dart';
 import 'package:myBlueAd/model/bluead.dart';
 import 'package:myBlueAd/model/theme_model.dart';
 import 'package:myBlueAd/view/widgets/bluetooth_modes_buttons.dart';
@@ -26,7 +28,8 @@ class _ScanScreenState extends State<ScanScreen> {
   FlutterBlue flutterblue= FlutterBlue.instance;
   final GlobalKey<ScaffoldState> _scaffoldKey = new GlobalKey<ScaffoldState>();
   List <ScanResult> res=[];
-  
+  final Duration initialDelay = Duration(milliseconds: 500);
+
   @override
   void initState() {
 
@@ -44,94 +47,205 @@ class _ScanScreenState extends State<ScanScreen> {
       child: SafeArea(
         child: Scaffold(
           key: _scaffoldKey,
-          body: SingleChildScrollView(
-          child: StreamBuilder<List<ScanResult>>(
-            stream: FlutterBlue.instance.scanResults,
-            initialData: [],
-            builder: (c, snapshot)
-            {
-              print(snapshot.data);
-              //vacio
-              if (snapshot.data.toString()=="[]")
-                return Loading();
-              if (!snapshot.hasData)
-                return Loading();
-              if (snapshot.hasError)
-                return ErrorContainer("error");
-              else
-                {
-                  print("max"+getmaxrssi(snapshot.data));
-                  /*if (getmaxrssi(snapshot.data)==null)
-                    return Loading();
-                  else
-                 Future.delayed(Duration(seconds:4)).then((value)
-                      {
-                        FlutterBlue.instance.stopScan();
-                        print(getmaxrssi(snapshot.data));
-                      });*/
-             return Column(
-            children: [Text(snapshot.data.toString())],
-                );
-            }
-            }
-            ),
-            ),
-            //TODO STREAMBUILDER CON RESULTADO GETMAXRSSI. parar o no parar? si le da click stopscan
+          body: Center(
+            child: SingleChildScrollView(
+            child: StreamBuilder<List<ScanResult>>(
+              stream: FlutterBlue.instance.scanResults,
+              initialData: [],
+              builder: (c, snapshot)
+              {
+                print(snapshot.data);
+                //vacio
+                if (snapshot.data.toString()=="[]")
+                  return ScanLoading();
+                if (!snapshot.hasData)
+                  return ScanLoading();
+                if (snapshot.hasError)
+                  return ErrorScanning("An error ocurred while scanning, please try again");
+                else
+                  {
+                    print("max"+getmaxrssi(snapshot.data));
+                    /*if (getmaxrssi(snapshot.data)==null)
+                      return Loading();
+                    else
+                   Future.delayed(Duration(seconds:4)).then((value)
+                        {
+                          FlutterBlue.instance.stopScan();
+                          print(getmaxrssi(snapshot.data));
+                        });*/
+               return  StreamBuilder<BlueAd>(
+                stream: db.getBlueAd(getmaxrssi(snapshot.data)),
+                builder: (context, AsyncSnapshot<BlueAd> snapshot) {
+                  if (snapshot.hasError) {
+                    flutterblue.stopScan();
+                    return ErrorScanning("Can't find this blue ad, please try again");
+                  }
+                  if (!snapshot.hasData) {
+                    return Center(child: Loading());
+                  }
+                  return   Column(
+                    children: [
+                      Padding(
+                        padding: const EdgeInsets.only(bottom:10.0),
+                        child: DelayedDisplay(
+                        delay: initialDelay,
+                        child: Text("You are in ${snapshot.data.zona} section.", textAlign: TextAlign.start,style: TextStyle(
+                          fontSize: 22,
+                          fontWeight: FontWeight.bold,
+                          color: Colors.blueAccent,
+                        ),),
+                      )),
+                      Padding(
+                        padding: const EdgeInsets.only(bottom:25.0),
+                        child: DelayedDisplay(
+                        delay: Duration(seconds:initialDelay.inSeconds + 1),
+                  child: Text("Blue ad founded for you!", textAlign: TextAlign.start, style: TextStyle(
+                          fontSize: 22,
+                          fontWeight: FontWeight.bold,
+                          color: Colors.blueAccent,
+                        ),),
+                      ),),
+                  DelayedDisplay(
+                  delay: Duration(seconds:initialDelay.inSeconds + 2),
+                  child: GestureDetector(
+                              //movimientos mas comunes de un usuario. tenemos que hacer una nueva pantalla.
+                              onTap: ()
+                              {
+                                flutterblue.stopScan();
+                              },
+                              onDoubleTap: ()
+                              {
+                                flutterblue.stopScan();
+                              },
+                              onLongPress: ()
+                              {
+                                flutterblue.stopScan();
+                              },
+                              child: AlertDialog(
+                                elevation: 200,
+                                shape:RoundedRectangleBorder(borderRadius: BorderRadius.circular(20)),
+                                contentPadding: EdgeInsets.zero,
+                                content:Container(
+                                  width: 320,
+                                  height: 220,
+                                  decoration: BoxDecoration(
+                                    borderRadius: BorderRadius.circular(20),
+                                    image: DecorationImage(
+                                      image: NetworkImage(snapshot.data.image),
+                                      fit: BoxFit.fill,
+                                    ),
+                                  ),
+                                  alignment: Alignment.bottomLeft,
+                                  child: Container(
+                                 decoration: BoxDecoration(
+                                color: Colors.black.withOpacity(0.35),
+                                borderRadius: BorderRadius.circular(20),),
+                                    child: ListTile(
+                                      title: Text(
+                                        snapshot.data.zona[0].toUpperCase()+snapshot.data.zona.substring(1),
+                                        style: TextStyle(
+                                            fontWeight: FontWeight.bold,
+                                            color: Colors.white,
+                                            fontSize:16
+                                        ),
+                                      ),
+                                      subtitle: Text("Tap and take a look :) !", style: TextStyle(
+                                          color: Colors.white,
+                                          fontSize:14
+                                      )),
+                                      trailing: IconButton(
+                                        tooltip: "Discard blue ad",
+                                        icon: Icon(Icons.not_interested, size: 32,color: Provider.of<ThemeModel>(context, listen: false).mode==ThemeMode.dark ? Colors.tealAccent : Theme.of(context).primaryColor),
+                                        onPressed: ()
+                                        {
+                                          flutterblue.stopScan();
+                                          Navigator.of(context).pop();
+                                          ScaffoldMessenger.of(context).showSnackBar(CustomSnackBar("New blue ads will appear next time you scan :)", context));
+                                        },
+                                      ),
+                                    ),),),),
+                            ), ),
+                      DelayedDisplay(
+                        delay: Duration(seconds: initialDelay.inSeconds+2),
+                        child: Lottie.asset('assets/28316-tap-tap.json', height: 140),
+                      ),
+                    ],
+                  );
+                    }
+                  ); /*GestureDetector(
 
-            /*)StreamBuilder<BlueAd>(
-              stream: db.getBlueAd(def.device.id.id),
-              builder: (context, AsyncSnapshot<BlueAd> snapshot) {
-                if (snapshot.hasError) {
-                  flutterblue.stopScan();
-                  return ErrorScanning("Can't find this blue ad, please try again");
-                }
-                if (!snapshot.hasData) {
-                  return Center(child: Loading());
-                }
-                return GestureDetector(
-                  //todo orientacion como card
-                    child: AlertDialog(
-                        title:
-                        Column(
-                          children: <Widget>[
-                            Container(
-                              height:20,
-                              child: Image.asset('assets/welcome.jpg'),
-                            ),
-                            const SizedBox(height: 15.0),
-                            Container(
-                              child: Text(
-                                snapshot.data.url,
-                                textAlign: TextAlign.center,
-                                style: TextStyle(
-                                  color: Colors.black,
-                                  fontSize: 20.0,
+                child:  AlertDialog(
+                      backgroundColor: Colors.green,
+                      elevation: 30,
+                      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(20)),
+                        contentPadding: EdgeInsets.zero,
+                        content:
+                        Card(
+                          shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(20)),
+                          child: Container(
+                              width: double.infinity,
+                              height: 300,
+                              decoration: BoxDecoration(
+                                borderRadius: BorderRadius.circular(20),
+                                image: DecorationImage(
+                                  image: NetworkImage(snapshot.data.image),
+                                  fit: BoxFit.fill,
                                 ),
                               ),
-                            )
-                          ],
+                              alignment: Alignment.bottomLeft,
+                              child: Container(
+                                decoration: BoxDecoration(
+                                  color: Colors.black.withOpacity(0.35),
+                                  borderRadius: BorderRadius.circular(20),
+                                ),
+
+                                child: ListTile(
+                                  title: Text(
+                                    'Hey, you are next to a blue offer!',
+                                    style: TextStyle(
+                                        fontWeight: FontWeight.bold,
+                                        color: Colors.white,
+                                        fontSize: 16
+                                    ),
+                                  ),
+                                  subtitle: Text(
+                                      "Tap and take a look :) !", style: TextStyle(
+                                      color: Colors.white,
+                                      fontSize: 14
+                                  )),
+                                  trailing: IconButton(
+                                    tooltip: "Close",
+                                    icon: Icon(
+                                        Icons.not_interested, size: 32, color: Provider
+                                        .of<ThemeModel>(context, listen: false)
+                                        .mode == ThemeMode.dark
+                                        ? Colors.tealAccent
+                                        : Theme
+                                        .of(context)
+                                        .primaryColor),
+                                    onPressed: () {
+
+                                     print("hola");
+                                    },
+                                  ),
+                                ),)),
                         ),
-                        content:
-                        Text('You have successfully verified your mobile number',
-                            textAlign: TextAlign.center,
-                            style: TextStyle(color: Colors.black, fontSize: 15.0)),
-//              gradient: LinearGradient(
-//                colors: <Color>[
-//                  Color(0xDD4a00e0),
-//                  Color(0xFF8e2de2),
-//                ],
-//                begin: Alignment.topCenter,
-//                end: Alignment.bottomCenter,
-//              ),
-                        actions: <Widget>[]
+//
+
                     ),
-                    onTap: () async   {
-                      FlutterBlue.instance.stopScan();
-                      //TODO NUEVA PAGINA PARA FAVS PORQUE NO HACE FALTA OTRO STREAMBUILDER. le pasamos el anuncio entero blueAd
-                    }
-                );
+                onTap: () async   {
+                    FlutterBlue.instance.stopScan();
+                    //TODO NUEVA PAGINA PARA FAVS PORQUE NO HACE FALTA OTRO STREAMBUILDER. le pasamos el anuncio entero blueAd
+                },
+                  );*/
+
               }
-          ),*/
+              }
+              ),
+              ),
+          ),
+
+
             //dos streambuilders, 1º de si esta activado el bluetooth (por si lo quita en otro momento) y 2º si esta o no escaneando
             floatingActionButton: StreamBuilder<BluetoothState>(
             stream: FlutterBlue.instance.state,

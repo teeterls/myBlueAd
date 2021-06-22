@@ -54,24 +54,23 @@ class ErrorContainer extends StatelessWidget {
     ErrorScanning(this._error);
     @override
     Widget build(BuildContext context) {
-      return Center(
-        child: Container(
-          child:Column(
-            mainAxisSize: MainAxisSize.min,
-            crossAxisAlignment: CrossAxisAlignment.center,
-            children: [
-              Center (
-                child: Padding(
-                  padding: const EdgeInsets.only(left:15.0, right:15.0),
-                  child: Text(_error,textAlign: TextAlign.center,
-                  style: TextStyle(fontSize:24, fontWeight: FontWeight.bold, color: Provider.of<ThemeModel>(context, listen: false).mode==ThemeMode.dark ? Colors.tealAccent : Theme.of(context).primaryColor),
-        ),
-                ),),
-              Center(child: Image.asset('assets/logo-completo.png')),
-            ],
+      return Padding(
+        padding: const EdgeInsets.only(top:180.0),
+        child: Column(
+              mainAxisSize: MainAxisSize.min,
+              crossAxisAlignment: CrossAxisAlignment.center,
+              children: [
+                Center (
+                  child: Padding(
+                    padding: const EdgeInsets.only(left:15.0, right:15.0),
+                    child: Text(_error,textAlign: TextAlign.center,
+                    style: TextStyle(fontSize:24, fontWeight: FontWeight.bold, color: Provider.of<ThemeModel>(context, listen: false).mode==ThemeMode.dark ? Colors.tealAccent : Theme.of(context).primaryColor),
           ),
-          //color: Provider.of<ThemeModel>(context, listen: false).mode==ThemeMode.dark ? Colors.black : Colors.white,
+                  ),),
+                Center(child: Image.asset('assets/logo-completo.png')),
+              ],
 
+            //color: Provider.of<ThemeModel>(context, listen: false).mode==ThemeMode.dark ? Colors.black : Colors.white,
         ),
       );
     }

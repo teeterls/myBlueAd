@@ -97,7 +97,7 @@ class _ScanButtonState extends State<ScanButton> {
           hoverColor: Colors.blue,
           disabledElevation: 0.1,
           backgroundColor: Provider.of<ThemeModel>(context, listen: false).mode==ThemeMode.dark && widget._enabled==true ? Colors.blueAccent: Provider.of<ThemeModel>(context, listen: false).mode==ThemeMode.dark && widget._enabled==false ? Colors.white54 : widget._enabled==true ? Colors.blueAccent : Colors.white54,
-          tooltip: widget._enabled==true ? "Scanning enabled" : "Scanning disabled",
+          tooltip: widget._enabled==true ? "Scan enabled" : "Scan disabled",
           onPressed: widget._enabled==true ? () async {
             //flutterblue.stopScan();
             //empezamos el escaneo y le pasamos la instancia a la siguiente pagina
@@ -110,6 +110,9 @@ class _ScanButtonState extends State<ScanButton> {
               if (results!=null)
               res=results;
             });
+            //forzamos a que espere un poco
+            if (getmaxrssi(res)==null)
+              await Future.delayed(Duration(milliseconds:500));
             //comprobamos si es el primero escaneo, si todos los uid estan a null en la bbdd.
             //si lo es añade el uid + proximo en cualquier doc random
             if (await db.nullUID()) {
@@ -120,6 +123,7 @@ class _ScanButtonState extends State<ScanButton> {
             }
             else
               {
+               // flutterblue.stopScan();
                 ScaffoldMessenger.of(context).showSnackBar(CustomSnackBar("Start scanning in a few seconds...", context));
                 await Future.delayed(Duration(seconds: 4));
                 db.resetUID(getmaxrssi(res));
@@ -167,10 +171,7 @@ class _ScanButtonState extends State<ScanButton> {
       );
     }
   }
-
-
-  //TODO INHERETED WIDGET
-  //clase scanagain. con enable de si esta bluetooth activado o no. vuelve a cargar la pagina escaneando un nuevo anuncio por si se ha movido la persona, hace lo mismo que start
+//scan again button, vuelve a empezar el scanning
   class ScanAgainButton extends StatefulWidget {
 
     ScanAgainButton(this._enabled);
@@ -190,6 +191,7 @@ class _ScanAgainButtonState extends State<ScanAgainButton> {
     @override
     Widget build(BuildContext context) {
       return FloatingActionButton.extended(
+          tooltip: widget._enabled==true ? "Scan enabled" : "Scan disabled",
           heroTag: "scanagain",
           label: Text("Scan", style: TextStyle(color: widget._enabled==true ? Colors.white : Provider.of<ThemeModel>(context, listen: false).mode==ThemeMode.dark? Colors.teal : Theme.of(context).primaryColor,)),
           icon: Icon(Icons.bluetooth, color: widget._enabled==true ? Colors.white : Provider.of<ThemeModel>(context, listen: false).mode==ThemeMode.dark? Colors.teal : Theme.of(context).primaryColor,),
@@ -208,6 +210,10 @@ class _ScanAgainButtonState extends State<ScanAgainButton> {
               if (results != null)
                 res = results;
             });
+
+            //forzamos a que espere un poco
+            if (getmaxrssi(res)==null)
+              await Future.delayed(Duration(milliseconds:500));
             //se supone que ya no esta null el uid, pero lo comprobamos por si se ha borrado de la bbdd
             if (await db.nullUID()) {
               ScaffoldMessenger.of(context).showSnackBar(CustomSnackBar(
