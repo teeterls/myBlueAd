@@ -1,10 +1,12 @@
 import 'dart:io';
+import 'dart:math';
 
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_blue/flutter_blue.dart';
 import 'package:myBlueAd/model/theme_model.dart';
 import 'package:myBlueAd/services/user_state_auth.dart';
+import 'package:myBlueAd/view/widgets/custom_snackbar.dart';
 import 'package:provider/provider.dart';
 import 'package:myBlueAd/services/firebase_db_retailstores.dart' as db;
 
@@ -56,36 +58,95 @@ class DemoButton extends StatelessWidget {
   }
 }
 
-//TODO BOTON SCANNING, solo enabled si bluetooth on
-class ScanButton extends StatelessWidget {
+//funcion que devuelva el id con el maximo rssi, el que esta más cerca.
+String getmaxrssi(List <ScanResult> results) {
+  List <int> _rssi = [];
+  ScanResult def;
+  print(results);
+    for (ScanResult r in results) {
+      _rssi.add(r.rssi);
+      _rssi.reduce(max);
+      if (r.rssi == _rssi.reduce(max))
+        def = r;
+    }
+    return def.device.id.id;
+  }
+
+
+class ScanButton extends StatefulWidget {
   bool _enabled;
   ScanButton(this._enabled);
+
+  @override
+  State<ScanButton> createState() => _ScanButtonState();
+}
+
+class _ScanButtonState extends State<ScanButton> {
+  FlutterBlue flutterblue = FlutterBlue.instance;
+
+  List <ScanResult> res=[];
+  String uid;
+
   @override
   Widget build(BuildContext context) {
       return FloatingActionButton.extended(
           heroTag: "scan",
-          label: Text("Start", style: TextStyle(color: _enabled==true ? Colors.white : Provider.of<ThemeModel>(context, listen: false).mode==ThemeMode.dark? Colors.teal : Theme.of(context).primaryColor,)),
-          icon: Icon(Icons.bluetooth, color: _enabled==true ? Colors.white : Provider.of<ThemeModel>(context, listen: false).mode==ThemeMode.dark? Colors.teal : Theme.of(context).primaryColor,),
+          label: Text("Start", style: TextStyle(color: widget._enabled==true ? Colors.white : Provider.of<ThemeModel>(context, listen: false).mode==ThemeMode.dark? Colors.teal : Theme.of(context).primaryColor,)),
+          icon: Icon(Icons.bluetooth, color: widget._enabled==true ? Colors.white : Provider.of<ThemeModel>(context, listen: false).mode==ThemeMode.dark? Colors.teal : Theme.of(context).primaryColor,),
           splashColor: Colors.blue,
           hoverColor: Colors.blue,
           disabledElevation: 0.1,
-          backgroundColor: Provider.of<ThemeModel>(context, listen: false).mode==ThemeMode.dark && _enabled==true ? Colors.blueAccent: Provider.of<ThemeModel>(context, listen: false).mode==ThemeMode.dark && _enabled==false ? Colors.white54 : _enabled==true ? Colors.blueAccent : Colors.white54,
-          tooltip: _enabled==true ? "Scanning enabled" : "Scanning disabled",
-          onPressed: _enabled==true ? () {
-           //TODO SCANNING DB
-            Navigator.of(context).pushNamed('/scan');
-            //db.resetUID('holaa');
+          backgroundColor: Provider.of<ThemeModel>(context, listen: false).mode==ThemeMode.dark && widget._enabled==true ? Colors.blueAccent: Provider.of<ThemeModel>(context, listen: false).mode==ThemeMode.dark && widget._enabled==false ? Colors.white54 : widget._enabled==true ? Colors.blueAccent : Colors.white54,
+          tooltip: widget._enabled==true ? "Scanning enabled" : "Scanning disabled",
+          onPressed: widget._enabled==true ? () async {
+            //flutterblue.stopScan();
+            //empezamos el escaneo y le pasamos la instancia a la siguiente pagina
+            flutterblue.startScan(scanMode: ScanMode.lowPower);
+            flutterblue.scanResults.listen((results)  {
+              // do something with scan results
+              //for (ScanResult r in results) {
+                //print('${r.device.name} found! rssi: ${r.rssi} id ${r.device.id}');
+             // }
+              if (results!=null)
+              res=results;
+            });
+            //comprobamos si es el primero escaneo, si todos los uid estan a null en la bbdd.
+            //si lo es añade el uid + proximo en cualquier doc random
+            if (await db.nullUID()) {
+              ScaffoldMessenger.of(context).showSnackBar(CustomSnackBar("Adding scanned beacons to database...", context));
+              //se le da un tiempo para que escanee , por si acaso.
+              await Future.delayed(Duration(seconds: 4));
+              db.setUID(getmaxrssi(res));
+            }
+            else
+              {
+                ScaffoldMessenger.of(context).showSnackBar(CustomSnackBar("Start scanning in a few seconds...", context));
+                await Future.delayed(Duration(seconds: 4));
+                db.resetUID(getmaxrssi(res));
+              }
+
+            //por si acaso
+            /*if (getmaxrssi(res)==null) {
+              ScaffoldMessenger.of(context).showSnackBar(
+                  CustomSnackBar("Please scan again.", context));
+                  flutterblue.stopScan();
+            }
+            else {
+              print(getmaxrssi(res));
+
+            }*/
             //});
+            //flutterblue.stopScan();
+            Navigator.of(context).pushNamed(
+                '/scan');
           } : null
       );
     }
+}
 
-  }
-
-  //clase stop button. con enable de si esta o no el bluetooth activado
+  //clase stop button. con enable de si esta o no el bluetooth activado, no hace nada masque parar el scan
   class StopButton extends StatelessWidget {
-  StopButton(this._flutterblue, this._enabled);
-  final FlutterBlue _flutterblue;
+  StopButton(this._enabled);
   bool _enabled;
     @override
     Widget build(BuildContext context) {
@@ -100,38 +161,82 @@ class ScanButton extends StatelessWidget {
           disabledElevation: 0.1,
           onPressed: _enabled== true ?()
           {
-            _flutterblue
+            FlutterBlue.instance
               .stopScan();
           } : null
       );
     }
   }
 
-  //clase scanagain. con enable de si esta bluetooth activado o no
-  class ScanAgainButton extends StatelessWidget {
-    ScanAgainButton(this._flutterblue, this._enabled);
-    final FlutterBlue _flutterblue;
+
+  //TODO INHERETED WIDGET
+  //clase scanagain. con enable de si esta bluetooth activado o no. vuelve a cargar la pagina escaneando un nuevo anuncio por si se ha movido la persona, hace lo mismo que start
+  class ScanAgainButton extends StatefulWidget {
+
+    ScanAgainButton(this._enabled);
     bool _enabled;
+
+  @override
+  State<ScanAgainButton> createState() => _ScanAgainButtonState();
+}
+
+class _ScanAgainButtonState extends State<ScanAgainButton> {
+    FlutterBlue flutterblue = FlutterBlue.instance;
+
+    List <ScanResult> res=[];
+
+    String uid;
+
     @override
     Widget build(BuildContext context) {
       return FloatingActionButton.extended(
           heroTag: "scanagain",
-          label: Text("Scan", style: TextStyle(color: _enabled==true ? Colors.white : Provider.of<ThemeModel>(context, listen: false).mode==ThemeMode.dark? Colors.teal : Theme.of(context).primaryColor,)),
-          icon: Icon(Icons.bluetooth, color: _enabled==true ? Colors.white : Provider.of<ThemeModel>(context, listen: false).mode==ThemeMode.dark? Colors.teal : Theme.of(context).primaryColor,),
+          label: Text("Scan", style: TextStyle(color: widget._enabled==true ? Colors.white : Provider.of<ThemeModel>(context, listen: false).mode==ThemeMode.dark? Colors.teal : Theme.of(context).primaryColor,)),
+          icon: Icon(Icons.bluetooth, color: widget._enabled==true ? Colors.white : Provider.of<ThemeModel>(context, listen: false).mode==ThemeMode.dark? Colors.teal : Theme.of(context).primaryColor,),
           splashColor: Colors.blue,
           hoverColor: Colors.blue,
-          backgroundColor: Provider.of<ThemeModel>(context, listen: false).mode==ThemeMode.dark && _enabled==true ? Colors.blueAccent: Provider.of<ThemeModel>(context, listen: false).mode==ThemeMode.dark && _enabled==false ? Colors.white54 : _enabled==true ? Colors.blueAccent : Colors.white54,
+          backgroundColor: Provider.of<ThemeModel>(context, listen: false).mode==ThemeMode.dark && widget._enabled==true ? Colors.blueAccent: Provider.of<ThemeModel>(context, listen: false).mode==ThemeMode.dark && widget._enabled==false ? Colors.white54 : widget._enabled==true ? Colors.blueAccent : Colors.white54,
           disabledElevation: 0.1,
-          onPressed: _enabled== true ?()
+          onPressed: widget._enabled== true ?() async
           {
-            _flutterblue
-                .startScan(timeout: Duration(seconds:4));
-          } : null
+            flutterblue.startScan(scanMode: ScanMode.lowPower);
+            flutterblue.scanResults.listen((results) {
+              // do something with scan results
+              //for (ScanResult r in results) {
+              //print('${r.device.name} found! rssi: ${r.rssi} id ${r.device.id}');
+              // }
+              if (results != null)
+                res = results;
+            });
+            //se supone que ya no esta null el uid, pero lo comprobamos por si se ha borrado de la bbdd
+            if (await db.nullUID()) {
+              ScaffoldMessenger.of(context).showSnackBar(CustomSnackBar(
+                  "Adding scanned beacons to database...", context));
+              //se le da un tiempo para que escanee , por si acaso.
+              await Future.delayed(Duration(seconds: 4));
+              db.setUID(getmaxrssi(res));
+            }
+
+            //por si acaso
+            if (getmaxrssi(res) == null) {
+              ScaffoldMessenger.of(context).showSnackBar(
+                  CustomSnackBar("Please scan again.", context));
+              flutterblue.stopScan();
+            }
+            else {
+              print(getmaxrssi(res));
+
+          }
+
+            }
+
+
+            //FlutterBlue.instance
+                //.startScan(timeout: Duration(seconds:4));
+           : null
       );
     }
-    }
-
-
+}
 
 //boton demo primera etapa
   /*class BeaconButton extends StatelessWidget {

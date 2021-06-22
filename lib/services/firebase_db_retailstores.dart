@@ -23,7 +23,8 @@ Future<bool> nullUID() async {
               "uid", isNull: true).get().then(
                   (doc)
               {
-                if (doc.docs.length==5)
+                //tenemos dos beacons y cinco documentos
+                if (doc.docs.length>3)
                   return true;
                 else
                   return false;
@@ -63,6 +64,7 @@ Future <String> setUID (String uid) async {
 
 //reset uid random cuando deja de escanear. //query
 Future <String> resetUID (String uid) async {
+  print(uid);
   List id=[];
   try
   {
@@ -78,27 +80,26 @@ Future <String> resetUID (String uid) async {
               });
           });
     //despues de borrar hace set a otro nuevo
-    return await setUID(uid);
+    await setUID(uid);
+    return null;
   } catch (e)
   {
     return e.toString();
   }
 }
 //TODO SE FILTRA POR UID del beacon
-Future<Stream<BlueAd>> getBlueAd(String uid) async
+Stream<BlueAd> getBlueAd(String uid)
 {
   try {
-    //print(uid);
-    return db.collection(FirestorePath.retailstores()).get().then(
-            (doc) {
+
           //obtenemos el id del primer doc, porque solo tenemos una tienda.
-         return db.collection(FirestorePath.blueads(doc.docs.first.id)).where(
+         return db.collection(FirestorePath.getblueads()).where(
               'uid', isEqualTo: uid)
               .snapshots().map((doc) {
-            print(toBlueAdList(doc).first.expiration);
+            //print(toBlueAdList(doc).last.expiration);
             return toBlueAdList(doc).first;
           });
-        });
+
   } catch (e)
   {
     return e;

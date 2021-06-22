@@ -18,6 +18,7 @@ import 'package:badges/badges.dart';
 //card con foto de fondo nombre y el corazon
 //CARDS
 //streambuilder  fav ads dentro del usuario.
+//TODO CAMBIAR PORQUE FILTRA POR ZONA.
 class FavoriteAds extends StatefulWidget {
   @override
   _FavoriteAdsState createState() => _FavoriteAdsState();

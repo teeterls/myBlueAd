@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:gradient_widgets/gradient_widgets.dart';
 import 'package:connectivity_plus/connectivity_plus.dart';
 import 'package:myBlueAd/view/widgets/custom_snackbar.dart';
-//TODO CONNECTIVITY. tiene que estar online.
 //logo y botones registro e iniciar sesion
 class HomeScreenWidget extends StatelessWidget {
 

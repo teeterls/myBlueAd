@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_blue/flutter_blue.dart';
 import 'package:myBlueAd/model/beacon.dart';
 import 'package:myBlueAd/view/screens/scanning_screen.dart';
 import 'package:myBlueAd/view/screens/show_update_profile.dart';

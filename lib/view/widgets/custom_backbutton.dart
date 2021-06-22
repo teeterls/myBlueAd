@@ -4,6 +4,9 @@ import 'package:myBlueAd/services/user_state_auth.dart';
 import '../../model/theme_model.dart';
 import 'package:provider/provider.dart';
 import 'dart:io' show Platform;
+
+import 'custom_snackbar.dart';
+import 'package:myBlueAd/services/firebase_db_retailstores.dart' as db;
 class CustomBackButton extends StatelessWidget {
 
      @override
@@ -59,7 +62,7 @@ class ScanBackButton extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return FloatingActionButton(
-        tooltip: "Go back",
+        tooltip: "Go back and reset",
         child: Icon(Platform.isIOS ? Icons.arrow_back_ios: Icons.arrow_back, color: Provider.of<ThemeModel>(context, listen: false).mode==ThemeMode.dark ? Colors.teal: Theme.of(context).primaryColor,),
         hoverColor: Colors.blue,
         splashColor: Colors.blue,
@@ -71,6 +74,7 @@ class ScanBackButton extends StatelessWidget {
             _flutterblue.stopScan();
           }
             Navigator.of(context).pop();
+          ScaffoldMessenger.of(context).showSnackBar(CustomSnackBar("New blue ads will appear next time you scan :)", context));
         }
     );
   }
