@@ -112,14 +112,17 @@ class _ScanScreenState extends State<ScanScreen> {
                               onTap: ()
                               {
                                 flutterblue.stopScan();
+                                Navigator.of(context).pushNamed('/blueads', arguments: snapshot.data);
                               },
                               onDoubleTap: ()
                               {
                                 flutterblue.stopScan();
+                                Navigator.of(context).pushNamed('/blueads', arguments: snapshot.data);
                               },
                               onLongPress: ()
                               {
                                 flutterblue.stopScan();
+                                Navigator.of(context).pushNamed('/blueads', arguments: snapshot.data);
                               },
                               child: AlertDialog(
                                 elevation: 200,

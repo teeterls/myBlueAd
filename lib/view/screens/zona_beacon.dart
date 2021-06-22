@@ -3,6 +3,7 @@ import 'dart:io';
 
 import 'package:flutter/material.dart';
 import 'package:myBlueAd/model/beacon.dart';
+import 'package:myBlueAd/model/bluead.dart';
 import 'package:myBlueAd/model/theme_model.dart';
 import 'package:myBlueAd/services/user_state_auth.dart';
 import 'package:myBlueAd/view/widgets/custom_appbar.dart';
@@ -21,6 +22,143 @@ import '../widgets/loading.dart';
 
 import 'package:flutter/services.dart' show rootBundle;
 import 'package:path_provider/path_provider.dart';
+
+
+//todo show bluead, recibe el bluead entero.
+class ShowBlueAd extends StatefulWidget {
+  ShowBlueAd(this._bluead);
+  final BlueAd _bluead;
+
+  @override
+  _ShowBlueAdState createState() => _ShowBlueAdState();
+}
+
+class _ShowBlueAdState extends State<ShowBlueAd> {
+
+  _addFavAd(String uid, String url, String zona) async
+  {
+    //ya es favad
+    if (await dbuser.isFavAd(uid, zona))
+    {
+    _btnControllerAd.success();
+    ScaffoldMessenger.of(context).showSnackBar(
+    CustomSnackBar("Already a fav!", context));
+
+    }
+    //forzar lista para firestore, lo añade modo array.
+    else if (await dbuser.setFavAd(uid, zona, url))
+    {
+    _btnControllerAd.success();
+    ScaffoldMessenger.of(context).showSnackBar(
+    CustomSnackBar("Added to your favs!", context));
+    }
+    else {
+  _btnControllerAd.error();
+  ScaffoldMessenger.of(context).showSnackBar(
+  CustomSnackBar("An error ocurred. Try again", context));
+  }
+  }
+
+  final RoundedLoadingButtonController _btnControllerAd = RoundedLoadingButtonController();
+  final RoundedLoadingButtonController _btnControllerDelete = RoundedLoadingButtonController();
+  final GlobalKey<ScaffoldState> _scaffoldKey = new GlobalKey<ScaffoldState>();
+
+  WebViewController _controller;
+  @override
+  void initState() {
+    // TODO: implement initState
+    super.initState();
+    if (Platform.isAndroid) WebView.platform = SurfaceAndroidWebView();
+  }
+  @override
+  Widget build(BuildContext context) {
+    final uid= Provider.of<UserState>(context, listen: false).user.uid;
+     return WillPopScope(
+      //no deja ir para atras
+        onWillPop: () async => false,
+        child: SafeArea(
+            child: Scaffold(
+                key: _scaffoldKey,
+                appBar: CustomAppBar(_scaffoldKey, context),
+                drawer: CustomDrawer(),
+                body:   SingleChildScrollView(
+                              //todoSHOWBLUEAD
+                              child:
+                              Column(
+                            children: <Widget>[
+                            Container(
+                              height: 500,
+                              child:
+                              WebView(
+                              allowsInlineMediaPlayback: true,
+                              javascriptMode: JavascriptMode.unrestricted,
+                              initialUrl: widget._bluead.url,
+                              gestureNavigationEnabled: true,
+                              debuggingEnabled: true,
+                              onWebViewCreated: (WebViewController webViewController) {
+                                _controller = webViewController;
+                              },
+                              //avisar al controller
+                            ),
+                          ),
+
+                        ],
+            )),
+                floatingActionButton: GoBack(),
+                floatingActionButtonLocation: FloatingActionButtonLocation.centerFloat,
+                bottomNavigationBar: Container(
+                  height:60,
+                  child: ButtonBar(
+                    alignment: MainAxisAlignment.spaceAround,
+                    children: <Widget>[
+                      Padding(
+                        padding: const EdgeInsets.only(bottom:5.0),
+                        child: RoundedLoadingButton(
+                          color: Provider.of<ThemeModel>(context, listen: false).mode==ThemeMode.dark ? Colors.lightBlue: Theme.of(context).primaryColor,
+                          successColor: Colors.green,
+                          disabledColor: Colors.blue,
+                          width:80,
+                          child: Icon(Icons.thumb_up_alt, color: Colors.white,),
+                          controller: _btnControllerAd,
+                          onPressed: () async {
+                            _addFavAd(uid, widget._bluead.url, widget._bluead.zona);
+                          },//
+                        ),
+                      ),
+                      Padding(
+                        padding: const EdgeInsets.only(bottom:5.0),
+                        child: RoundedLoadingButton(
+                          color: Provider.of<ThemeModel>(context, listen: false).mode==ThemeMode.dark ? Colors.lightBlue: Theme.of(context).primaryColor,
+                          width:80,
+                          child: Icon(Icons.thumb_down_alt,color: Colors.white,),
+                          controller: _btnControllerDelete,
+                          onPressed: () async
+                          {
+                            if (await dbuser.isFavAd(uid, widget._bluead.zona))
+                            {
+                              dbuser.removeFavAd(uid, widget._bluead.zona);
+                              Navigator.of(context).pop();
+                              ScaffoldMessenger.of(context).showSnackBar(
+                                  CustomSnackBar("The ${widget._bluead.zona} ad has been removed from your favs!", context));
+                            }
+                            else if (! (await dbuser.isFavAd(uid, widget._bluead.zona)))
+                            {
+                              Navigator.of(context).pop();
+                              ScaffoldMessenger.of(context).showSnackBar(
+                                  CustomSnackBar("Your preferences about ${widget._bluead.zona} section have been saved! ", context));
+                            }
+                            //se pone el boton a clear
+                            _btnControllerDelete.error();
+
+                          },
+                        ),
+                      ),
+                    ],
+                  ),
+                )
+            )));
+  }
+}
 
 class Ad extends StatefulWidget {
 
@@ -73,7 +211,6 @@ class _AdState extends State<Ad> {
         _btnControllerAd.success();
         ScaffoldMessenger.of(context).showSnackBar(
         CustomSnackBar("Added to your favs!", context));
-
   }
       else {
       _btnControllerAd.error();
@@ -218,7 +355,6 @@ class _ShowBeaconState extends State<ShowBeacon> {
             Container(
               height: 500,
               child:
-                  //TODO WEBVIEW MAS COMPLETO.
              WebView(
                allowsInlineMediaPlayback: true,
                   javascriptMode: JavascriptMode.unrestricted,
@@ -296,6 +432,21 @@ class _ShowFavBeaconState extends State<ShowFavBeacon>
         ),)
       ),);
   }
+    );
+  }
+}
+
+class GoBack extends StatelessWidget {
+
+  @override
+  Widget build(BuildContext context) {
+    return FloatingActionButton(
+      onPressed: () => Navigator.of(context).pop(),
+      tooltip: "Go back",
+      child: Icon(Platform.isIOS ? Icons.arrow_back_ios: Icons.arrow_back, color: Provider.of<ThemeModel>(context, listen: false).mode==ThemeMode.dark ? Colors.teal: Theme.of(context).primaryColor,),
+      hoverColor: Colors.blue,
+      splashColor: Colors.blue,
+      backgroundColor: Provider.of<ThemeModel>(context, listen: false).mode==ThemeMode.dark ? Colors.white: Colors.white54,
     );
   }
 }

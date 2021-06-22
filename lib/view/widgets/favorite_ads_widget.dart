@@ -47,7 +47,6 @@ class _FavoriteAdsState extends State<FavoriteAds> {
             //hay datos del perfil del usuario identificado con el uid al sign in/register
             //snapshot.data.favads.key zona -> lookup image db nuevo STREAMBUILDER
             //snapshot.data.favads.values url -> esto se utiliza asi
-            //TODO STREAMBUILDER BEACON Y METODO OBTENER IMAGENES de la retail store con storage
             if (snapshot.data.favads.isNotEmpty)  {
               print(snapshot.data.favads.toString());
               return ShowFavBeacon(
@@ -58,6 +57,7 @@ class _FavoriteAdsState extends State<FavoriteAds> {
           });
   }
 }
+//TODO METODO SHOWBLUEAD POR CONTENIDO URL QUE ES UNICO. las zonas en el futuro podrian no serlo.
 class ShowFavBeacon extends StatefulWidget {
   //recibe las url y las zonas en mapa
   List  <String> _favbeacons;

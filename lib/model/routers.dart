@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_blue/flutter_blue.dart';
 import 'package:myBlueAd/model/beacon.dart';
+import 'package:myBlueAd/model/bluead.dart';
 import 'package:myBlueAd/view/screens/scanning_screen.dart';
 import 'package:myBlueAd/view/screens/show_update_profile.dart';
 import 'package:myBlueAd/view/screens/zona_beacon_demo.dart';
@@ -55,6 +56,9 @@ class Routers {
         return MaterialPageRoute(builder: (_) => AdsDemo(zonas));
       case '/scan':
         return MaterialPageRoute(builder: (_) => ScanScreen());
+      case '/blueads':
+        var bluead=settings.arguments as BlueAd;
+        return MaterialPageRoute(builder: (_) => ShowBlueAd(bluead));
       // ult
       default:
         return MaterialPageRoute(builder: (_) {
