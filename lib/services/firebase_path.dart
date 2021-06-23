@@ -17,7 +17,7 @@ class FirestorePath {
 //one bluead
 static String bluead (String id, String blueid) => 'retail_stores/$id/blueads/$blueid';
 
-static String getblueads() => '/retail_stores/rwOEANtIjZVD0FRjnE6o/blueads/';
+static String blueadscollection() => '/retail_stores/rwOEANtIjZVD0FRjnE6o/blueads/';
 }
 
 //storage paths

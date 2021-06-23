@@ -34,7 +34,13 @@ class ShowBlueAd extends StatefulWidget {
 }
 
 class _ShowBlueAdState extends State<ShowBlueAd> {
-
+//metodo de asset a file
+  Future<File> getImageFileFromAssets(String path) async {
+    final byteData = await rootBundle.load('assets/$path');
+    File file =  File('${(await getTemporaryDirectory()).path}/$path');
+    await file.writeAsBytes(byteData.buffer.asUint8List(byteData.offsetInBytes, byteData.lengthInBytes));
+    return file;
+  }
   _addFavAd(String uid, String url, String zona) async
   {
     //ya es favad
@@ -48,6 +54,14 @@ class _ShowBlueAdState extends State<ShowBlueAd> {
     //forzar lista para firestore, lo añade modo array.
     else if (await dbuser.setFavAd(uid, zona, url))
     {
+      /*if (zona=="jewelry") {
+        print ("aqui");
+        File image = await getImageFileFromAssets('${zona}.jpg');
+        await storage.uploadBeaconImage(image, zona);
+        String url = await storage.downloadBeaconImage(zona);
+        print(url);
+      }*/
+
     _btnControllerAd.success();
     ScaffoldMessenger.of(context).showSnackBar(
     CustomSnackBar("Added to your favs!", context));

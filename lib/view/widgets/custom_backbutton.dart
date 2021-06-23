@@ -6,7 +6,7 @@ import 'package:provider/provider.dart';
 import 'dart:io' show Platform;
 
 import 'custom_snackbar.dart';
-import 'package:myBlueAd/services/firebase_db_retailstores.dart' as db;
+import 'package:myBlueAd/services/firestore_db_retailstores.dart' as db;
 class CustomBackButton extends StatelessWidget {
 
      @override

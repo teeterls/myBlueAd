@@ -8,7 +8,7 @@ import 'package:myBlueAd/model/theme_model.dart';
 import 'package:myBlueAd/services/user_state_auth.dart';
 import 'package:myBlueAd/view/widgets/custom_snackbar.dart';
 import 'package:provider/provider.dart';
-import 'package:myBlueAd/services/firebase_db_retailstores.dart' as db;
+import 'package:myBlueAd/services/firestore_db_retailstores.dart' as db;
 
 //boton demo con query zona solo enabled si bluetooth on
 class DemoButton extends StatelessWidget {

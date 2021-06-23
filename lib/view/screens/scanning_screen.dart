@@ -8,7 +8,7 @@ import 'package:myBlueAd/view/widgets/bluetooth_modes_buttons.dart';
 import 'package:myBlueAd/view/widgets/custom_appbar.dart';
 import 'package:myBlueAd/view/widgets/custom_backbutton.dart';
 import 'package:myBlueAd/view/widgets/custom_drawer.dart';
-import 'package:myBlueAd/services/firebase_db_retailstores.dart' as db;
+import 'package:myBlueAd/services/firestore_db_retailstores.dart' as db;
 import 'package:myBlueAd/view/widgets/custom_snackbar.dart';
 import 'dart:math';
 
