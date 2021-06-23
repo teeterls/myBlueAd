@@ -120,7 +120,7 @@ class _ShowBlueAdState extends State<ShowBlueAd> {
             )),
                 floatingActionButton: GoBack(),
                 floatingActionButtonLocation: FloatingActionButtonLocation.centerFloat,
-                bottomNavigationBar: Container(
+                bottomNavigationBar:  (Provider.of<UserState>(context, listen: false).user.email!=null) ? Container(
                   height:60,
                   child: ButtonBar(
                     alignment: MainAxisAlignment.spaceAround,
@@ -169,7 +169,7 @@ class _ShowBlueAdState extends State<ShowBlueAd> {
                       ),
                     ],
                   ),
-                )
+                ) : null,
             )));
   }
 }

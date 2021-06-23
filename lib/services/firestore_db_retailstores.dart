@@ -92,8 +92,9 @@ Future <String> resetUID (String uid) async {
   }
 }
 
+//reset que no repita el mismo uid
 Future <String> norepeatUID (String uid, String actual) async {
-  print(actual);
+  //print(actual);
   List id=[];
   try
   {
@@ -139,6 +140,19 @@ Stream<BlueAd> getBlueAd(String uid)
     return e;
   }
 }
+
+Stream<Baliza> getBlueAdDemo(String zona)
+{
+  /*return db.collection(FirestorePath.beaconscollection()).where('zona', isEqualTo: zona)
+      .snapshots().map((doc) => toBeaconList(doc).first);*/
+  return db.collection(FirestorePath.beaconscollection()).where('zona', isEqualTo: zona)
+      .snapshots().map((doc) {
+    Baliza beacon= toBeaconList(doc).first;
+    beacon.uid= doc.docs.first.id;
+    return beacon;
+  });
+}
+
 
 //no se usa pero seria como ejemplo. inicialmente uid a null, luego se haria el set.
 
