@@ -1,5 +1,4 @@
 ## myBlueAd
 TFG 4ºGITT+ADE ICAI (Universidad Pontificia Comillas)
 ## Resumen proyecto
-DESARROLLO APP MÓVIL MULTIPLATAFORMA EN FLUTTER (iOS, Android) PARA UNA ESTRATEGIA DE MARKETING DE PROXIMIDAD INDOOR CON TECNOLOGÍA BEACON APLICADA AL SECTOR RETAIL.
-CONTENIDO MULTIMEDIA PERSONALIZADO SEGUN LA POSICION DEL CLIENTE EN EL ESPACIO. EXPERIENCIA DE COMPRA UNICA CON UN VALOR AÑADIDO QUE RESULTARÁ EN UNA FIDELIZACIÓN DEL CLIENTE.
+Desarrollo app móvil multiplataforma con el framework Flutter para un sistema de marketing de proximidad indoor utilizando tecnología beacon. Este sistema está pensado para el sector minorista o retail. El sistema consiste en mostrar contenido exclusivo al usuario según su posición en espacios cerrados. Con esto, se pretende crear un valor añadido a la experiencia de compra que resulte en una fidelización del cliente actual y un aumento de clientes potenciales. 
