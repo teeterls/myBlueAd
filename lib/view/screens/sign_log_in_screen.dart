@@ -1,4 +1,8 @@
+import 'dart:io';
+
 import 'package:flutter/material.dart';
+import 'package:myBlueAd/model/theme_model.dart';
+import 'package:provider/provider.dart';
 import '../widgets/custom_appbar.dart';
 import '../widgets/custom_backbutton.dart';
 import '../widgets/custom_drawer.dart';
@@ -34,7 +38,10 @@ class _SignLogInScreenState extends State<SignLogInScreen> {
   }
   @override
   Widget build(BuildContext context) {
-    return SafeArea(
+    return WillPopScope(
+        //no deja ir para atras
+        onWillPop: () async => false,
+    child:SafeArea(
       child: Scaffold(
         key: _scaffoldkey,
         drawer: CustomDrawer(),
@@ -51,8 +58,18 @@ class _SignLogInScreenState extends State<SignLogInScreen> {
                   ),
           ),
         ),
-        floatingActionButton: CustomBackButton(),
-      ),
+        floatingActionButton: FloatingActionButton(
+            tooltip: "Go back",
+            child: Icon(Platform.isIOS ? Icons.arrow_back_ios: Icons.arrow_back, color: Provider.of<ThemeModel>(context, listen: false).mode==ThemeMode.dark ? Colors.teal: Theme.of(context).primaryColor,),
+            hoverColor: Colors.blue,
+            splashColor: Colors.blue,
+            backgroundColor: Provider.of<ThemeModel>(context, listen: false).mode==ThemeMode.dark ? Colors.white: Colors.white54,
+            onPressed: ()
+            {
+              Navigator.of(context).pop();
+            }),
+        ),
+    ),
     );
   }
 

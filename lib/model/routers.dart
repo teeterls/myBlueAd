@@ -5,6 +5,7 @@ import 'package:myBlueAd/model/bluead.dart';
 import 'package:myBlueAd/view/screens/scanning_screen.dart';
 import 'package:myBlueAd/view/screens/show_update_profile.dart';
 import 'package:myBlueAd/view/screens/zona_beacon_demo.dart';
+import 'package:myBlueAd/view/screens/zona_blueads_demo.dart';
 import 'package:myBlueAd/view/widgets/user_profile_widget.dart';
 import 'package:myBlueAd/view/screens/zona_beacon.dart';
 import '../view/screens/user_signin_action_screen.dart';
@@ -45,7 +46,7 @@ class Routers {
       case '/useraction':
         var options = settings.arguments as String;
         return MaterialPageRoute(builder: (_) => UserActionScreen(options));
-      case '/ads':
+     /* case '/ads':
         var zona= settings.arguments as String;
         return MaterialPageRoute(builder: (_) => Ad(zona));
       case '/showbeacon':
@@ -53,13 +54,17 @@ class Routers {
         return MaterialPageRoute(builder: (_) => ShowFavBeacon(beacon));
       case '/adsdemo':
         var zonas=settings.arguments as List<String>;
-        return MaterialPageRoute(builder: (_) => AdsDemo(zonas));
+        return MaterialPageRoute(builder: (_) => AdsDemo(zonas));*/
       case '/scan':
         return MaterialPageRoute(builder: (_) => ScanScreen());
       case '/blueads':
         var bluead=settings.arguments as BlueAd;
         return MaterialPageRoute(builder: (_) => ShowBlueAd(bluead));
-      // ult
+      case '/blueadsdemo':
+        return MaterialPageRoute(builder: (_) => BlueAdsDemo());
+      case '/viewblueads':
+        var bluead=settings.arguments as BlueAd;
+        return MaterialPageRoute(builder: (_) => OnlyViewBlueAd(bluead));
       default:
         return MaterialPageRoute(builder: (_) {
           return Error('No route founded for ${settings.name}');

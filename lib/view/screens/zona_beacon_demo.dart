@@ -35,7 +35,6 @@ final List <String> _zonas;
   _AdsDemoState createState() => _AdsDemoState();
 }
 
-//TODO streambuilder flutterblue, porque pierde la instancia que tenia en userhomescreen.
 class _AdsDemoState extends State<AdsDemo> {
   final FlutterBlue flutterBlue = FlutterBlue.instance;
   Stream<Widget> zonademo (List<String> zonas) async*
@@ -105,6 +104,7 @@ class _AdsDemoState extends State<AdsDemo> {
                             onPressed: () {
                               print(zonas);
                               zonas.remove(zonas[i]);
+                              //vuelveatras
                               Navigator.of(context).pushNamed(
                                   '/adsdemo', arguments: zonas);
                               ScaffoldMessenger.of(context).showSnackBar(
@@ -157,7 +157,6 @@ class _AdsDemoState extends State<AdsDemo> {
                     return WaitingDemo();
                   case ConnectionState.active:
                   //llegan datos
-                  //TODO.
                     return snapshot.data;
                   case ConnectionState.done:
                     return EndDemo(widget._zonas);

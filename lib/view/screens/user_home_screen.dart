@@ -30,12 +30,11 @@ class _UserHomeScreenState extends State<UserHomeScreen> {
 
   //empieza en el de en medio
   int _currentIndex = 1;
-  bool _enabled;
-
+ // bool _enabled;
 
   /*@override
   void initState() {
-    Future.delayed(Duration(seconds:0)).then((value)
+    Future.delayed(Duration(seconds:0)).then((value) flu
     async  {
       if (!await flutterBlue.isOn) {
         _enabled = false;
@@ -149,164 +148,6 @@ class _UserHomeScreenState extends State<UserHomeScreen> {
           ),
         ),
       );
-
-
-    //phone o anonym ->
-    /*else
-      {
-        return WillPopScope(
-          onWillPop: () async => false,
-          child: SafeArea(
-            child: Scaffold(
-                key: _scaffoldKey,
-                appBar: CustomAppBar(_scaffoldKey, context),
-                drawer: CustomDrawer(),
-                body: SingleChildScrollView(
-                  child: PrinBlueAnonym(),
-                ),
-                floatingActionButton: StreamBuilder<BluetoothState>(
-              stream: FlutterBlue.instance.state,
-              initialData: BluetoothState.unknown,
-              builder: (c, snapshot) {
-                final state = snapshot.data;
-                if (state == BluetoothState.on) {
-                  print("on");
-                  return SpeedDial( //AddAccountButton()
-                    marginEnd: 18,
-                    marginBottom: 20,
-                    // animatedIcon: AnimatedIcons.menu_close,
-                    // animatedIconTheme: IconThemeData(size: 22.0),
-                    icon: Icons.add,
-                    activeIcon: Icons.close,
-                    iconTheme: IconThemeData(color: Provider
-                        .of<ThemeModel>(context, listen: false)
-                        .mode == ThemeMode.dark ? Colors.teal : Theme
-                        .of(context)
-                        .primaryColor, size: 30),
-                    labelTransitionBuilder: (widget, animation) =>
-                        ScaleTransition(scale: animation, child: widget),
-                    buttonSize: 56.0,
-                    visible: true,
-                    closeManually: false,
-                    renderOverlay: false,
-                    curve: Curves.bounceIn,
-                    overlayColor: Colors.black,
-                    overlayOpacity: 0.5,
-                    tooltip: 'Options',
-                    backgroundColor: Colors.white,
-                    foregroundColor: Colors.black,
-                    elevation: 8.0,
-                    shape: CircleBorder(),
-                    // orientation: SpeedDialOrientation.Up,
-                    // childMarginBottom: 2,
-                    // childMarginTop: 2,
-                    children: [
-                      SpeedDialChild(
-                        child: Icon(Icons.account_circle, color: Provider
-                            .of<ThemeModel>(context, listen: false)
-                            .mode == ThemeMode.dark ? Colors.teal : Theme
-                            .of(context)
-                            .primaryColor,),
-                        label: "Create profile",
-                        labelStyle: TextStyle(fontWeight: FontWeight.bold,
-                            fontSize: 16,
-                            color: Colors.white),
-                        labelBackgroundColor: Provider
-                            .of<ThemeModel>(context, listen: false)
-                            .mode == ThemeMode.dark ? Colors.teal : Theme
-                            .of(context)
-                            .primaryColor,
-                        onTap: () async {
-                          Navigator.of(context).pushNamed(
-                              '/signlogin', arguments: "Log in");
-                        },
-                        onLongPress: () async {
-                          Navigator.of(context).pushNamed(
-                              '/signlogin', arguments: "Log in");
-                        },
-                      ),
-                      // ignore: unrelated_type_equality_checks
-                      SpeedDialChild(
-                        child: myBeaconButton(true),
-                        //Icon(Icons.bluetooth, color: Provider.of<ThemeModel>(context, listen: false).mode==ThemeMode.dark ? Colors.teal: Theme.of(context).primaryColor,),
-                        label: "Nearby blue ads",
-                        labelStyle: TextStyle(fontWeight: FontWeight.bold,
-                            fontSize: 16,
-                            color: Colors.white),
-                        labelBackgroundColor: Provider
-                            .of<ThemeModel>(context, listen: false)
-                            .mode == ThemeMode.dark ? Colors.teal : Theme
-                            .of(context)
-                            .primaryColor,
-                        //boton beacon
-                      ),
-                    ],
-                  );
-                }
-                else
-                  {
-                  return SpeedDial( //AddAccountButton()
-                    marginEnd: 18,
-                    marginBottom: 20,
-                    // animatedIcon: AnimatedIcons.menu_close,
-                    // animatedIconTheme: IconThemeData(size: 22.0),
-                    icon: Icons.add,
-                    activeIcon: Icons.close,
-                    iconTheme: IconThemeData(color: Provider
-                        .of<ThemeModel>(context, listen: false)
-                        .mode == ThemeMode.dark ? Colors.teal : Theme
-                        .of(context)
-                        .primaryColor, size: 30),
-                    labelTransitionBuilder: (widget, animation) =>
-                        ScaleTransition(scale: animation, child: widget),
-                    buttonSize: 56.0,
-                    visible: true,
-                    closeManually: false,
-                    renderOverlay: false,
-                    curve: Curves.bounceIn,
-                    overlayColor: Colors.black,
-                    overlayOpacity: 0.5,
-                    tooltip: 'Options',
-                    backgroundColor: Colors.white,
-                    foregroundColor: Colors.black,
-                    elevation: 8.0,
-                    shape: CircleBorder(),
-                    // orientation: SpeedDialOrientation.Up,
-                    // childMarginBottom: 2,
-                    // childMarginTop: 2,
-                    children: [
-                      SpeedDialChild(
-                        child: Icon(Icons.account_circle, color: Provider
-                            .of<ThemeModel>(context, listen: false)
-                            .mode == ThemeMode.dark ? Colors.teal : Theme
-                            .of(context)
-                            .primaryColor,),
-                        label: "Create profile",
-                        labelStyle: TextStyle(fontWeight: FontWeight.bold,
-                            fontSize: 16,
-                            color: Colors.white),
-                        labelBackgroundColor: Provider
-                            .of<ThemeModel>(context, listen: false)
-                            .mode == ThemeMode.dark ? Colors.teal : Theme
-                            .of(context)
-                            .primaryColor,
-                        onTap: () async {
-                          Navigator.of(context).pushNamed(
-                              '/signlogin', arguments: "Log in");
-                        },
-                        onLongPress: () async {
-                          Navigator.of(context).pushNamed(
-                              '/signlogin', arguments: "Log in");
-                        },
-                      ),
-                      // ignore: unrelated_type_equality_checks
-                    ],
-                  );
-              }}
-          )
-              //custombottonnavigation bar: email o no?
-            ),),);
-      }*/
   }
 
   //cambiamos la pagina que se ve

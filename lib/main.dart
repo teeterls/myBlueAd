@@ -1,6 +1,7 @@
 
 import 'package:flutter/material.dart';
 import 'package:firebase_core/firebase_core.dart';
+import 'package:myBlueAd/model/bluead.dart';
 import '/view/myBlueAdapp.dart';
 import '/view/widgets/error.dart';
 import '/view/widgets/loading.dart';
@@ -9,12 +10,14 @@ import 'package:provider/provider.dart';
 import '/model/theme_model.dart';
 
 import '/services/user_state_auth.dart';
+import 'package:myBlueAd/services/firestore_db_retailstores.dart' as db;
   // @dart=2.9
 void main() {
   //widgets de flutter inicializado
   WidgetsFlutterBinding.ensureInitialized();
   runApp(MultiProvider(
     providers: [
+      StreamProvider<List<BlueAd>>(create: (_) => db.getBlueAds(), initialData: []),
       ChangeNotifierProvider <ThemeModel> (
       create: (_) => ThemeModel(),
       ),

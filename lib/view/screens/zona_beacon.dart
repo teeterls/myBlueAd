@@ -2,9 +2,11 @@ import 'dart:async';
 import 'dart:io';
 
 import 'package:flutter/material.dart';
+import 'package:flutter_blue/flutter_blue.dart';
 import 'package:myBlueAd/model/beacon.dart';
 import 'package:myBlueAd/model/bluead.dart';
 import 'package:myBlueAd/model/theme_model.dart';
+import 'package:myBlueAd/services/firestore_db_retailstores.dart' as dbretail;
 import 'package:myBlueAd/services/user_state_auth.dart';
 import 'package:myBlueAd/view/widgets/custom_appbar.dart';
 import 'package:myBlueAd/view/widgets/custom_drawer.dart';
@@ -22,9 +24,8 @@ import '../widgets/loading.dart';
 
 import 'package:flutter/services.dart' show rootBundle;
 import 'package:path_provider/path_provider.dart';
+import 'package:flutter_speed_dial/flutter_speed_dial.dart';
 
-
-//todo show bluead, recibe el bluead entero.
 class ShowBlueAd extends StatefulWidget {
   ShowBlueAd(this._bluead);
   final BlueAd _bluead;
@@ -118,8 +119,85 @@ class _ShowBlueAdState extends State<ShowBlueAd> {
 
                         ],
             )),
-                floatingActionButton: GoBack(),
-                floatingActionButtonLocation: FloatingActionButtonLocation.centerFloat,
+                //SPEEDDIAL
+                floatingActionButton: OrientationBuilder(
+         builder: (context, orientation) {
+           return SpeedDial(
+    /// both default to 16
+    marginEnd: orientation== Orientation.portrait ?  168:330,
+    marginBottom: orientation== Orientation.portrait ? 100: 40,
+    // animatedIcon: AnimatedIcons.menu_close,
+    // animatedIconTheme: IconThemeData(size: 22.0),
+    /// This is ignored if animatedIcon is non null
+    icon: Icons.arrow_drop_up_sharp,
+             iconTheme: IconThemeData(color: Provider.of<ThemeModel>(context, listen: false).mode==ThemeMode.dark ? Colors.teal: Theme.of(context).primaryColor,),
+    activeIcon: Icons.remove,
+    buttonSize: 56.0,
+    visible: true,
+    /// If true user is forced to close dial manually
+    /// by tapping main button and overlay is not rendered.
+    closeManually: false,
+    /// If true overlay will render no matter what.
+    renderOverlay: false,
+    curve: Curves.bounceIn,
+    overlayColor: Colors.black,
+    overlayOpacity: 0.5,
+    onOpen: () => print('OPENING DIAL'),
+    onClose: () => print('DIAL CLOSED'),
+    tooltip: 'Options',
+    heroTag: 'options-tag',
+    backgroundColor: Provider.of<ThemeModel>(context, listen: false).mode==ThemeMode.dark ? Colors.white: Colors.white60,
+    elevation: 8.0,
+    shape: CircleBorder(),
+    // orientation: SpeedDialOrientation.Up,
+    // childMarginBottom: 2,
+    // childMarginTop: 2,
+    children: [
+    SpeedDialChild(
+      backgroundColor: Provider.of<ThemeModel>(context, listen: false).mode==ThemeMode.dark ? Colors.white: Colors.white60,
+    child: Icon(Icons.arrow_back, color: Provider.of<ThemeModel>(context, listen: false).mode==ThemeMode.dark ? Colors.teal: Theme.of(context).primaryColor,),
+    labelWidget: Padding(
+      padding: const EdgeInsets.only(right: 12.0),
+      child: Text("Go back", style:TextStyle(fontSize: 20.0,  fontWeight: FontWeight.bold,
+        color: Provider.of<ThemeModel>(context, listen: false).mode==ThemeMode.dark ? Colors.blueAccent: Theme.of(context).primaryColor,), ),
+    ),
+    onTap: ()  {
+      FlutterBlue.instance.startScan(allowDuplicates: true);
+      Navigator.of(context).pop();
+    },
+    onLongPress: ()
+      {
+        FlutterBlue.instance.startScan(allowDuplicates: true);
+        Navigator.of(context).pop();
+
+      },
+    ),
+      SpeedDialChild(
+        backgroundColor: Provider.of<ThemeModel>(context, listen: false).mode==ThemeMode.dark ? Colors.white: Colors.white60,
+        child: Icon(Icons.restart_alt_outlined, color: Provider.of<ThemeModel>(context, listen: false).mode==ThemeMode.dark ? Colors.teal: Theme.of(context).primaryColor,),
+        labelWidget: Padding(
+          padding: const EdgeInsets.only(right: 12.0),
+          child: Text("Reset", style:TextStyle(fontSize: 20.0,  fontWeight: FontWeight.bold,
+            color: Provider.of<ThemeModel>(context, listen: false).mode==ThemeMode.dark ? Colors.blueAccent: Theme.of(context).primaryColor,), ),
+        ),
+        onTap: ()  {
+          dbretail.resetUID(widget._bluead.uid);
+          FlutterBlue.instance.startScan(allowDuplicates: true);
+          Navigator.of(context).pop();
+        },
+        onLongPress: ()
+        {
+          dbretail.resetUID(widget._bluead.uid);
+          FlutterBlue.instance.startScan(allowDuplicates: true);
+          Navigator.of(context).pop();
+        },
+      ),
+    ],
+    );
+         }
+    )
+    ,//GoBack(),
+                floatingActionButtonLocation: FloatingActionButtonLocation.centerDocked,
                 bottomNavigationBar:  (Provider.of<UserState>(context, listen: false).user.email!=null) ? Container(
                   height:60,
                   child: ButtonBar(
@@ -455,7 +533,11 @@ class GoBack extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return FloatingActionButton(
-      onPressed: () => Navigator.of(context).pop(),
+      onPressed: ()
+        {
+          FlutterBlue.instance.startScan(allowDuplicates: true);
+          Navigator.of(context).pop();
+        },
       tooltip: "Go back",
       child: Icon(Platform.isIOS ? Icons.arrow_back_ios: Icons.arrow_back, color: Provider.of<ThemeModel>(context, listen: false).mode==ThemeMode.dark ? Colors.teal: Theme.of(context).primaryColor,),
       hoverColor: Colors.blue,

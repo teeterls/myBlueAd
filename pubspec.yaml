@@ -67,6 +67,7 @@ dependencies:
   connectivity_plus: ^1.0.3
   location: ^4.3.0
   geoflutterfire: ^3.0.0-nullsafety.2
+  firebase_in_app_messaging: ^0.5.0+6
 
 
 dev_dependencies:

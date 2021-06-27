@@ -37,6 +37,7 @@ Future<bool> nullUID() async {
 
 //set uid random cuando se empareja la primera vez
 Future <String> setUID (String uid) async {
+  print(uid);
   List id=[];
   try 
       {
@@ -141,6 +142,16 @@ Stream<BlueAd> getBlueAd(String uid)
   }
 }
 
+//metodo map -> pasar una funcion que convierte los QuerySnapshots a List (o lo que sea)
+Stream <List<BlueAd>> getBlueAds() {
+  //togrouplist recibe un querysnapshot. mapeamos el stream de querysnapshots y se genera un stream de listgroups
+  //return db.collection(FirestorePath.userscollection()).orderBy('firstaccess').snapshots().map(toUserList);
+  return db.collection(FirestorePath.blueadscollection()).orderBy('fecharegistro').snapshots().map(toBlueAdList);
+}
+
+
+
+/*//TODO LO VAMOS A HACER POR DOCREFERENCE
 Stream<Baliza> getBlueAdDemo(String zona)
 {
   /*return db.collection(FirestorePath.beaconscollection()).where('zona', isEqualTo: zona)
@@ -151,7 +162,7 @@ Stream<Baliza> getBlueAdDemo(String zona)
     beacon.uid= doc.docs.first.id;
     return beacon;
   });
-}
+}*/
 
 
 //no se usa pero seria como ejemplo. inicialmente uid a null, luego se haria el set.

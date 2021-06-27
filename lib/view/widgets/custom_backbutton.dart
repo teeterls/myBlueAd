@@ -62,19 +62,23 @@ class ScanBackButton extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return FloatingActionButton(
-        tooltip: "Go back and reset",
+        tooltip: "Go back",
         child: Icon(Platform.isIOS ? Icons.arrow_back_ios: Icons.arrow_back, color: Provider.of<ThemeModel>(context, listen: false).mode==ThemeMode.dark ? Colors.teal: Theme.of(context).primaryColor,),
         hoverColor: Colors.blue,
         splashColor: Colors.blue,
         backgroundColor: Provider.of<ThemeModel>(context, listen: false).mode==ThemeMode.dark ? Colors.white: Colors.white54,
-        onPressed: ()
+        onPressed: () async
         {
           //stop scan
           if (_enable) {
             _flutterblue.stopScan();
           }
+          else
+            {
+              ScaffoldMessenger.of(context).showSnackBar(CustomSnackBar("Enable bluetooth next time, please!", context));
+            }
             Navigator.of(context).pop();
-          ScaffoldMessenger.of(context).showSnackBar(CustomSnackBar("New blue ads will appear next time you scan :)", context));
+          ScaffoldMessenger.of(context).showSnackBar(CustomSnackBar("Scan stopped! :)", context));
         }
     );
   }

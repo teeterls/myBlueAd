@@ -25,7 +25,7 @@ apply plugin: 'com.android.application'
 apply plugin: 'kotlin-android'
 apply from: "$flutterRoot/packages/flutter_tools/gradle/flutter.gradle"
 apply plugin: 'com.google.gms.google-services'
-
+apply plugin: 'com.google.firebase.crashlytics'
 android {
     compileSdkVersion 30
 
@@ -66,7 +66,7 @@ dependencies {
     implementation "androidx.browser:browser:1.2.0"
     implementation 'com.google.android.gms:play-services-auth:19.0.0'
     implementation 'com.facebook.android:facebook-android-sdk:[5,6)'
-
+    implementation 'com.google.firebase:firebase-crashlytics-ktx'
 
 }
 
