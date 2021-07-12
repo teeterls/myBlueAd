@@ -1,13 +1,8 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_blue/flutter_blue.dart';
-import 'package:myBlueAd/model/beacon.dart';
 import 'package:myBlueAd/model/bluead.dart';
+import 'package:myBlueAd/view/screens/bluead_screen.dart';
 import 'package:myBlueAd/view/screens/scanning_screen.dart';
-import 'package:myBlueAd/view/screens/show_update_profile.dart';
-import 'package:myBlueAd/view/screens/zona_beacon_demo.dart';
-import 'package:myBlueAd/view/screens/zona_blueads_demo.dart';
-import 'package:myBlueAd/view/widgets/user_profile_widget.dart';
-import 'package:myBlueAd/view/screens/zona_beacon.dart';
+import 'package:myBlueAd/view/screens/blueads_demo.dart';
 import '../view/screens/user_signin_action_screen.dart';
 import '../view/screens/home_screen.dart';
 import '../view/screens/sign_log_in_screen.dart';
@@ -27,45 +22,40 @@ class Routers {
       //pagina inicio app
         return MaterialPageRoute(builder: (_) => HomeScreen());
       case '/signlogin':
+        //pagina registro o acceso
         var options = settings.arguments as String;
         return MaterialPageRoute(builder: (_) => SignLogInScreen(options));
       case '/draweroptions':
-      //obtenemos la opcion para el drawer pasado por la ruta
+      //pagina opcion drawer lateral
         var options = settings.arguments as String;
         return MaterialPageRoute(builder: (_) => DrawerOptionsWidget(options));
-            //pagina USUARIO (anonimo o no)
+        //pagina principal usuario
       case '/userhome':
         return MaterialPageRoute(builder: (_) => UserHomeScreen());
+        //gestion conflicto credenciales auth 3rd party. se pasa el proveedor y el email
       case '/credentials':
-        //se le envia el provider y el email en conflicto de credentials
         var credentials = settings.arguments as List;
         return MaterialPageRoute(builder: (_) => PwdCredentials(credentials));
       case '/signinoptions':
+        //pagina acceso con link o telefono
         var options = settings.arguments as String;
         return MaterialPageRoute(builder: (_) => SignInPhoneLink(options));
       case '/useraction':
+        //pagina cambio cuenta
         var options = settings.arguments as String;
         return MaterialPageRoute(builder: (_) => UserActionScreen(options));
-     /* case '/ads':
-        var zona= settings.arguments as String;
-        return MaterialPageRoute(builder: (_) => Ad(zona));
-      case '/showbeacon':
-        var beacon= settings.arguments as Baliza;
-        return MaterialPageRoute(builder: (_) => ShowFavBeacon(beacon));
-      case '/adsdemo':
-        var zonas=settings.arguments as List<String>;
-        return MaterialPageRoute(builder: (_) => AdsDemo(zonas));*/
       case '/scan':
+        //pagina scanning
         return MaterialPageRoute(builder: (_) => ScanScreen());
       case '/blueads':
+        //pagina visualizacion BlueAd encontrado
         var bluead=settings.arguments as BlueAd;
         return MaterialPageRoute(builder: (_) => ShowBlueAd(bluead));
       case '/blueadsdemo':
+        //pagina demo
         return MaterialPageRoute(builder: (_) => BlueAdsDemo());
-      case '/viewblueads':
-        var bluead=settings.arguments as BlueAd;
-        return MaterialPageRoute(builder: (_) => OnlyViewBlueAd(bluead));
       default:
+        //error
         return MaterialPageRoute(builder: (_) {
           return Error('No route founded for ${settings.name}');
         });

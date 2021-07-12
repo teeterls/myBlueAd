@@ -3,16 +3,13 @@ import 'dart:async';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:location/location.dart';
 import 'package:geoflutterfire/geoflutterfire.dart';
-//se pueden registrar como tienda
-import 'beacon.dart';
-//TODO, pero no es relevante poque no la utilizamos
+
 class RetailStore
 {
   //String id;
   String _nombre;
-  LocationData _ubicacion;
   GeoFirePoint _firePoint;
-RetailStore({String nombre, LocationData ubicacion}) : _nombre=nombre, _ubicacion=ubicacion;
+RetailStore({String nombre, GeoFirePoint ubicacion}) : _nombre=nombre, _firePoint=ubicacion;
 
  RetailStore.fromFirestore(DocumentSnapshot doc) :
        _firePoint= Geoflutterfire().point(latitude: (doc.data()['ubicacion'] as GeoPoint).latitude, longitude: (doc.data()['ubicacion'] as GeoPoint).longitude),
@@ -25,9 +22,9 @@ RetailStore({String nombre, LocationData ubicacion}) : _nombre=nombre, _ubicacio
         'ubicacion' : _firePoint.geoPoint,
       };
 
-  LocationData get ubicacion=> _ubicacion;
   String get nombre => _nombre;
+  GeoFirePoint get firePoint => _firePoint;
 
-  set ubicacion(LocationData ubicacion) =>_ubicacion = ubicacion;
   set nombre(String nombre) => _nombre=nombre;
+  set firePoint(GeoFirePoint value) => _firePoint = value;
  }

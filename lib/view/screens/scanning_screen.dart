@@ -30,6 +30,7 @@ class _ScanScreenState extends State<ScanScreen> {
   final GlobalKey<ScaffoldState> _scaffoldKey = new GlobalKey<ScaffoldState>();
   List <ScanResult> res=[];
   final Duration initialDelay = Duration(milliseconds: 500);
+  //BlueAd encontrado
    BlueAd blueadshow;
 
   @override
@@ -40,66 +41,25 @@ class _ScanScreenState extends State<ScanScreen> {
 
   @override
   Widget build(BuildContext context) {
-    // Start scanning
-    //FlutterBlue flutterBlue= FlutterBlue.instance;
-    //flutterBlue.startScan();
-
-// Listen to scan results
-  /*flutterBlue.scanResults.listen((results) {
-      // do something with scan results
-      for (ScanResult r in results) {
-        print('${r.device.name} found! rssi: ${r.rssi}');
-      }
-    });*/
-
-// Stop scanning
-    //FlutterBlue.instance.stopScan();
-    // PROVIDER BLUADS, recuperamos los blueads
+    // Provider, recuperamos los blueads de la base de datos en tiempo real
     final List<BlueAd> blueads = Provider.of<List<BlueAd>>(context);
-    List <String> macs=[];
-    List <String> bluemacs=[];
+    //macs BBDD
+    List <String> dbmacs=[];
+    //macs escaneadas
+    List <String> scanmacs=[];
+    //macs bbdd distintas a null
+    List<String> macsnotnull=[];
    
-    //BlueAd blueadshow;
-    String maxmac=null;
+   //mac coincidente
+    String foundmac=null;
+    //rellenar lista macs base de datos
+    //rellenar lista macs not null base de datos
     blueads.forEach((bluead) {
-      macs.add(bluead.uid);
+      dbmacs.add(bluead.uid);
+      if (bluead.uid!=null)
+        macsnotnull.add(bluead.uid);
     });
 
-    //devuelve el bluead que coincide, si son mas de uno(en este caso como maximo 2 calcula getmaxrssi
-    BlueAd macBlueAd(List<ScanResult> results) {
-      List<String> bluemacs=[];
-      print(bluemacs);
-      for (ScanResult r in results) {
-        if (macs.contains(r.device.id.id))
-        {
-          if (!bluemacs.contains(r.device.id.id))
-            bluemacs.add(r.device.id.id);
-        }
-      }
-      //print(bluemacs);
-      return blueads.firstWhere((bluead) => bluead.uid==bluemacs[0],  orElse: () => null);
-      /*if (macs.contains(result.device.id.id)) {
-        return blueads.firstWhere((bluead) => bluead.uid==result.device.id.id,  orElse: () => null);
-      }
-      else
-        return null;*/
-    }
-      //ninguno
-      /*if (blueres.length<1)
-        return null;
-      //uno, se devuelve ese
-      if (blueres.length==1)
-        return blueads.firstWhere((bluead) => bluead.uid==blueres[0].device.id.id,  orElse: () => null);
-
-      else
-        {
-          print(getmaxrssi(blueres));
-          return blueads.firstWhere((bluead) => bluead.uid==getmaxrssi(blueres),  orElse: () => null);
-        }
-
-    }*/
-
-    //else
     return WillPopScope(
       //no deja ir para atras
       onWillPop: () async => false,
@@ -112,36 +72,46 @@ class _ScanScreenState extends State<ScanScreen> {
               initialData: [],
               builder: (c, snapshot)
               {
-                //flutterblue.stopScan();
                 if (!snapshot.hasData)
                   //waiting
                   return ScanLoading();
                 if (snapshot.hasError)
                   return ErrorScanning("An error ocurred while scanning, please try again");
                 else {
+                print("Scanning results:");
+                //bucle para cada scanresult
                   snapshot.data.forEach((r) {
-                    print('${r.device.name} found! rssi: ${r.rssi} mac: ${r.device.id.id}');
-                    if (macs.contains(r.device.id.id)) {
-                      if (!bluemacs.contains(r.device.id.id))
-                        bluemacs.add(r.device.id.id);
-                      if (bluemacs.length>1) {
-                        maxmac = getmaxrssi(snapshot.data);
-                        print("Mac in bbdd with max rssi:"+ maxmac);
+                    print('${r.device.name} found!, rssi: ${r.rssi}, mac: ${r.device.id.id}, advertising data: ${r.advertisementData}');
+                    //coincidencia macs base de datos y Bluetooth MAC escaneada
+                    if (dbmacs.contains(r.device.id.id)) {
+                      //evitar que se repitan las macs coincidentes guardasas
+                      if (!scanmacs.contains(r.device.id.id))
+                        scanmacs.add(r.device.id.id);
+                      if (scanmacs.length>1) {
+                        //se han encontrado más de una coincidencia, se calcula la Bluetooth MAC con mayor rssi
+                        foundmac = getmaxrssi(snapshot.data);
+                        print("Mac in database with max rssi founded: "+ foundmac);
                       }
                       else {
-                        maxmac = bluemacs[0];
-                        print("Mac in bbdd:"+ maxmac);
+                        //solo se encuentra una
+                        foundmac = scanmacs[0];
+                        print("Mac in database founded: "+ foundmac);
                       }
                     }
                     else
-                      print("Mac not in bbdd" + r.device.id.id);
+                      //no hay coincidencia
+                      print("This mac is not in database: " + r.device.id.id);
                   });
-                  print("Total macs in bbdd:" + macs.toString());
-                  print("Total macs in bbdd founded:"+ bluemacs.toString());
-                  if (maxmac!=null) {
+                  print("Total macs in database: " + dbmacs.toString());
+                  print("Total macs in database founded: "+ scanmacs.toString());
+                  if (scanmacs.length==macsnotnull.length)
+                    print("All macs in database founded!");
+                  //mac escogida
+                  if (foundmac!=null) {
+                    //obtener blue
                     blueadshow = blueads.firstWhere((bluead) =>
                     bluead.uid ==
-                        maxmac, orElse: () => null);
+                        foundmac, orElse: () => null);
                   }
                   while(blueadshow==null)
                     return ScanLoading();
@@ -162,7 +132,7 @@ class _ScanScreenState extends State<ScanScreen> {
                             padding: const EdgeInsets.only(top:10, bottom:25.0),
                             child: DelayedDisplay(
                               delay: Duration(seconds:initialDelay.inSeconds + 1),
-                              child: Text("Blue ad founded for you!", textAlign: TextAlign.start, style: TextStyle(
+                              child: Text("Blue ad found for you!", textAlign: TextAlign.start, style: TextStyle(
                                 fontSize: 22,
                                 fontWeight: FontWeight.bold,
                                 color: Colors.blueAccent,
@@ -176,6 +146,7 @@ class _ScanScreenState extends State<ScanScreen> {
                               {
 
                                 flutterblue.stopScan();
+                                print("Show BlueAd with ${blueadshow.uid} MAC");
                                 Navigator.of(context).pushNamed('/blueads', arguments: blueadshow);
                               },
                               onDoubleTap: ()
@@ -220,16 +191,16 @@ class _ScanScreenState extends State<ScanScreen> {
                                           color: Colors.white,
                                           fontSize:14
                                       )),
-                                      trailing: IconButton(
+                                      /*trailing: IconButton(
                                         tooltip: "Discard blue ad",
                                         icon: Icon(Icons.not_interested, size: 32,color: Provider.of<ThemeModel>(context, listen: false).mode==ThemeMode.dark ? Colors.tealAccent : Theme.of(context).primaryColor),
                                         onPressed: ()
                                         {
                                           flutterblue.stopScan();
-                                          Navigator.of(context).pop();
+                                         // Navigator.of(context).pop();
                                           ScaffoldMessenger.of(context).showSnackBar(CustomSnackBar("New blue ads will appear next time you scan :)", context));
                                         },
-                                      ),
+                                      ),*/
                                     ),),),),
                             ), ),
                           DelayedDisplay(
@@ -257,300 +228,6 @@ class _ScanScreenState extends State<ScanScreen> {
                         ],
                       ),
                     );
-
-
-
-                 /* if (bluemacs.isEmpty)
-                    return Text("null");
-                  else
-                  {
-
-
-                    print(getmaxrssi(res));
-                    blueadshow= blueads.firstWhere((bluead) => bluead.uid==getmaxrssi(res),  orElse: () => null);
-                    return Text(blueadshow.zona);
-                  }*/
-                  //return Text(snapshot.data.toString());
-                //}
-                /*else
-                  {
-                    print(snapshot.data);
-                      snapshot.data.forEach((r) {
-                        print(r.device.id.id);
-                        if (macs.contains(r.device.id.id)) {
-                          if (!bluemacs.contains(r.device.id.id))
-                            bluemacs.add(r.device.id.id);
-                          res.add(r);
-                        }
-                      });
-                      print(bluemacs);
-                      blueads.forEach((element) {print(element.zona);});
-                      if (bluemacs.length==1) {
-                        blueadshow = blueads.firstWhere((bluead) => bluead.uid ==
-                            bluemacs[0], orElse: () => null);
-                        return Text(blueadshow.zona);
-                      }
-                      if (bluemacs.isEmpty)
-                        return Text("null");
-                      else
-                      {
-                        print(getmaxrssi(res));
-                        blueadshow= blueads.firstWhere((bluead) => bluead.uid==getmaxrssi(res),  orElse: () => null);
-                      return Text(blueadshow.zona);
-                      }
-
-
-
-                    //return Text(snapshot.data.toString());
-
-                    //no es el de la bbdd
-
-                      //return ErrorScanning("An error ocurred while scanning, please try again");
-                   // else
-                      /*return   Center(
-                        child: Column(
-                          children: [
-                            Padding(
-                                padding: const EdgeInsets.only(top: 70),
-                                child: DelayedDisplay(
-                                  delay: initialDelay,
-                                  child: Text("You are in ${b.zona} section.", textAlign: TextAlign.start,style: TextStyle(
-                                    fontSize: 22,
-                                    fontWeight: FontWeight.bold,
-                                    color: Colors.blueAccent,
-                                  ),),
-                                )),
-                            Padding(
-                              padding: const EdgeInsets.only(top:10, bottom:25.0),
-                              child: DelayedDisplay(
-                                delay: Duration(seconds:initialDelay.inSeconds + 1),
-                                child: Text("Blue ad founded for you!", textAlign: TextAlign.start, style: TextStyle(
-                                  fontSize: 22,
-                                  fontWeight: FontWeight.bold,
-                                  color: Colors.blueAccent,
-                                ),),
-                              ),),
-                            DelayedDisplay(
-                              delay: Duration(seconds:initialDelay.inSeconds + 2),
-                              child: GestureDetector(
-                                //movimientos mas comunes de un usuario. tenemos que hacer una nueva pantalla.
-                                onTap: ()
-                                {
-                                  flutterblue.stopScan();
-                                  Navigator.of(context).pushNamed('/blueads', arguments: b);
-                                },
-                                onDoubleTap: ()
-                                {
-                                  flutterblue.stopScan();
-                                  Navigator.of(context).pushNamed('/blueads', arguments: b);
-                                },
-                                onLongPress: ()
-                                {
-                                  flutterblue.stopScan();
-                                  Navigator.of(context).pushNamed('/blueads', arguments: b);
-                                },
-                                child: AlertDialog(
-                                  elevation: 200,
-                                  shape:RoundedRectangleBorder(borderRadius: BorderRadius.circular(20)),
-                                  contentPadding: EdgeInsets.zero,
-                                  content:Container(
-                                    width: 320,
-                                    height: 220,
-                                    decoration: BoxDecoration(
-                                      borderRadius: BorderRadius.circular(20),
-                                      image: DecorationImage(
-                                        image: NetworkImage(b.image),
-                                        fit: BoxFit.fill,
-                                      ),
-                                    ),
-                                    alignment: Alignment.bottomLeft,
-                                    child: Container(
-                                      decoration: BoxDecoration(
-                                        color: Colors.black.withOpacity(0.35),
-                                        borderRadius: BorderRadius.circular(20),),
-                                      child: ListTile(
-                                        title: Text(
-                                           b.zona[0].toUpperCase()+b.zona.substring(1),
-                                          style: TextStyle(
-                                              fontWeight: FontWeight.bold,
-                                              color: Colors.white,
-                                              fontSize:16
-                                          ),
-                                        ),
-                                        subtitle: Text("Tap and take a look :) !", style: TextStyle(
-                                            color: Colors.white,
-                                            fontSize:14
-                                        )),
-                                        trailing: IconButton(
-                                          tooltip: "Discard blue ad",
-                                          icon: Icon(Icons.not_interested, size: 32,color: Provider.of<ThemeModel>(context, listen: false).mode==ThemeMode.dark ? Colors.tealAccent : Theme.of(context).primaryColor),
-                                          onPressed: ()
-                                          {
-                                            flutterblue.stopScan();
-                                            Navigator.of(context).pop();
-                                            ScaffoldMessenger.of(context).blueadshowSnackBar(CustomSnackBar("New blue ads will appear next time you scan :)", context));
-                                          },
-                                        ),
-                                      ),),),),
-                              ), ),
-                            DelayedDisplay(
-                              delay: Duration(seconds: initialDelay.inSeconds+2),
-                              child: GestureDetector(
-                                child: Lottie.asset('assets/28316-tap-tap.json', height: 140),
-                                //movimientos mas comunes de un usuario. tenemos que hacer una nueva pantalla.
-                                onTap: ()
-                                {
-                                  flutterblue.stopScan();
-                                  Navigator.of(context).pushNamed('/blueads', arguments: snapshot.data);
-                                },
-                                onDoubleTap: ()
-                                {
-                                  flutterblue.stopScan();
-                                  Navigator.of(context).pushNamed('/blueads', arguments: snapshot.data);
-                                },
-                                onLongPress: ()
-                                {
-                                  flutterblue.stopScan();
-                                  Navigator.of(context).pushNamed('/blueads', arguments: snapshot.data);
-                                },
-                              ),
-                            ),
-                          ],
-                        ),
-                      );*/
-                    //print("max"+getmaxrssi(snapshot.data));
-                    /*if (getmaxrssi(snapshot.data)==null)
-                      return Loading();
-                    else
-                   Future.delayed(Duration(seconds:4)).then((value)
-                        {
-                          FlutterBlue.instance.stopScan();
-                          print(getmaxrssi(snapshot.data));
-                        });*/
-
-                    /*return  StreamBuilder<BlueAd>(
-                stream: db.getBlueAd(getmaxrssi(snapshot.data)),
-                builder: (context, AsyncSnapshot<BlueAd> snapshot) {
-                  /*if (snapshot.hasError) {
-                    flutterblue.stopScan();
-                    return ErrorScanning("Can't find this blue ad, please try again");
-                  }*/
-                  if (!snapshot.hasData) {
-                    return Center(child: Loading());
-                  }
-                  return   Column(
-                    children: [
-                      Padding(
-                        padding: const EdgeInsets.only(bottom:10.0),
-                        child: DelayedDisplay(
-                        delay: initialDelay,
-                        child: Text("You are in ${snapshot.data.zona} section.", textAlign: TextAlign.start,style: TextStyle(
-                          fontSize: 22,
-                          fontWeight: FontWeight.bold,
-                          color: Colors.blueAccent,
-                        ),),
-                      )),
-                      Padding(
-                        padding: const EdgeInsets.only(bottom:25.0),
-                        child: DelayedDisplay(
-                        delay: Duration(seconds:initialDelay.inSeconds + 1),
-                  child: Text("Blue ad founded for you!", textAlign: TextAlign.start, style: TextStyle(
-                          fontSize: 22,
-                          fontWeight: FontWeight.bold,
-                          color: Colors.blueAccent,
-                        ),),
-                      ),),
-                  DelayedDisplay(
-                  delay: Duration(seconds:initialDelay.inSeconds + 2),
-                  child: GestureDetector(
-                              //movimientos mas comunes de un usuario. tenemos que hacer una nueva pantalla.
-                              onTap: ()
-                              {
-                                flutterblue.stopScan();
-                                Navigator.of(context).pushNamed('/blueads', arguments: snapshot.data);
-                              },
-                              onDoubleTap: ()
-                              {
-                                flutterblue.stopScan();
-                                Navigator.of(context).pushNamed('/blueads', arguments: snapshot.data);
-                              },
-                              onLongPress: ()
-                              {
-                                flutterblue.stopScan();
-                                Navigator.of(context).pushNamed('/blueads', arguments: snapshot.data);
-                              },
-                              child: AlertDialog(
-                                elevation: 200,
-                                shape:RoundedRectangleBorder(borderRadius: BorderRadius.circular(20)),
-                                contentPadding: EdgeInsets.zero,
-                                content:Container(
-                                  width: 320,
-                                  height: 220,
-                                  decoration: BoxDecoration(
-                                    borderRadius: BorderRadius.circular(20),
-                                    image: DecorationImage(
-                                      image: NetworkImage(snapshot.data.image),
-                                      fit: BoxFit.fill,
-                                    ),
-                                  ),
-                                  alignment: Alignment.bottomLeft,
-                                  child: Container(
-                                 decoration: BoxDecoration(
-                                color: Colors.black.withOpacity(0.35),
-                                borderRadius: BorderRadius.circular(20),),
-                                    child: ListTile(
-                                      title: Text(
-                                        snapshot.data.zona[0].toUpperCase()+snapshot.data.zona.substring(1),
-                                        style: TextStyle(
-                                            fontWeight: FontWeight.bold,
-                                            color: Colors.white,
-                                            fontSize:16
-                                        ),
-                                      ),
-                                      subtitle: Text("Tap and take a look :) !", style: TextStyle(
-                                          color: Colors.white,
-                                          fontSize:14
-                                      )),
-                                      trailing: IconButton(
-                                        tooltip: "Discard blue ad",
-                                        icon: Icon(Icons.not_interested, size: 32,color: Provider.of<ThemeModel>(context, listen: false).mode==ThemeMode.dark ? Colors.tealAccent : Theme.of(context).primaryColor),
-                                        onPressed: ()
-                                        {
-                                          flutterblue.stopScan();
-                                          Navigator.of(context).pop();
-                                          ScaffoldMessenger.of(context).blueadshowSnackBar(CustomSnackBar("New blue ads will appear next time you scan :)", context));
-                                        },
-                                      ),
-                                    ),),),),
-                            ), ),
-                      DelayedDisplay(
-                        delay: Duration(seconds: initialDelay.inSeconds+2),
-                        child: GestureDetector(
-                            child: Lottie.asset('assets/28316-tap-tap.json', height: 140),
-                          //movimientos mas comunes de un usuario. tenemos que hacer una nueva pantalla.
-                          onTap: ()
-                          {
-                            flutterblue.stopScan();
-                            Navigator.of(context).pushNamed('/blueads', arguments: snapshot.data);
-                          },
-                          onDoubleTap: ()
-                          {
-                            flutterblue.stopScan();
-                            Navigator.of(context).pushNamed('/blueads', arguments: snapshot.data);
-                          },
-                          onLongPress: ()
-                          {
-                            flutterblue.stopScan();
-                            Navigator.of(context).pushNamed('/blueads', arguments: snapshot.data);
-                          },
-                        ),
-                      ),
-                    ],
-                  );
-                    }
-                  );*/
-
-              }*/
               } }
               ),),
             //dos streambuilders, 1º de si esta activado el bluetooth (por si lo quita en otro momento) y 2º si esta o no escaneando

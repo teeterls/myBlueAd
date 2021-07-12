@@ -2,14 +2,15 @@ import 'dart:io';
 
 import 'package:flutter/material.dart';
 import 'package:flutter_blue/flutter_blue.dart';
+import 'package:lottie/lottie.dart';
 import 'package:myBlueAd/model/theme_model.dart';
 import 'dart:async';
 
 import 'package:myBlueAd/services/firestore_db_retailstores.dart' as db;
 import 'package:myBlueAd/model/bluead.dart';
-import 'package:myBlueAd/view/screens/zona_beacon.dart';
-import 'package:myBlueAd/view/screens/zona_beacon_demo.dart';
+import 'package:myBlueAd/services/user_state_auth.dart';
 import 'package:myBlueAd/view/widgets/custom_appbar.dart';
+import 'package:myBlueAd/view/widgets/custom_backbutton.dart';
 import 'package:myBlueAd/view/widgets/custom_drawer.dart';
 import 'package:myBlueAd/view/widgets/custom_snackbar.dart';
 import 'package:myBlueAd/view/widgets/error.dart';
@@ -23,7 +24,7 @@ class BlueAdsDemo extends StatefulWidget {
 }
 
 class _BlueAdsDemoState extends State<BlueAdsDemo> {
-  Stream<Widget> zonademo (List<BlueAd> bluead) async*
+  Stream<Widget> demo (List<BlueAd> bluead) async*
   {
 
     //random
@@ -137,7 +138,7 @@ class _BlueAdsDemoState extends State<BlueAdsDemo> {
           //bluetooth on
           if (state == BluetoothState.on) {
             return StreamBuilder(
-                      stream: zonademo(blueads),
+                      stream: demo(blueads),
                       builder: (context, AsyncSnapshot<Widget> snapshot) {
                         if (snapshot.hasError) {
                           return  Center(
@@ -170,6 +171,103 @@ class _BlueAdsDemoState extends State<BlueAdsDemo> {
           }
         }
     );
+  }
+}
+class NoBluetooth extends StatelessWidget {
+  final GlobalKey<ScaffoldState> _scaffoldKey = new GlobalKey<ScaffoldState>();
+  @override
+  Widget build(BuildContext context) {
+    return WillPopScope(
+      //no deja ir para atras
+      onWillPop: () async => false,
+      child:SafeArea(
+          child: Scaffold(
+            key: _scaffoldKey,
+            appBar: CustomAppBar(_scaffoldKey, context),
+            drawer: CustomDrawer(),
+            body: Center(
+              child: Padding(
+                padding: const EdgeInsets.all(30),
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  mainAxisSize: MainAxisSize.min,
+                  children: <Widget>
+                  [
+                    Center(
+                      child: Text("Enable Bluetooth in your device to continue", textAlign: TextAlign.center,
+                        style: TextStyle(fontSize: 22,
+                            color: Colors.blueAccent,
+                            fontWeight: FontWeight.bold),),
+                    ),
+                    SizedBox(height: 30),
+                    Center(
+                      child: Lottie.asset('assets/12435-turn-on-bluetooth.json', width: 200, height: 100),
+                    ),
+
+                  ],),),),
+            floatingActionButton: CustomBackButton(),)
+      ),);
+  }
+}
+
+
+class WaitingDemo extends StatelessWidget {
+  final GlobalKey<ScaffoldState> _scaffoldKey = new GlobalKey<ScaffoldState>();
+  @override
+  Widget build(BuildContext context) {
+    final userstate = Provider.of<UserState>(context, listen: false);
+    return WillPopScope(
+      //no deja ir para atras
+      onWillPop: () async => false,
+      child:SafeArea(
+          child: Scaffold(
+            key: _scaffoldKey,
+            appBar: CustomAppBar(_scaffoldKey, context),
+            drawer: CustomDrawer(),
+            body: Center(
+              child: Padding(
+                padding: const EdgeInsets.all(30),
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  mainAxisSize: MainAxisSize.min,
+                  children: <Widget>
+                  [
+                    Row(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: [
+                          Image.asset(
+                              "assets/logo_store.png", width: 80),
+
+                          Padding(
+                            padding: const EdgeInsets.only(right: 8.0),
+                            child:  Text(
+                              "myBlueStore",
+                              style: TextStyle(
+                                fontWeight: FontWeight.bold,
+                                fontSize: 30.0,
+                                color: Colors.blue,
+                              ),
+                            ),
+                          ),
+                        ]
+                    ),
+                    SizedBox(
+                      height: 30.0,
+                    ),
+                    Center(
+                      child: Text("Blue ads demo loading...",
+                        style: TextStyle(fontSize: 18,
+                            color: Colors.blueAccent,
+                            fontWeight: FontWeight.bold),),
+                    ),
+                    SizedBox(height: 30),
+                    Center(
+                      child:  CircularProgressIndicator(),
+                    ),
+
+                  ],),),),
+            floatingActionButton: CustomBackButton(),)
+      ),);
   }
 }
 
@@ -268,60 +366,5 @@ class _EndBlueDemoState extends State<EndBlueDemo> {
   }
 }
 
-class OnlyViewBlueAd extends StatefulWidget {
-  OnlyViewBlueAd(this._bluead);
-final BlueAd _bluead;
-
-  @override
-  State<OnlyViewBlueAd> createState() => _OnlyViewBlueAdState();
-}
-
-class _OnlyViewBlueAdState extends State<OnlyViewBlueAd> {
-  final GlobalKey<ScaffoldState> _scaffoldKey = new GlobalKey<ScaffoldState>();
-
-  WebViewController _controller;
-  @override
-  void initState() {
-    // TODO: implement initState
-    super.initState();
-    if (Platform.isAndroid) WebView.platform = SurfaceAndroidWebView();
-  }
-
-  @override
-  Widget build(BuildContext context) {
-   return WillPopScope(
-        //no deja ir para atras
-        onWillPop: () async => false,
-        child: SafeArea(
-          child: Scaffold(
-                  key: _scaffoldKey,
-                  appBar: CustomAppBar(_scaffoldKey, context),
-                  drawer: CustomDrawer(),
-                    body:   SingleChildScrollView(
-                  //todoSHOWBLUEAD
-                      child: Column(
-                             children: <Widget>[
-                          Container(
-                          height: 500,
-                          child: WebView(
-                          allowsInlineMediaPlayback: true,
-                          javascriptMode: JavascriptMode.unrestricted,
-                          initialUrl: widget._bluead.url,
-                          gestureNavigationEnabled: true,
-                          debuggingEnabled: true,
-                          onWebViewCreated: (WebViewController webViewController) {
-                          _controller = webViewController;
-                          },
-                          //avisar al controller
-                          ),
-                          ),
-
-                  ],
-                  )),
-                  floatingActionButton: GoBack(),
-                  floatingActionButtonLocation: FloatingActionButtonLocation.centerFloat
-   ),),);
-  }
-}
 
 

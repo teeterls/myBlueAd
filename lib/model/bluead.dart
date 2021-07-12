@@ -20,6 +20,7 @@ class BlueAd
         _image=doc.data()['image'],
         _uid=doc.data()['uid'],
         _expiration= (doc.data()['expiration'] as Timestamp).toDate();
+
   Map <String, dynamic> toFirestore() =>
       {
         'fecharegistro': _fecharegistro,
@@ -45,7 +46,7 @@ class BlueAd
   set image(String value) => _image = value;
 }
 
-//mapear stream de querysnapshots a stream de List<User>
+//mapear stream de querysnapshots a stream de List<BlueAd>
 List<BlueAd> toBlueAdList(QuerySnapshot query)
 {
   //List<DocumentSnapshot> docs= query.docs;

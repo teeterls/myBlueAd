@@ -1,5 +1,4 @@
 import 'dart:async';
-import 'package:myBlueAd/model/beacon.dart';
 
 import '../model/user.dart';
 import 'firebase_path.dart';
@@ -10,14 +9,6 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 //instancia Cloud Firestore
 var db = FirebaseFirestore.instance;
 
-
-/*//metodo map -> pasar una funcion que convierte los QuerySnapshots a List (o lo que sea)
-Stream <List<Usuario>> getUsers() {
-  //togrouplist recibe un querysnapshot. mapeamos el stream de querysnapshots y se genera un stream de listgroups
-  //return db.collection(FirestorePath.userscollection()).orderBy('firstaccess').snapshots().map(toUserList);
-  return db.collection(FirestorePath.userscollection()).orderBy('firstaccess').snapshots().map(toUserList);
-}
-*/
 
 
 Stream <Usuario> getUserProfile(String userId)
@@ -55,29 +46,12 @@ Future<void> deletePhotoURL(String uid) async {
   db.doc(FirestorePath.user(uid)).update({"photoURL": FieldValue.delete()});
 }
 
-/*Future <bool> favPrueba (String uid, String beacon, String zona) async
-{
-  //List <String> _ref = [beacon];
-  try {
-    db.doc(FirestorePath.user(uid)).update({"favprueba2.${zona}": beacon});
-    /*db.doc(FirestorePath.user(uid)).update({"favprueba": FieldValue.arrayUnion(_ref)});
-    //db.doc(FirestorePath.user(uid)).update({"x.dos": FieldValue.delete()});
-    /*db.doc(FirestorePath.user(uid)).update(
-       {"favads": FieldValue.arrayUnion(adurl)});*/*/
-    return true;
-  } on FirebaseException catch (e) {
-    return false;
-  }
-}*/
 
 
 //se añaden de uno en uno, cada vez que le da al botón de fav, pero se une una lista
 Future <bool> setFavAd (String uid, String zona, String adurl) async {
  try {
    db.doc(FirestorePath.user(uid)).update({"favads.${zona}": adurl});
-   //db.doc(FirestorePath.user(uid)).update({"x.dos": FieldValue.delete()});
-   /*db.doc(FirestorePath.user(uid)).update(
-       {"favads": FieldValue.arrayUnion(adurl)});*/
    return true;
  } on FirebaseException catch (e) {
    return false;

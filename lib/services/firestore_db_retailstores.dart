@@ -2,7 +2,6 @@ import 'dart:async';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:myBlueAd/model/bluead.dart';
 import 'package:myBlueAd/model/user.dart';
-import 'package:myBlueAd/model/beacon.dart';
 import 'package:myBlueAd/services/firebase_path.dart';
 import 'firebase_path.dart';
 
@@ -35,9 +34,8 @@ Future<bool> nullUID() async {
   }
 }
 
-//set uid random cuando se empareja la primera vez
+//set uid random de las balizas
 Future <String> setUID (String uid) async {
-  print(uid);
   List id=[];
   try 
       {
@@ -48,11 +46,12 @@ Future <String> setUID (String uid) async {
               await db.collection(FirestorePath.blueads(doc.docs.first.id)).get().then((
                   query) async {
                 query.docs.forEach((doc) {
-                 // print(id);
+                 // se guardan los ids de los documentos
                   id.add(doc.id);
                 });
                 //id random, no sabemos cual sera.
                 id.shuffle();
+                //update atributo uid con el valor de un id random
                 await db.doc(FirestorePath.bluead(doc.docs.first.id, id[0])).update({'uid' : uid});
               });
             });
@@ -144,29 +143,13 @@ Stream<BlueAd> getBlueAd(String uid)
 
 //metodo map -> pasar una funcion que convierte los QuerySnapshots a List (o lo que sea)
 Stream <List<BlueAd>> getBlueAds() {
-  //togrouplist recibe un querysnapshot. mapeamos el stream de querysnapshots y se genera un stream de listgroups
-  //return db.collection(FirestorePath.userscollection()).orderBy('firstaccess').snapshots().map(toUserList);
   return db.collection(FirestorePath.blueadscollection()).orderBy('fecharegistro').snapshots().map(toBlueAdList);
 }
 
 
 
-/*//TODO LO VAMOS A HACER POR DOCREFERENCE
-Stream<Baliza> getBlueAdDemo(String zona)
-{
-  /*return db.collection(FirestorePath.beaconscollection()).where('zona', isEqualTo: zona)
-      .snapshots().map((doc) => toBeaconList(doc).first);*/
-  return db.collection(FirestorePath.beaconscollection()).where('zona', isEqualTo: zona)
-      .snapshots().map((doc) {
-    Baliza beacon= toBeaconList(doc).first;
-    beacon.uid= doc.docs.first.id;
-    return beacon;
-  });
-}*/
 
-
-//no se usa pero seria como ejemplo. inicialmente uid a null, luego se haria el set.
-
+//registerBlueAd
 Future <String> registerBlueAd(BlueAd ad) async
     {
       try {
@@ -190,7 +173,7 @@ Future <String> registerBlueAd(BlueAd ad) async
       }
    }
 
-   //TODO GETFAVBLUEADS
+   //metodo para obtener los BlueAdsfavoritos
 Stream <List<BlueAd>> getFavBlueAds(List <String> urls)
 {
   return db.collection(FirestorePath.blueadscollection()).where('url', whereIn: urls).snapshots().map((doc) => toBlueAdList(doc));

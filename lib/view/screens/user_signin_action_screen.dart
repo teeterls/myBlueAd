@@ -86,7 +86,7 @@ class _UserActionScreenState extends State<UserActionScreen> {
     //vacio
     _email = TextEditingController(text: "");
     _newemail = TextEditingController(text: "");
-    _emailuser = TextEditingController(text: Provider.of<UserState>(context, listen:false).user.email);
+    //_emailuser = TextEditingController(text: Provider.of<UserState>(context, listen:false).user.email);
     _pwd = TextEditingController(text: "");
   }
   @override

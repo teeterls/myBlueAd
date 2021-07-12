@@ -33,8 +33,6 @@ class _UserProfileState extends State<UserProfile> {
             return Center(child: Loading());
           }
           //hay datos del perfil del usuario identificado con el uid al sign in/register
-          //
-
           return ShowUpdateProfile(snapshot.data);
         });
   }

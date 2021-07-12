@@ -13,22 +13,22 @@ class myBlueAdApp extends StatelessWidget {
   Widget build(BuildContext context) {
     return ChangeNotifierProvider<ThemeModel>(
       create: (_) => ThemeModel(),
-        child: Consumer<ThemeModel>(
-          builder:(context, theme ,_) =>MaterialApp(
-            debugShowCheckedModeBanner: false,
+      child: Consumer<ThemeModel>(
+        builder:(context, theme ,_) =>MaterialApp(
+          debugShowCheckedModeBanner: false,
           title:_title,
           theme: ThemeData(
               primaryColor: Colors.pink[500],
-            visualDensity: VisualDensity.adaptivePlatformDensity
+              visualDensity: VisualDensity.adaptivePlatformDensity
           ), // Provide light theme.
           darkTheme: ThemeData.dark(), // Provide dark theme.
           themeMode:  theme.mode,
-            initialRoute: '/',
-            //generador de rutas
-            onGenerateRoute: Routers.generateRoute,
+          initialRoute: '/',
+          //generador de rutas
+          onGenerateRoute: Routers.generateRoute,
 
-      ),
         ),
+      ),
     );
   }
 }

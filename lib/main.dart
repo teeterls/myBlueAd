@@ -30,7 +30,7 @@ void main() {
   ),);
 }
 
-//app que inicializa FlutterFire de forma async para la conexion con Firebase
+//widget que inicializa FlutterFire de forma async para la conexion con Firebase
 class InitializeApp extends StatefulWidget {
   @override
   _InitializeAppState createState() => _InitializeAppState();
@@ -45,7 +45,7 @@ class _InitializeAppState extends State<InitializeApp> {
   // Define an async function to initialize FlutterFire
   void initializeFlutterFire() async {
     try {
-      // Wait for Firebase to initialize and set _nitialized state to true
+      // Wait for Firebase to initialize and set initialized state to true
       await Firebase.initializeApp();
       setState(() {
         _initialized = true;
