@@ -12,5 +12,8 @@ The following is an overview of the proximity marketing system developed and the
 ![image](https://user-images.githubusercontent.com/46919127/161378119-6766d18e-0509-41e4-a1b8-00602c2bebb2.png)
 
 The scanning algorithm is as follows:
+
 ![image](https://user-images.githubusercontent.com/46919127/161378115-43a97519-58aa-41d9-b4c0-42b45fdb2235.png)
 
+The project publication can be found here:
+https://repositorio.comillas.edu/xmlui/handle/11531/51654
