@@ -14,5 +14,3 @@ The following is an overview of the proximity marketing system developed and the
 The scanning algorithm is as follows:
 ![image](https://user-images.githubusercontent.com/46919127/161378115-43a97519-58aa-41d9-b4c0-42b45fdb2235.png)
 
-
-Translated with www.DeepL.com/Translator (free version)
